@@ -33,8 +33,8 @@ namespace DentistStudioApp.Model
         public Survey(long id) => _surveyId = id;
         public Survey(Patient patient) 
         {
-            this.Patient = patient;
-            DOS = DateTime.Now;
+            _patient = patient;
+            _dos = DateTime.Now;
         }
 
         public Survey(DbDataReader reader) 

@@ -8,10 +8,10 @@ namespace DentistStudioApp.Model
     public class SurveyData : AbstractModel
     {
         #region backing fields
-        long _surveyDataID;
-        Survey? _survey;
-        SurveyQuestion? _surveyQuestion;
-        bool _have = false;
+        private long _surveyDataID;
+        private Survey? _survey;
+        private SurveyQuestion? _surveyQuestion;
+        private bool _have = false;
         #endregion
 
         #region Properties
@@ -35,8 +35,8 @@ namespace DentistStudioApp.Model
 
         public SurveyData(Survey survey, SurveyQuestion surveyQuestion) 
         { 
-            Survey = survey;
-            SurveyQuestion = surveyQuestion;    
+            _survey = survey;
+            _surveyQuestion = surveyQuestion;    
         }
 
         public SurveyData(DbDataReader reader) 

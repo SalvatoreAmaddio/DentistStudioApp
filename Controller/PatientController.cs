@@ -1,8 +1,10 @@
 ﻿using Backend.Database;
+using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
+using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
@@ -12,31 +14,51 @@ namespace DentistStudioApp.Controller
         public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
         public override int DatabaseIndex => 0;
 
-        public void AddSurvey() 
-        { 
-            if (CurrentRecord == null) return;
+        public ICommand AddSurveyCMD { get; }
+
+        public PatientController() : base()
+        {
+            AddSurveyCMD = new CMDAsync(AddSurvey);        
+        }
+
+        public async Task<bool> AddSurvey() 
+        {
+            if (CurrentRecord == null) return false;
 
             if (CurrentRecord.IsNewRecord()) 
             {
                 bool result = this.PerformUpdate();
-                if (!result) return;
+                if (!result) return false;
             }
-
-            Survey survey = new(CurrentRecord);
+            
             IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();
+            bool taskResult = false;
+            bool exist = surveyDB.MasterSource.Any(s=>((Survey)s).Patient.Equals(CurrentRecord));
+            if (exist) goto OpenWin;
+            Survey survey = new(CurrentRecord);
             surveyDB.Model = survey;
             surveyDB.Crud(CRUD.INSERT);
+            var x = survey.SurveyID;
+            List<ISQLModel>? questions = DatabaseManager.Find<SurveyQuestion>()?.MasterSource.ToList();
+            IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
 
-            MasterSource? questions = DatabaseManager.Find<SurveyQuestion>()?.MasterSource;
-
-            foreach(SurveyQuestion question in questions) 
+            taskResult = await Task.Run(() =>
             {
-                question.Category = (SurveyQuestionCategory?)(DatabaseManager.Find<SurveyQuestionCategory>()?.MasterSource.First());
-                SurveyData surveyData = new(survey,question);
-                IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
-                surveyDataDB.Model = survey;
-                surveyDataDB.Crud(CRUD.INSERT);
-            }
+                foreach (SurveyQuestion question in questions)
+                {
+                    question.Category = (SurveyQuestionCategory?)(DatabaseManager.Find<SurveyQuestionCategory>()?.MasterSource.First());
+                    SurveyData surveyData = new(survey, question);
+                    surveyDataDB.Model = surveyData;
+                    surveyDataDB.Crud(CRUD.INSERT);
+                    var y = surveyData.SurveyDataID;
+                }
+                return true;
+            });
+
+            OpenWin:
+            View.Survey surveyWindow = new();
+            surveyWindow.ShowDialog();
+            return taskResult;
         }
     }
 }
