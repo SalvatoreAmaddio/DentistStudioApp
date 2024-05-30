@@ -68,8 +68,8 @@ namespace DentistStudioApp.Model
             _firstName = reader.GetString(1);
             _lastName = reader.GetString(2);
             _dob = reader.GetDateTime(3);
-            _gender = new(reader.GetInt64(4)); //notice the Gender Model was defined with an additional constructor taking long as argument.
-            _jobTitle = new(reader.GetInt64(5)); //notice the JobTitle Model was defined with an additional constructor taking long as argument.
+            _gender = new(reader.GetInt64(4));
+            _jobTitle = new(reader.GetInt64(5));
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
             string str = reader.GetString(8);
