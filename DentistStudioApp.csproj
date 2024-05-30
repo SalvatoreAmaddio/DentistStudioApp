@@ -9,17 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\dentist.db" />
+    <None Remove="Data\data.db" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\dentist.db">
+    <Content Include="Data\data.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controller\" />
   </ItemGroup>
 
   <ItemGroup>

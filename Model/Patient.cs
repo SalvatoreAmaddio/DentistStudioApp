@@ -61,6 +61,7 @@ namespace DentistStudioApp.Model
         #region Constructor
         public Patient() { }
 
+        public Patient(long id) => _patientID = id;
         public Patient(DbDataReader reader) 
         {
             _patientID = reader.GetInt64(0);
