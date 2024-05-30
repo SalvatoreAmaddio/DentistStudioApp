@@ -8,16 +8,24 @@
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=controller:SurveyDataController, IsDesignTimeCreatable=False}"
-        Title="Survey" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight"
+        Title="Survey">
 
     <fr:FormList>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="150,50">
+                    <Label Grid.Column="1" Content="Question"/>
+                    <Label Grid.Column="2" Content="Yes/No"/>
+                </Grid>
+            </fr:Lista.Header>
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.ColumnDefinitions="100,100">
+                        <Grid fr:Definition.ColumnDefinitions="150,50">
                             <Label Content="{Binding SurveyQuestion.Question}"/>
-                            <CheckBox IsChecked="{Binding Have}"/>
+                            <CheckBox Grid.Column="1" IsChecked="{Binding Have}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>
                     </fr:FormRow>
                 </DataTemplate>
