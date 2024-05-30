@@ -20,7 +20,10 @@
 
   <ItemGroup>
     <Folder Include="Controller\" />
-    <Folder Include="View\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DesktopBusinessAppSharpBuilder" Version="1.0.3" />
   </ItemGroup>
 
 </Project>
