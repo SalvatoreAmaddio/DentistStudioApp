@@ -9,10 +9,10 @@ namespace DentistStudioApp
     {
         public App()
         {
-            Sys.LoadAllEmbeddedDll(); //load some custom assemblies that could be used later on.
-            DatabaseManager.Add(new SQLiteDatabase(new Patient())); //Add the database object responsible for dealing with this table.
-            DatabaseManager.Add(new SQLiteDatabase(new Gender())); //Add the database object responsible for dealing with this table.
-            DatabaseManager.Add(new SQLiteDatabase(new JobTitle())); //Add the database object responsible for dealing with this table.
+            Sys.LoadAllEmbeddedDll(); 
+            DatabaseManager.Add(new SQLiteDatabase(new Patient())); 
+            DatabaseManager.Add(new SQLiteDatabase(new Gender())); 
+            DatabaseManager.Add(new SQLiteDatabase(new JobTitle())); 
 
             //survey tables
             DatabaseManager.Add(new SQLiteDatabase(new Survey())); 

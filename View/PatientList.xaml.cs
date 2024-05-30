@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DentistStudioApp.Controller;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DentistStudioApp.View
 {
-    /// <summary>
-    /// Interaction logic for PatientList.xaml
-    /// </summary>
     public partial class PatientList : Window
     {
         public PatientList()
         {
             InitializeComponent();
+            DataContext = new PatientControllerList();
+            ((PatientControllerList)DataContext).Window = this;
         }
     }
 }
