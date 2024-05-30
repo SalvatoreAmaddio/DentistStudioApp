@@ -9,12 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\mydb.db" />
+    <None Remove="PatientImages\placeholder.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\mydb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PatientImages\placeholder.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

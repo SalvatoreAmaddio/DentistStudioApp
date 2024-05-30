@@ -1,5 +1,6 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
+using FrontEnd.Dialogs;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -16,6 +17,13 @@ namespace DentistStudioApp.View
         public PatientForm(Patient? patient) : this()
         {
             ((PatientController)DataContext).GoAt(patient);
+        }
+
+        private void OnPhotoFrameClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FilePicker filePicker = new();
+            filePicker.ShowDialog();
+            MessageBox.Show(filePicker.SelectedFile);
         }
     }
 }

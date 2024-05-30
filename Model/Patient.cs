@@ -14,7 +14,7 @@ namespace DentistStudioApp.Model
         DateTime? _dob;
         string _phoneNumber = string.Empty;
         string _email = string.Empty;
-        string _picturePath = string.Empty;
+        string _picturePath = "/PatientImages/placeholder.jpg";
         JobTitle? _jobTitle; //JobTitle is a class extending AbstractModel
         Gender? _gender; //Gender is a class extending AbstractModel
         #endregion
@@ -72,7 +72,9 @@ namespace DentistStudioApp.Model
             _jobTitle = new(reader.GetInt64(5)); //notice the JobTitle Model was defined with an additional constructor taking long as argument.
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
-            _picturePath = reader.GetString(8);
+            string str = reader.GetString(8);
+            if (string.IsNullOrEmpty(str))
+                _picturePath = reader.GetString(8);
         }
         #endregion
 
