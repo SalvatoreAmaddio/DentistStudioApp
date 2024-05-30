@@ -67,6 +67,7 @@ namespace DentistStudioApp.Controller
                     surveyData.SurveyQuestion = (SurveyQuestion?)surveyQuestionDb.MasterSource.FirstOrDefault(s => s.Equals(surveyData.SurveyQuestion));
                     if (surveyData.SurveyQuestion!=null)
                         surveyData.SurveyQuestion.Category = (SurveyQuestionCategory?)(SurveyQuestionCategory?.FirstOrDefault());
+                    surveyData.IsDirty = false;
                 }
                 return results;
             });
