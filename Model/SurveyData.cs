@@ -11,6 +11,7 @@ namespace DentistStudioApp.Model
         long _surveyDataID;
         Survey? _survey;
         SurveyQuestion? _surveyQuestion;
+        bool _have = false;
         #endregion
 
         #region Properties
@@ -24,16 +25,26 @@ namespace DentistStudioApp.Model
         [FK]
         [Mandatory]
         public SurveyQuestion? SurveyQuestion { get => _surveyQuestion; set => UpdateProperty(ref value, ref _surveyQuestion); }
+
+        [Field]
+        public bool Have { get => _have; set => UpdateProperty(ref value, ref _have); }
         #endregion
 
         #region Constructor
         public SurveyData() { }
 
+        public SurveyData(Survey survey, SurveyQuestion surveyQuestion) 
+        { 
+            Survey = survey;
+            SurveyQuestion = surveyQuestion;    
+        }
+
         public SurveyData(DbDataReader reader) 
         {
             _surveyDataID = reader.GetInt64(0);
-            _survey = new Survey(reader);
-            _surveyQuestion = new SurveyQuestion(reader);
+            _survey = new Survey(reader.GetInt64(1));
+            _surveyQuestion = new SurveyQuestion(reader.GetInt64(2));
+            _have = reader.GetBoolean(3);
         }
         #endregion
 

@@ -8,9 +8,9 @@ namespace DentistStudioApp.Model
     public class SurveyQuestion : AbstractModel
     {
         #region backing fields
-        long _surveyQuestionID;
-        string _question = string.Empty;
-        SurveyQuestionCategory? _category;
+        private long _surveyQuestionID;
+        private string _question = string.Empty;
+        private SurveyQuestionCategory? _category;
         #endregion
 
         #region Properties
@@ -28,6 +28,7 @@ namespace DentistStudioApp.Model
         #region Constructor
         public SurveyQuestion() { }
 
+        public SurveyQuestion(long surveyQuestionId) => _surveyQuestionID = surveyQuestionId;
         public SurveyQuestion(DbDataReader reader) 
         {
             _surveyQuestionID = reader.GetInt64(0);

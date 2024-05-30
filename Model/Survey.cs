@@ -30,6 +30,13 @@ namespace DentistStudioApp.Model
         #region Constructor
         public Survey() { }
 
+        public Survey(long id) => _surveyId = id;
+        public Survey(Patient patient) 
+        {
+            this.Patient = patient;
+            DOS = DateTime.Now;
+        }
+
         public Survey(DbDataReader reader) 
         {
             _surveyId = reader.GetInt64(0);
