@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="PatientImages\placeholder.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Data\mydb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -22,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DesktopBusinessAppSharpBuilder" Version="1.0.3" />
+    <ProjectReference Include="..\DesktopBusinessAppSharpBuilder\FrontEnd.csproj" />
   </ItemGroup>
 
 </Project>

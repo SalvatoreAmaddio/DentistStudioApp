@@ -1,6 +1,8 @@
 ﻿using DentistStudioApp.Model;
 using FrontEnd.Controller;
+using FrontEnd.Dialogs;
 using FrontEnd.Events;
+using System.ComponentModel;
 
 namespace DentistStudioApp.Controller
 {
@@ -18,6 +20,13 @@ namespace DentistStudioApp.Controller
         public SurveyDataController() 
         { 
             AllowNewRecord = false;
+        }
+
+        public override void OnWindowClosing(object? sender, CancelEventArgs e)
+        {
+            bool dirty = AsRecordSource().Any(s => s.IsDirty);
+            if (dirty) 
+                PerformUpdate(); 
         }
 
         public override void OnOptionFilter(FilterEventArgs e)
