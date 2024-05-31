@@ -18,7 +18,7 @@ namespace DentistStudioApp.Model
 
         [Mandatory]
         [Field]
-        public string CategoryName { get => _categoryName;set=>UpdateProperty(ref value, ref _categoryName); }
+        public string CategoryName { get => _categoryName; set => UpdateProperty(ref value, ref _categoryName); }
         #endregion
 
         #region Constructor

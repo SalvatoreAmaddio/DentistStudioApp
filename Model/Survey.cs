@@ -23,7 +23,7 @@ namespace DentistStudioApp.Model
 
         [Mandatory]
         [FK]
-        public Patient? Patient { get => _patient; set=>UpdateProperty(ref _patient, ref _patient); }
+        public Patient? Patient { get => _patient; set=>UpdateProperty(ref value, ref _patient); }
         #endregion
 
 
@@ -47,7 +47,7 @@ namespace DentistStudioApp.Model
 
         public override ISQLModel Read(DbDataReader reader) => new Survey(reader);
 
-        public override string ToString() => $"Survey ID: {SurveyID} {Patient}";
+        public override string ToString() => $"Survey ID: {SurveyID} - {Patient}";
 
     }
 }

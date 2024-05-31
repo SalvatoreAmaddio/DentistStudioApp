@@ -13,9 +13,11 @@ namespace DentistStudioApp.View
             ((SurveyDataController)DataContext).Window = this;
         }
 
-        public SurveyDataFormList(IEnumerable<SurveyData> data) : this()
+        public SurveyDataFormList(Survey survey, IEnumerable<SurveyData> data) : this()
         {
-            ((SurveyDataController)DataContext).AsRecordSource().ReplaceRange(data);
+            SurveyDataController controller = (SurveyDataController)DataContext;
+            controller.SurveyController.CurrentRecord = survey;
+            controller.AsRecordSource().ReplaceRange(data);
         }
     }
 }

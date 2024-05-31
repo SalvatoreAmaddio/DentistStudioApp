@@ -13,34 +13,53 @@
         Height="300"
         Title="Survey">
 
-    <fr:FormList>
-        <fr:FormList.Header>
-            <Grid Background="{StaticResource DefaultWhite}">
-                <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
-                    <fr:Text Placeholder="Search question..." Text="{Binding Search}"/>
-                </StackPanel>
-            </Grid>
-        </fr:FormList.Header>
+    <Grid Background="{StaticResource DefaultWhite}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".8*"/>
+            <ColumnDefinition Width=".2*"/>
+        </Grid.ColumnDefinitions>
 
-        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
-            <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="150,50,150">
-                    <Label Grid.Column="1" Content="Question"/>
-                    <Label Grid.Column="2" Content="Yes/No"/>
-                    <Label Grid.Column="3" Content="Category"/>
+        <fr:FormList>
+            <fr:FormList.Header>
+                <Grid Background="{StaticResource DefaultWhite}">
+                    <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
+                        <fr:Text Placeholder="Search question..." Text="{Binding Search}"/>
+                    </StackPanel>
                 </Grid>
-            </fr:Lista.Header>
-            <fr:Lista.ItemTemplate>
-                <DataTemplate>
-                    <fr:FormRow>
-                        <Grid fr:Definition.ColumnDefinitions="150,50,150">
-                            <Label Content="{Binding SurveyQuestion.Question}"/>
-                            <CheckBox Grid.Column="1" IsChecked="{Binding Have}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <Label Grid.Column="2" Content="{Binding SurveyQuestion.Category}"/>
-                        </Grid>
-                    </fr:FormRow>
-                </DataTemplate>
-            </fr:Lista.ItemTemplate>            
-        </fr:Lista>
-    </fr:FormList>
+            </fr:FormList.Header>
+
+            <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                <fr:Lista.Header>
+                    <Grid fr:Definition.ColumnDefinitions="150,50,150">
+                        <Label Grid.Column="1" Content="Question"/>
+                        <Label Grid.Column="2" Content="Yes/No"/>
+                        <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding CategoryOptions}" Text="Category"/>
+                    </Grid>
+                </fr:Lista.Header>
+                <fr:Lista.ItemTemplate>
+                    <DataTemplate>
+                        <fr:FormRow>
+                            <Grid fr:Definition.ColumnDefinitions="150,50,150">
+                                <Label Content="{Binding SurveyQuestion.Question}"/>
+                                <CheckBox Grid.Column="1" IsChecked="{Binding Have}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Label Grid.Column="2" Content="{Binding SurveyQuestion.Category}"/>
+                            </Grid>
+                        </fr:FormRow>
+                    </DataTemplate>
+                </fr:Lista.ItemTemplate>
+            </fr:Lista>
+        </fr:FormList>
+
+        <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" Background="{StaticResource DefaultGrey}" Padding="10">
+            <fr:Form 
+                 DataContext="{Binding SurveyController}"
+                 RecordStatusColumn="0" RecordTrackerRow="0"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Background="{StaticResource DefaultGrey}" fr:Definition.RowDefinitions="30,30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Label Content="{Binding CurrentRecord.Patient}" ContentStringFormat="Patient: {0}"/>
+                    <Label Content="{Binding CurrentRecord.DOS}" ContentStringFormat="Survey taken on: {0:dd MMMM yyyy}" Grid.Row="1"/>
+                </Grid>
+            </fr:Form>
+        </Border>
+    </Grid>
 </Window>
