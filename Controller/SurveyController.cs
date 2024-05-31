@@ -37,13 +37,19 @@ namespace DentistStudioApp.Controller
 
         public override Task<IEnumerable<SurveyData>> SearchRecordAsync()
         {
-            IEnumerable<SurveyQuestion>? questions = DatabaseManager.Find<SurveyQuestion>()?.MasterSource.Cast<SurveyQuestion>().ToList().Where(s => s.Question.ToLower().StartsWith(Search.ToLower()));
+            IAbstractDatabase? surveryQuestionsDb = DatabaseManager.Find<SurveyQuestion>();
+            List<SurveyQuestion>? surveyQuestions = surveryQuestionsDb?.MasterSource.Cast<SurveyQuestion>().ToList();
+            IEnumerable<SurveyQuestion>? questions = surveyQuestions?.Where(s => s.Question.ToLower().StartsWith(Search.ToLower()));
             List<SurveyData> temp = [];
 
-            foreach(SurveyData surveyData in MasterSource) 
+            foreach (SurveyData surveyData in MasterSource!)
             { 
-                if (questions.Any(s=>s.Equals(surveyData.SurveyQuestion))) 
+                SurveyQuestion? question = surveyData.SurveyQuestion;
+
+                if (questions!.Any(s=>s.Equals(question))) 
+                {
                     temp.Add(surveyData);
+                }
             }
             IEnumerable<SurveyData> result = temp;
             return Task.FromResult(result);

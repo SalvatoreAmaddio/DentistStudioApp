@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.Database;
+using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -33,10 +34,10 @@ namespace DentistStudioApp.Model
         #region Constructor
         public SurveyData() { }
 
-        public SurveyData(Survey survey, SurveyQuestion surveyQuestion) 
-        { 
+        public SurveyData(Survey survey, SurveyQuestion surveyQuestion)
+        {
             _survey = survey;
-            _surveyQuestion = surveyQuestion;    
+            _surveyQuestion = surveyQuestion;
         }
 
         public SurveyData(DbDataReader reader) 
@@ -49,6 +50,13 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new SurveyData(reader);
+
+        public async Task FetchSurveyQuestionAsync()
+        {
+            _surveyQuestion = (SurveyQuestion?)DatabaseManager.Find<SurveyQuestion>()?.MasterSource.FirstOrDefault(s => s.Equals(_surveyQuestion));
+            if (_surveyQuestion != null) 
+                await _surveyQuestion.FetchCategory();
+        }
 
         public override string? ToString() => $"{Survey} {SurveyQuestion}";
 

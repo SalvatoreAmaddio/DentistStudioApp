@@ -16,7 +16,7 @@ namespace DentistStudioApp.Model
 
         #region Properties
         [PK]
-        public long SurveyQuestionID { get => _surveyQuestionID; set=> UpdateProperty(ref value, ref _surveyQuestionID); }
+        public long SurveyQuestionID { get => _surveyQuestionID; set => UpdateProperty(ref value, ref _surveyQuestionID); }
 
         [Field]
         public string Question { get => _question; set => UpdateProperty(ref value, ref _question); }
