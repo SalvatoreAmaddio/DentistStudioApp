@@ -19,13 +19,7 @@ namespace DentistStudioApp.Controller
         public SurveyDataController() 
         { 
             AllowNewRecord = false;
-        }
-
-        public override void OnWindowClosing(object? sender, CancelEventArgs e)
-        {
-            bool dirty = AsRecordSource().Any(s => s.IsDirty);
-            if (dirty) 
-                PerformUpdate(); 
+            AllowAutoSave = true;
         }
 
         public override void OnOptionFilter(FilterEventArgs e)
