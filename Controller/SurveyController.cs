@@ -4,7 +4,6 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using System.IO;
 
 namespace DentistStudioApp.Controller
 {
