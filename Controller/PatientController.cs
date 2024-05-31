@@ -76,7 +76,7 @@ namespace DentistStudioApp.Controller
         public async Task AddSurvey() 
         {
             if (CurrentRecord == null) return;
-
+            
             if (CurrentRecord.IsNewRecord()) 
             {
                 bool result = this.PerformUpdate();
@@ -89,10 +89,15 @@ namespace DentistStudioApp.Controller
 
             if (surveyDataDB == null || surveyQuestionDb == null) return;
 
+            IsLoading = true;
+
             if (survey == null) 
                 survey = await Generate(surveyDataDB, surveyQuestionDb);
 
             var data = await FillCategories(surveyDataDB, surveyQuestionDb, survey);
+
+            IsLoading = false;
+
             View.SurveyDataFormList surveyWindow = new(data);
             surveyWindow.ShowDialog();
         }

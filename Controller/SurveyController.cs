@@ -20,12 +20,6 @@ namespace DentistStudioApp.Controller
             AllowNewRecord = false;
         }
 
-        public void Filter(Survey survey) 
-        {
-            var results = AsRecordSource().Where(s=>s.Survey.Equals(survey)).ToList();
-            AsRecordSource().ReplaceRange(results);
-        }
-
         public override void OnOptionFilter(FilterEventArgs e)
         {
         }
@@ -38,5 +32,7 @@ namespace DentistStudioApp.Controller
         protected override void Open(SurveyData? model)
         {
         }
+
+
     }
 }
