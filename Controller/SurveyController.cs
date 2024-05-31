@@ -1,6 +1,5 @@
 ﻿using DentistStudioApp.Model;
 using FrontEnd.Controller;
-using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using System.ComponentModel;
 
@@ -41,7 +40,6 @@ namespace DentistStudioApp.Controller
         protected override void Open(SurveyData? model)
         {
         }
-
 
     }
 }
