@@ -3,6 +3,7 @@ using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
@@ -20,7 +21,12 @@ namespace DentistStudioApp.Controller
             AddSurveyCMD = new CMDAsync(AddSurvey);        
         }
 
-        private async Task<Survey> Generate(IAbstractDatabase surveyDataDB, IAbstractDatabase surveyQuestionDb)
+        /// <summary>
+        /// Creates a new Survey.
+        /// </summary>
+        /// <returns>A Survey</returns>
+        /// <exception cref="Exception"></exception>
+        private Task<Survey> CreateNewSurveyAsync()
         {
             IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();
 
@@ -30,49 +36,44 @@ namespace DentistStudioApp.Controller
             Survey survey = new(CurrentRecord);
             surveyDB.Model = survey;
             surveyDB.Crud(CRUD.INSERT);
-
-            List<ISQLModel> questions = surveyQuestionDb.MasterSource.ToList();
-
-            await Task.Run(() =>
-            {
-                foreach (SurveyQuestion question in questions)
-                {
-                    SurveyData surveyData = new(survey, question);
-                    surveyDataDB.Model = surveyData;
-                    surveyDataDB.Crud(CRUD.INSERT);
-                }
-            });
-
-            return survey;
+            return Task.FromResult(survey);
         }
 
-        private async Task<Survey?> TryGetSurvey() 
+        /// <summary>
+        /// Returns a <see cref="IEnumerable{SurveyQuestion}"/> of <see cref="SurveyQuestion"/>.
+        /// </summary>
+        /// <returns>a <see cref="Task{List{SurveyQuestion}}"/></returns>
+        private async Task<IEnumerable<SurveyQuestion>> PrepareQuestionsAsync()
         {
-            return await Task.Run(() =>
-            { 
-                return (Survey?)DatabaseManager.Find<Survey>()?.MasterSource.FirstOrDefault(s => ((Survey)s).Patient.Equals(CurrentRecord));
-            });
-            
+            IAbstractDatabase? surveyQuestionDb = DatabaseManager.Find<SurveyQuestion>();
+
+            IEnumerable<SurveyQuestion>? questions = surveyQuestionDb?.MasterSource.Cast<SurveyQuestion>().ToList();
+
+            foreach (SurveyQuestion question in questions)
+                await Task.Run(question.FetchCategory);
+
+            return questions;
         }
 
-        public async Task<IEnumerable<SurveyData>> FillCategories(IAbstractDatabase surveyDataDB, IAbstractDatabase surveyQuestionDb, Survey survey) 
+        private Task AddSurveyData(Survey survey, IAbstractDatabase surveyDataDB, IEnumerable<SurveyQuestion> questions)
         {
-           var SurveyQuestionCategory = DatabaseManager.Find<SurveyQuestionCategory>()?.MasterSource;
-           return await Task.Run(() =>
+            foreach (SurveyQuestion question in questions)
             {
-                List<SurveyData> results = surveyDataDB.MasterSource.Where(s => ((SurveyData)s).Survey.Equals(survey)).Cast<SurveyData>().ToList();
-                foreach (SurveyData surveyData in results)
-                {
-
-                    surveyData.SurveyQuestion = (SurveyQuestion?)surveyQuestionDb.MasterSource.FirstOrDefault(s => s.Equals(surveyData.SurveyQuestion));
-                    if (surveyData.SurveyQuestion!=null)
-                        surveyData.SurveyQuestion.Category = (SurveyQuestionCategory?)(SurveyQuestionCategory?.FirstOrDefault());
-                    surveyData.IsDirty = false;
-                }
-                return results;
-            });
-
+                SurveyData surveyData = new(survey, question);
+                surveyDataDB.Model = surveyData;
+                surveyDataDB.Crud(CRUD.INSERT);
+            }
+            return Task.CompletedTask;
         }
+
+        private Task<Survey?> FetchSurvey() 
+        {
+           return Task.FromResult(DatabaseManager.Find<Survey>()?.MasterSource.Cast<Survey>().FirstOrDefault(s => s.Patient.Equals(CurrentRecord)));            
+        }
+
+        public Task<IEnumerable<SurveyData>> FetchSurveyData(IAbstractDatabase surveyDataDB, Survey survey) =>
+        Task.FromResult(surveyDataDB.MasterSource.Cast<SurveyData>().ToList().Where(s => s.Survey.Equals(survey)));
+
         public async Task AddSurvey() 
         {
             if (CurrentRecord == null) return;
@@ -83,22 +84,30 @@ namespace DentistStudioApp.Controller
                 if (!result) return;
             }
 
-            Survey? survey = await TryGetSurvey();
-            IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
-            IAbstractDatabase? surveyQuestionDb = DatabaseManager.Find<SurveyQuestion>();
+            Task<IEnumerable<SurveyQuestion>> questionsTask = Task.Run(PrepareQuestionsAsync);
 
-            if (surveyDataDB == null || surveyQuestionDb == null) return;
+            Survey? survey = await Task.Run(FetchSurvey);
 
             IsLoading = true;
 
-            if (survey == null) 
-                survey = await Generate(surveyDataDB, surveyQuestionDb);
+            IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
 
-            var data = await FillCategories(surveyDataDB, surveyQuestionDb, survey);
+            if (surveyDataDB == null) return;
+
+            if (survey == null) 
+            {
+                survey = await Task.Run(CreateNewSurveyAsync);                
+            }
+
+            IEnumerable<SurveyQuestion> questions = await questionsTask;
+
+            await Task.Run(() => AddSurveyData(survey, surveyDataDB, questions));
+
+            IEnumerable<SurveyData> results = await Task.Run(()=>FetchSurveyData(surveyDataDB, survey));
 
             IsLoading = false;
 
-            View.SurveyDataFormList surveyWindow = new(data);
+            View.SurveyDataFormList surveyWindow = new(results);
             surveyWindow.ShowDialog();
         }
     }

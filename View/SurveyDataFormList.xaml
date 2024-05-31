@@ -14,19 +14,29 @@
         Title="Survey">
 
     <fr:FormList>
+        <fr:FormList.Header>
+            <Grid Background="{StaticResource DefaultWhite}">
+                <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
+                    <fr:Text Placeholder="Search question..." Text="{Binding Search}"/>
+                </StackPanel>
+            </Grid>
+        </fr:FormList.Header>
+
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="150,50">
+                <Grid fr:Definition.ColumnDefinitions="150,50,150">
                     <Label Grid.Column="1" Content="Question"/>
                     <Label Grid.Column="2" Content="Yes/No"/>
+                    <Label Grid.Column="3" Content="Category"/>
                 </Grid>
             </fr:Lista.Header>
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.ColumnDefinitions="150,50">
+                        <Grid fr:Definition.ColumnDefinitions="150,50,150">
                             <Label Content="{Binding SurveyQuestion.Question}"/>
                             <CheckBox Grid.Column="1" IsChecked="{Binding Have}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Column="2" Content="{Binding SurveyQuestion.Category}"/>
                         </Grid>
                     </fr:FormRow>
                 </DataTemplate>

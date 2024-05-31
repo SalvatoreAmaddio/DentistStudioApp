@@ -1,7 +1,7 @@
-﻿using DentistStudioApp.Model;
+﻿using Backend.Database;
+using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
-using System.ComponentModel;
 
 namespace DentistStudioApp.Controller
 {
@@ -20,6 +20,15 @@ namespace DentistStudioApp.Controller
         { 
             AllowNewRecord = false;
             AllowAutoSave = true;
+            AfterUpdate += OnAfterUpdate;
+        }
+
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (!e.Is(nameof(Search))) return;
+            var result = await Task.Run(SearchRecordAsync);
+            AsRecordSource().ReplaceRange(result);
+            GoFirst();
         }
 
         public override void OnOptionFilter(FilterEventArgs e)
@@ -28,7 +37,16 @@ namespace DentistStudioApp.Controller
 
         public override Task<IEnumerable<SurveyData>> SearchRecordAsync()
         {
-            throw new NotImplementedException();
+            IEnumerable<SurveyQuestion>? questions = DatabaseManager.Find<SurveyQuestion>()?.MasterSource.Cast<SurveyQuestion>().ToList().Where(s => s.Question.ToLower().StartsWith(Search.ToLower()));
+            List<SurveyData> temp = [];
+
+            foreach(SurveyData surveyData in MasterSource) 
+            { 
+                if (questions.Any(s=>s.Equals(surveyData.SurveyQuestion))) 
+                    temp.Add(surveyData);
+            }
+            IEnumerable<SurveyData> result = temp;
+            return Task.FromResult(result);
         }
 
         protected override void Open(SurveyData? model)

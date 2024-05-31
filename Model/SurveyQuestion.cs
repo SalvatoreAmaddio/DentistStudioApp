@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.Database;
+using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -36,6 +37,12 @@ namespace DentistStudioApp.Model
             _category = new(reader.GetInt64(2));
         }
         #endregion
+
+        public Task FetchCategory() 
+        {
+            _category = (SurveyQuestionCategory?)DatabaseManager.Find<SurveyQuestionCategory>()?.MasterSource.FirstOrDefault(s => s.Equals(_category));
+            return Task.CompletedTask;
+        }
 
         public override ISQLModel Read(DbDataReader reader) => new SurveyQuestion(reader);
 
