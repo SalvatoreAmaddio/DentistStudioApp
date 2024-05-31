@@ -4,6 +4,9 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
@@ -40,6 +43,7 @@ namespace DentistStudioApp.Controller
 
         public override void OnOptionFilter(FilterEventArgs e)
         {
+            OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
         private bool Filter(SurveyData data, IEnumerable<SurveyQuestion> questions) 
@@ -48,7 +52,13 @@ namespace DentistStudioApp.Controller
             SurveyQuestion? q = data.SurveyQuestion;
             bool condition1 = (s == null) ? false : s.Equals(SurveyController.CurrentRecord);
             bool condition2 = questions.Any(s => s.Equals(q));
-            return condition1 && condition2;
+            bool condition3 = true;
+
+            if (CategoryOptions.Selected().Any()) 
+            {
+                condition3 = CategoryOptions.Selected().Any(s=>s.Equals(data.SurveyQuestion.Category));
+            }
+            return condition1 && condition2 && condition3;
         }
 
         public override Task<IEnumerable<SurveyData>> SearchRecordAsync()
