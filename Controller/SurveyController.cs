@@ -54,10 +54,9 @@ namespace DentistStudioApp.Controller
             bool condition2 = questions.Any(s => s.Equals(q));
             bool condition3 = true;
 
-            if (CategoryOptions.Selected().Any()) 
-            {
+            if (CategoryOptions.Selected().Any())
                 condition3 = CategoryOptions.Selected().Any(s=>s.Equals(data.SurveyQuestion.Category));
-            }
+
             return condition1 && condition2 && condition3;
         }
 
