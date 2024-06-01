@@ -1,7 +1,6 @@
 ﻿using Backend.Database;
 using Backend.Utils;
 using DentistStudioApp.Model;
-using DentistStudioApp.Model.Dentist;
 using System.Windows;
 
 namespace DentistStudioApp

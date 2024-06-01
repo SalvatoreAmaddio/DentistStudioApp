@@ -4,6 +4,7 @@ using System.Data.Common;
 
 namespace DentistStudioApp.Model
 {
+    [Table(nameof(Dentist))]
     public class Dentist : AbstractModel
     {
         #region backing fields
@@ -15,10 +16,15 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Properties
+        [PK]
         public long DentistID { get => _dentistId; set => UpdateProperty(ref value, ref _dentistId); }
+        [Field]
         public string FirstName { get => _firstName; set => UpdateProperty(ref value, ref _firstName); }
+        [Field]
         public string LastName { get => _lastName; set => UpdateProperty(ref value, ref _lastName); }
+        [FK]
         public Clinic? Clinic { get => _clinic; set => UpdateProperty(ref value, ref _clinic); }
+        [Field]
         public bool Active { get => _active; set => UpdateProperty(ref value, ref _active); }
         #endregion
 
