@@ -4,17 +4,9 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using System.IO;
-using System.Linq;
-using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
-    public class SurveyController : AbstractFormController<Survey>
-    {
-        public override int DatabaseIndex => 3;
-    }
-
     public class SurveyDataController : AbstractFormListController<SurveyData>
     {
         public SourceOption CategoryOptions { get; private set; }
@@ -24,8 +16,8 @@ namespace DentistStudioApp.Controller
         public override string SearchQry { get; set; } = string.Empty;
 
         public override int DatabaseIndex => 4;
-        
-        public SurveyDataController() 
+
+        public SurveyDataController()
         {
             CategoryOptions = new(SurveyQuestionCategories, "CategoryName");
             AllowNewRecord = false;
@@ -46,7 +38,7 @@ namespace DentistStudioApp.Controller
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
-        private bool Filter(SurveyData data, IEnumerable<SurveyQuestion> questions) 
+        private bool Filter(SurveyData data, IEnumerable<SurveyQuestion> questions)
         {
             Survey? s = data.Survey;
             SurveyQuestion? q = data.SurveyQuestion;
@@ -55,7 +47,7 @@ namespace DentistStudioApp.Controller
             bool condition3 = true;
 
             if (CategoryOptions.Selected().Any())
-                condition3 = CategoryOptions.Selected().Any(s=>s.Equals(data.SurveyQuestion.Category));
+                condition3 = CategoryOptions.Selected().Any(s => s.Equals(data.SurveyQuestion.Category));
 
             return condition1 && condition2 && condition3;
         }
@@ -79,4 +71,5 @@ namespace DentistStudioApp.Controller
         }
 
     }
+
 }

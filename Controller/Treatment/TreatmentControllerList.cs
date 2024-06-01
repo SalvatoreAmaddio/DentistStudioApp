@@ -5,12 +5,6 @@ using FrontEnd.Events;
 
 namespace DentistStudioApp.Controller
 {
-    public class TreatmentController : AbstractFormController<Treatment>
-    {
-        public override int DatabaseIndex => 7;
-
-    }
-
     public class TreatmentControllerList : AbstractFormListController<Treatment>
     {
         public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @patientID;";

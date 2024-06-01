@@ -1,6 +1,7 @@
 ﻿using Backend.Database;
 using Backend.Utils;
 using DentistStudioApp.Model;
+using DentistStudioApp.Model.Dentist;
 using System.Windows;
 
 namespace DentistStudioApp
@@ -10,18 +11,24 @@ namespace DentistStudioApp
         public App()
         {
             Sys.LoadAllEmbeddedDll(); 
-            DatabaseManager.Add(new SQLiteDatabase(new Patient())); 
-            DatabaseManager.Add(new SQLiteDatabase(new Gender())); 
-            DatabaseManager.Add(new SQLiteDatabase(new JobTitle())); 
+            DatabaseManager.Add(new SQLiteDatabase(new Patient())); //0
+            DatabaseManager.Add(new SQLiteDatabase(new Gender())); //1
+            DatabaseManager.Add(new SQLiteDatabase(new JobTitle())); //2
 
             //survey tables
-            DatabaseManager.Add(new SQLiteDatabase(new Survey())); 
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyData())); 
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestion()));
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestionCategory()));
+            DatabaseManager.Add(new SQLiteDatabase(new Survey())); //3
+            DatabaseManager.Add(new SQLiteDatabase(new SurveyData()));//4 
+            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestion()));//5
+            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestionCategory()));//6
 
-            //Treatments
-            DatabaseManager.Add(new SQLiteDatabase(new Treatment()));
+            //Treatment And Services
+            DatabaseManager.Add(new SQLiteDatabase(new Treatment()));//7
+            DatabaseManager.Add(new SQLiteDatabase(new Service()));//8
+            DatabaseManager.Add(new SQLiteDatabase(new Appointment()));//9
+
+            //Dentist and Clinics
+            DatabaseManager.Add(new SQLiteDatabase(new Dentist()));//10
+            DatabaseManager.Add(new SQLiteDatabase(new Clinic()));//11
 
         }
     }

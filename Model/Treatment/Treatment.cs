@@ -27,7 +27,7 @@ namespace DentistStudioApp.Model
 
         #region Constructor
         public Treatment() { }
-
+        public Treatment(long treatmentid) => _treatmentId = treatmentid;
         public Treatment(DbDataReader reader) 
         {
             _treatmentId = reader.GetInt64(0);
