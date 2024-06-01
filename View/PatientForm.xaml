@@ -63,11 +63,34 @@
                 </Grid>
             </Border>
 
-            <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" Background="{StaticResource HappyBlue}">
-                <fr:FormList>
+            <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+                <fr:FormList DataContext="{Binding Treatments}">
                     <fr:FormList.Header>
-                        <Label Content="Treatment(s)" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
+                        <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>
+                    <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                        <fr:Lista.Header>
+                            <Grid fr:Definition.ColumnDefinitions="100,100,100,100">
+                                <Label Grid.Column="1" Content="Start Date"/>
+                                <Label Grid.Column="2" Content="End Date"/>
+                                <Label Grid.Column="3" Content="N. of Services"/>
+                                <Label Grid.Column="4" Content="COMMANDS"/>
+                            </Grid>
+                        </fr:Lista.Header>
+                        <fr:Lista.ItemTemplate>
+                            <DataTemplate>
+                                <fr:SubForm>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,100">
+                                        <DatePicker SelectedDate="{Binding StartDate}"/>
+                                        <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
+                                        <Label Grid.Column="2"/>
+                                        <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
+                                        <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
+                                    </Grid>
+                                </fr:SubForm>
+                            </DataTemplate>
+                        </fr:Lista.ItemTemplate>
+                    </fr:Lista>
                 </fr:FormList>        
             </fr:SubForm>
         </Grid>

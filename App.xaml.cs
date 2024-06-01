@@ -20,6 +20,9 @@ namespace DentistStudioApp
             DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestion()));
             DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestionCategory()));
 
+            //Treatments
+            DatabaseManager.Add(new SQLiteDatabase(new Treatment()));
+
         }
     }
 

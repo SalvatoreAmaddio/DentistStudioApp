@@ -1,15 +1,14 @@
 ﻿using Backend.Database;
-using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
     public class PatientController : AbstractFormController<Patient>
     {
+        public TreatmentControllerList Treatments { get; } = new();
         private Survey? Survey { get; set; }
         public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
