@@ -38,6 +38,12 @@ namespace DentistStudioApp.Controller
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
+
+        private void Treatment_ServiceUpdateEvent(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void OnOptionFilter(FilterEventArgs e)
         {
         }
@@ -50,6 +56,25 @@ namespace DentistStudioApp.Controller
         protected override void Open(Appointment? model)
         {
             throw new NotImplementedException();
+        }
+
+        protected override bool Update(Appointment? model)
+        {
+            bool? IsNewRecord = model?.IsNewRecord();
+            bool result = base.Update(model);
+            if (result) 
+                if (IsNewRecord!=null) 
+                    if (IsNewRecord.Value) 
+                        ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.ADD);
+            return result;
+        }
+
+        protected override bool Delete(Appointment? model)
+        {
+            bool result = base.Delete(model);
+            if (result)
+                ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.SUBTRACT);
+            return result;
         }
     }
 }

@@ -83,7 +83,7 @@
                                     <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
                                         <DatePicker SelectedDate="{Binding StartDate}"/>
                                         <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
-                                        <Label Grid.Column="2" Content="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                        <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
                                         <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
                                     </Grid>

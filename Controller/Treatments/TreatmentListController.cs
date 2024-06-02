@@ -18,11 +18,17 @@ namespace DentistStudioApp.Controller
 
         public override async void OnSubFormFilter()
         {
+            List<Task> serviceCountTasks = [];
             QueryBuiler.Clear();
             QueryBuiler.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
             var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            
+            foreach (Treatment record in results)
+                serviceCountTasks.Add(record.CountServices());
+
             AsRecordSource().ReplaceRange(results);
             GoFirst();
+            await Task.WhenAll(serviceCountTasks);
         }
 
         public override void OnOptionFilter(FilterEventArgs e)

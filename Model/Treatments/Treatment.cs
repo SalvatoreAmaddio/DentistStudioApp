@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.Database;
+using Backend.Model;
 using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
@@ -13,6 +14,7 @@ namespace DentistStudioApp.Model
         private DateTime? _startDate;
         private DateTime? _endDate;
         private Patient? _patient;
+        private int _totalServices;
         #endregion
 
         #region Properties
@@ -24,6 +26,8 @@ namespace DentistStudioApp.Model
         public DateTime? EndDate { get => _endDate; set => UpdateProperty(ref value, ref _endDate); }
         [FK]
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
+
+        public int TotalServices { get => _totalServices; private set => UpdateProperty(ref value, ref _totalServices); }
         #endregion
 
         #region Constructor
@@ -42,5 +46,30 @@ namespace DentistStudioApp.Model
 
         public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
 
+        public async Task CountServices() 
+        {
+
+            IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>();
+            if (appointmentDB == null) throw new NullReferenceException();
+            long? count = await appointmentDB.CountRecordsAsync($"SELECT Count(*) FROM {nameof(Appointment)} WHERE {nameof(TreatmentID)} = {TreatmentID}");
+            if (count != null) 
+                _totalServices = (int)count;
+        }
+
+        public void UpdateTotalServiceCount(ArithmeticOperation bo) 
+        {
+            if (bo == ArithmeticOperation.ADD)
+                _totalServices++;
+            else
+                _totalServices--;
+            RaisePropertyChanged(nameof(TotalServices));
+        }
+
+    }
+
+    public enum ArithmeticOperation 
+    { 
+        ADD = 0,
+        SUBTRACT = 1,
     }
 }
