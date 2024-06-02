@@ -53,7 +53,7 @@ namespace DentistStudioApp.Model
             _clinic = (Clinic?)DatabaseManager.Find<Clinic>()?.MasterSource.FirstOrDefault(s => s.Equals(_clinic));
             return Task.CompletedTask;
         }
-        public override string? ToString() => $"{FirstName} {LastName} at {Clinic}";
+        public override string? ToString() => $"{FirstName} {LastName}";
 
     }
 }

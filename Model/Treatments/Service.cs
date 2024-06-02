@@ -34,8 +34,7 @@ namespace DentistStudioApp.Model
         }
         #endregion
         public override ISQLModel Read(DbDataReader reader) => new Service(reader);
-
-        public override string? ToString() => $"{ServiceName} - {Cost}";
+        public override string? ToString() => $"{ServiceName}";
 
     }
 }
