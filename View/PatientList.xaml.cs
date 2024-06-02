@@ -8,8 +8,8 @@ namespace DentistStudioApp.View
         public PatientList()
         {
             InitializeComponent();
-            DataContext = new PatientControllerList();
-            ((PatientControllerList)DataContext).Window = this;
+            DataContext = new PatientListController();
+            ((PatientListController)DataContext).Window = this;
         }
     }
 }

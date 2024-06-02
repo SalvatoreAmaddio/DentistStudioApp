@@ -7,7 +7,7 @@
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=controller:SurveyDataController, IsDesignTimeCreatable=False}"
+        d:DataContext="{d:DesignInstance Type=controller:SurveyDataListController, IsDesignTimeCreatable=False}"
         WindowStartupLocation="CenterScreen"
         SizeToContent="Width"
         Height="300"

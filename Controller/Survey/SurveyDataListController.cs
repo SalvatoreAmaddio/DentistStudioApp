@@ -7,7 +7,7 @@ using FrontEnd.FilterSource;
 
 namespace DentistStudioApp.Controller
 {
-    public class SurveyDataController : AbstractFormListController<SurveyData>
+    public class SurveyDataListController : AbstractFormListController<SurveyData>
     {
         public SourceOption CategoryOptions { get; private set; }
 
@@ -17,7 +17,7 @@ namespace DentistStudioApp.Controller
 
         public override int DatabaseIndex => 4;
 
-        public SurveyDataController()
+        public SurveyDataListController()
         {
             CategoryOptions = new(SurveyQuestionCategories, "CategoryName");
             AllowNewRecord = false;

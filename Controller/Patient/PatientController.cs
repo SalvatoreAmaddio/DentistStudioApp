@@ -8,7 +8,7 @@ namespace DentistStudioApp.Controller
 {
     public class PatientController : AbstractFormController<Patient>
     {
-        public TreatmentControllerList Treatments { get; } = new();
+        public TreatmentListController Treatments { get; } = new();
         private Survey? Survey { get; set; }
         public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);

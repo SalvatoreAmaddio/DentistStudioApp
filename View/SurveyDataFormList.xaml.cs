@@ -9,13 +9,13 @@ namespace DentistStudioApp.View
         public SurveyDataFormList()
         {
             InitializeComponent();
-            DataContext = new SurveyDataController();
-            ((SurveyDataController)DataContext).Window = this;
+            DataContext = new SurveyDataListController();
+            ((SurveyDataListController)DataContext).Window = this;
         }
 
         public SurveyDataFormList(Survey survey, IEnumerable<SurveyData> data) : this()
         {
-            SurveyDataController controller = (SurveyDataController)DataContext;
+            SurveyDataListController controller = (SurveyDataListController)DataContext;
             controller.SurveyController.CurrentRecord = survey;
             controller.AsRecordSource().ReplaceRange(data);
         }

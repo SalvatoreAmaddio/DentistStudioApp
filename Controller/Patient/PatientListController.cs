@@ -8,7 +8,7 @@ using FrontEnd.FilterSource;
 
 namespace DentistStudioApp.Controller
 {
-    public class PatientControllerList : AbstractFormListController<Patient>
+    public class PatientListController : AbstractFormListController<Patient>
     {
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
@@ -18,7 +18,7 @@ namespace DentistStudioApp.Controller
         
         public override int DatabaseIndex => 0;
 
-        public PatientControllerList() 
+        public PatientListController() 
         {
             TitleOptions = new(Titles, "Title");
             GenderOptions = new(Genders, "GenderName");
