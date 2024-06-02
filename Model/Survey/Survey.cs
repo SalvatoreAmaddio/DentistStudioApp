@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.ExtensionMethods;
+using Backend.Model;
 using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
@@ -40,7 +41,7 @@ namespace DentistStudioApp.Model
         public Survey(DbDataReader reader) 
         {
             _surveyId = reader.GetInt64(0);
-            _dos = Sys.GetDate(reader, 1);
+            _dos = reader.TryFetchDate(1);
             _patient = new(reader.GetInt64(2));
         }
         #endregion

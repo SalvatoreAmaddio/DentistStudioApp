@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.ExtensionMethods;
+using Backend.Model;
 using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
@@ -55,8 +56,8 @@ namespace DentistStudioApp.Model
         public Appointment(DbDataReader reader) 
         {
             _appointmentID = reader.GetInt64(0);
-            _doa = Sys.GetDate(reader,1);
-            _toa = Sys.GetTime(reader, 2);
+            _doa = reader.TryFetchDate(1);
+            _toa = reader.TryFetchTime(2);
             _notes = reader.GetString(3);
             _attended = reader.GetBoolean(4);
             _roomNumber = reader.GetInt32(5);

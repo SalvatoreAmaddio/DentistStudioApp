@@ -12,13 +12,17 @@
     <Content Include="Data\mydb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="PatientImages\placeholder.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Images\placeholder.jpg">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DesktopBusinessAppSharpBuilder\FrontEnd.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PatientImages\" />
   </ItemGroup>
 
 </Project>

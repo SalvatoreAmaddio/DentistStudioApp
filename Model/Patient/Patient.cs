@@ -1,4 +1,6 @@
-﻿using Backend.Model;
+﻿using Backend.ExtensionMethods;
+using Backend.Model;
+using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -14,7 +16,7 @@ namespace DentistStudioApp.Model
         DateTime? _dob;
         string _phoneNumber = string.Empty;
         string _email = string.Empty;
-        string _picturePath = "/PatientImages/placeholder.jpg";
+        string _picturePath = "/Images/placeholder.jpg";
         JobTitle? _jobTitle; //JobTitle is a class extending AbstractModel
         Gender? _gender; //Gender is a class extending AbstractModel
         #endregion
@@ -67,14 +69,12 @@ namespace DentistStudioApp.Model
             _patientID = reader.GetInt64(0);
             _firstName = reader.GetString(1);
             _lastName = reader.GetString(2);
-            _dob = reader.GetDateTime(3);
+            _dob = reader.TryFetchDate(3);
             _gender = new(reader.GetInt64(4));
             _jobTitle = new(reader.GetInt64(5));
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
-            string str = reader.GetString(8);
-            if (string.IsNullOrEmpty(str))
-                _picturePath = reader.GetString(8);
+            _picturePath = reader.TryFetchString(8, _picturePath, _picturePath);
         }
         #endregion
 

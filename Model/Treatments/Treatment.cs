@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using Backend.Utils;
 using FrontEnd.Model;
@@ -36,8 +37,8 @@ namespace DentistStudioApp.Model
         public Treatment(DbDataReader reader) 
         {
             _treatmentId = reader.GetInt64(0);
-            _startDate = Sys.GetDate(reader, 1);
-            _endDate = Sys.GetDate(reader, 2);
+            _startDate = reader.TryFetchDate(1);
+            _endDate = reader.TryFetchDate(2);
             _patient = new Patient(reader.GetInt64(3));
         }
         #endregion
