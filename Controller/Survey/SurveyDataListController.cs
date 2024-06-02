@@ -30,7 +30,8 @@ namespace DentistStudioApp.Controller
             if (!e.Is(nameof(Search))) return;
             var result = await Task.Run(SearchRecordAsync);
             AsRecordSource().ReplaceRange(result);
-            GoFirst();
+            if (sender is not FilterEventArgs)
+                GoFirst();
         }
 
         public override void OnOptionFilter(FilterEventArgs e)
