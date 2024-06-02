@@ -1,4 +1,5 @@
 ﻿using Backend.Model;
+using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -55,8 +56,7 @@ namespace DentistStudioApp.Model
         {
             _appointmentID = reader.GetInt64(0);
             _doa = reader.GetDateTime(1);
-            var x = reader.GetDateTime(2);
-            _toa = new TimeSpan(x.Hour, x.Minute, 0);
+            _toa = Sys.GetTime(reader, 2);
             _notes = reader.GetString(3);
             _attended = reader.GetBoolean(4);
             _roomNumber = reader.GetInt32(5);

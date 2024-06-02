@@ -43,7 +43,7 @@
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65,50,50">
                                 <Label Grid.Column="1" Content="Service"/>
                                 <Label Grid.Column="2" Content="Dentist"/>
                                 <Label Grid.Column="3" Content="Room Num"/>
@@ -51,12 +51,13 @@
                                 <Label Grid.Column="5" Content="Time"/>
                                 <Label Grid.Column="6" Content="Notes"/>
                                 <Label Grid.Column="7" Content="Attended"/>
+                                <Label Grid.Column="8" Grid.ColumnSpan="2" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65" fr:Definition.RowDefinitions="30">
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65,50,50" fr:Definition.RowDefinitions="30">
                                         <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}">
                                             <fr:Combo.ItemTemplate>
                                                 <DataTemplate>
@@ -76,9 +77,11 @@
                                         </fr:Combo>
                                         <fr:Text Grid.Column="2" Text="{Binding RoomNumber}"/>
                                         <DatePicker Grid.Column="3" SelectedDate="{Binding DOA}"/>
-                                        <fr:Text Grid.Column="4" Text="{Binding TOA}"/>
+                                        <fr:Text Grid.Column="4" Text="{Binding TOA, Converter={StaticResource TimeBox}}"/>
                                         <fr:Text Grid.Column="5" Text="{Binding Notes}"/>
                                         <CheckBox Grid.Column="6" IsChecked="{Binding Attended}" HorizontalAlignment="Center"/>
+                                        <fr:SaveButton Grid.Column="7" IsWithinList="True"/>
+                                        <fr:DeleteButton Grid.Column="8" IsWithinList="True"/>
                                     </Grid>
                                 </fr:FormRow>
                             </DataTemplate>
