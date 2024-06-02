@@ -43,7 +43,7 @@
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,100,100,70">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65">
                                 <Label Grid.Column="1" Content="Service"/>
                                 <Label Grid.Column="2" Content="Dentist"/>
                                 <Label Grid.Column="3" Content="Room Num"/>
@@ -56,14 +56,29 @@
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,100,100,70">
-                                        <fr:Combo ItemsSource="{Binding Services}" SelectedItem="{Binding Service}"/>
-                                        <fr:Combo Grid.Column="1" ItemsSource="{Binding Dentists}" SelectedItem="{Binding Dentist}"/>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65" fr:Definition.RowDefinitions="30">
+                                        <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}">
+                                            <fr:Combo.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding ServiceName}"/>
+                                                </DataTemplate>
+                                            </fr:Combo.ItemTemplate>
+                                        </fr:Combo>
+                                        <fr:Combo Grid.Column="1" ControllerRecordSource="Dentists" SelectedItem="{Binding Dentist}">
+                                            <fr:Combo.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid fr:Definition.ColumnDefinitions="100,100">
+                                                        <Label Grid.Column="0" Content="{Binding FullName}"/>
+                                                        <Label Grid.Column="1" Content="{Binding Clinic, Converter={StaticResource GetClinic}}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </fr:Combo.ItemTemplate>
+                                        </fr:Combo>
                                         <fr:Text Grid.Column="2" Text="{Binding RoomNumber}"/>
                                         <DatePicker Grid.Column="3" SelectedDate="{Binding DOA}"/>
-                                        <DatePicker Grid.Column="4" SelectedDate="{Binding TOA}"/>
+                                        <fr:Text Grid.Column="4" Text="{Binding TOA}"/>
                                         <fr:Text Grid.Column="5" Text="{Binding Notes}"/>
-                                        <CheckBox Grid.Column="6" IsChecked="{Binding Attended}"/>
+                                        <CheckBox Grid.Column="6" IsChecked="{Binding Attended}" HorizontalAlignment="Center"/>
                                     </Grid>
                                 </fr:FormRow>
                             </DataTemplate>

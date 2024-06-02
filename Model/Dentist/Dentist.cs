@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.Database;
+using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -26,6 +27,8 @@ namespace DentistStudioApp.Model
         public Clinic? Clinic { get => _clinic; set => UpdateProperty(ref value, ref _clinic); }
         [Field]
         public bool Active { get => _active; set => UpdateProperty(ref value, ref _active); }
+
+        public string FullName { get => $"{FirstName} {LastName}"; }
         #endregion
 
         #region Constructor
@@ -45,6 +48,11 @@ namespace DentistStudioApp.Model
 
         public override ISQLModel Read(DbDataReader reader) => new Dentist(reader);
 
+        public Task FetchClinic()
+        {
+            _clinic = (Clinic?)DatabaseManager.Find<Clinic>()?.MasterSource.FirstOrDefault(s => s.Equals(_clinic));
+            return Task.CompletedTask;
+        }
         public override string? ToString() => $"{FirstName} {LastName} at {Clinic}";
 
     }

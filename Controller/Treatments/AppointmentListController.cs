@@ -17,6 +17,7 @@ namespace DentistStudioApp.Controller
         public AppointmentListController() 
         {
             NewRecordEvent += OnNewRecordEvent;
+            OpenWindowOnNew = false;
         }
 
         private void OnNewRecordEvent(object? sender, EventArgs e)

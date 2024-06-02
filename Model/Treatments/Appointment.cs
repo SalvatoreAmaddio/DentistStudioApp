@@ -10,7 +10,7 @@ namespace DentistStudioApp.Model
         #region backing fields
         private long _appointmentID;
         private DateTime? _doa;
-        private DateTime? _toa;
+        private TimeSpan? _toa;
         private string _notes = string.Empty;
         private bool _attended;
         private int _roomNumber;
@@ -22,19 +22,20 @@ namespace DentistStudioApp.Model
         #region Properties
         [PK]
         public long AppointmentID { get => _appointmentID; set => UpdateProperty(ref value, ref _appointmentID); }
+
         [Field]
         public DateTime? DOA { get => _doa; set => UpdateProperty(ref value, ref _doa); }
-        [Field]
 
-        public DateTime? TOA { get => _toa; set => UpdateProperty(ref value, ref _toa); }
         [Field]
+        public TimeSpan? TOA { get => _toa; set => UpdateProperty(ref value, ref _toa); }
 
+        [Field]
         public string Notes { get => _notes; set => UpdateProperty(ref value, ref _notes); }
-        [Field]
 
+        [Field]
         public bool Attended { get => _attended; set => UpdateProperty(ref value, ref _attended); }
-        [Field]
 
+        [Field]
         public int RoomNumber { get => _roomNumber; set => UpdateProperty(ref value, ref _roomNumber); }
 
         [FK]        
@@ -54,7 +55,8 @@ namespace DentistStudioApp.Model
         {
             _appointmentID = reader.GetInt64(0);
             _doa = reader.GetDateTime(1);
-            _toa = reader.GetDateTime(2);
+            var x = reader.GetDateTime(2);
+            _toa = new TimeSpan(x.Hour, x.Minute, 0);
             _notes = reader.GetString(3);
             _attended = reader.GetBoolean(4);
             _roomNumber = reader.GetInt32(5);
