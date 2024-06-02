@@ -22,8 +22,12 @@ namespace DentistStudioApp.Controller
 
         private void OnNewRecordEvent(object? sender, EventArgs e)
         {
-
-
+            Treatment? treatment = (Treatment?)ParentRecord;
+            if (CurrentRecord!= null) 
+            {
+                CurrentRecord.Treatment = treatment;
+                CurrentRecord.IsDirty = false;
+            }
         }
 
         public override async void OnSubFormFilter()
