@@ -55,7 +55,7 @@ namespace DentistStudioApp.Model
         public Appointment(DbDataReader reader) 
         {
             _appointmentID = reader.GetInt64(0);
-            _doa = reader.GetDateTime(1);
+            _doa = Sys.GetDate(reader,1);
             _toa = Sys.GetTime(reader, 2);
             _notes = reader.GetString(3);
             _attended = reader.GetBoolean(4);
