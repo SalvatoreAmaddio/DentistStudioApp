@@ -1,4 +1,5 @@
 ﻿using Backend.Model;
+using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -26,7 +27,6 @@ namespace DentistStudioApp.Model
         public Patient? Patient { get => _patient; set=>UpdateProperty(ref value, ref _patient); }
         #endregion
 
-
         #region Constructor
         public Survey() { }
 
@@ -40,7 +40,7 @@ namespace DentistStudioApp.Model
         public Survey(DbDataReader reader) 
         {
             _surveyId = reader.GetInt64(0);
-            _dos = reader.GetDateTime(1);
+            _dos = Sys.GetDate(reader, 1);
             _patient = new(reader.GetInt64(2));
         }
         #endregion
