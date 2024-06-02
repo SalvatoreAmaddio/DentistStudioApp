@@ -15,10 +15,10 @@
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="65"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="110"/>
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -58,13 +58,8 @@
                             <DataTemplate>
                                 <fr:FormRow>
                                     <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65,50,50" fr:Definition.RowDefinitions="30">
-                                        <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}">
-                                            <fr:Combo.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Label Content="{Binding ServiceName}"/>
-                                                </DataTemplate>
-                                            </fr:Combo.ItemTemplate>
-                                        </fr:Combo>
+                                        <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}"/>
+
                                         <fr:Combo Grid.Column="1" ControllerRecordSource="Dentists" SelectedItem="{Binding Dentist}">
                                             <fr:Combo.ItemTemplate>
                                                 <DataTemplate>
