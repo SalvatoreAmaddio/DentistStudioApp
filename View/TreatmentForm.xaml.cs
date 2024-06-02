@@ -10,7 +10,7 @@ namespace DentistStudioApp.View
         {
             InitializeComponent();
             DataContext = new TreatmentController();
-            ((TreatmentController)DataContext).Window = this;
+            ((TreatmentController)DataContext).UI = this;
         }
 
         public TreatmentForm(Treatment? treatment) : this()

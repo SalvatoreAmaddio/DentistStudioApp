@@ -9,7 +9,7 @@ namespace DentistStudioApp.View
         {
             InitializeComponent();
             DataContext = new PatientListController();
-            ((PatientListController)DataContext).Window = this;
+            ((PatientListController)DataContext).UI = this;
         }
     }
 }

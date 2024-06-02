@@ -10,7 +10,7 @@ namespace DentistStudioApp.View
         {
             InitializeComponent();
             DataContext = new SurveyDataListController();
-            ((SurveyDataListController)DataContext).Window = this;
+            ((SurveyDataListController)DataContext).UI = this;
         }
 
         public SurveyDataFormList(Survey survey, IEnumerable<SurveyData> data) : this()
