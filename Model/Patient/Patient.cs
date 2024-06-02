@@ -1,6 +1,6 @@
 ﻿using Backend.ExtensionMethods;
 using Backend.Model;
-using Backend.Utils;
+using DentistStudioApp.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -10,13 +10,13 @@ namespace DentistStudioApp.Model
     public class Patient : AbstractModel
     {
         #region backing fields
-        long _patientID;
-        string _firstName = string.Empty;
-        string _lastName = string.Empty;
-        DateTime? _dob;
-        string _phoneNumber = string.Empty;
-        string _email = string.Empty;
-        string _picturePath = "/Images/placeholder.jpg";
+        private long _patientID;
+        private string _firstName = string.Empty;
+        private string _lastName = string.Empty;
+        private DateTime? _dob;
+        private string _phoneNumber = string.Empty;
+        private string _email = string.Empty;
+        private string _picturePath = "pack://application:,,,/Images/placeholder.jpg";
         JobTitle? _jobTitle; //JobTitle is a class extending AbstractModel
         Gender? _gender; //Gender is a class extending AbstractModel
         #endregion

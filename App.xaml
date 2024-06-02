@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FrontEnd;component/Themes/FrontEndDictionary.xaml"/>
                 <ResourceDictionary Source="Themes/Images.xaml"/>
+                <ResourceDictionary Source="Themes/Strings.xaml"/>
                 <ResourceDictionary Source="Themes/Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

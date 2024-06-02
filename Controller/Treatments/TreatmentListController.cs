@@ -23,8 +23,9 @@ namespace DentistStudioApp.Controller
             QueryBuiler.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
             var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
             
-            foreach (Treatment record in results)
-                serviceCountTasks.Add(record.CountServices());
+            if (results.Count > 0)
+                foreach (Treatment record in results)
+                    serviceCountTasks.Add(record.CountServices());
 
             AsRecordSource().ReplaceRange(results);
             GoFirst();
