@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="Treatment Form" Height="400" Width="500">
+        Title="Treatment Form" Height="450" Width="800">
     <fr:Form>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="250"/>
+                <RowDefinition Height="240"/>
             </Grid.RowDefinitions>
             <Label Content="Patient"/>
             <Label Grid.Column="1" Content="{Binding CurrentRecord.Patient}"/>
@@ -36,17 +36,41 @@
 
             <fr:CommandPanel Grid.Column="3" Grid.RowSpan="4"/>
 
-
-            <Border Grid.Row="4" Grid.ColumnSpan="5" Background="{StaticResource HappyBlue}" Padding="10" HorizontalAlignment="Stretch">
-                
-            </Border>
-            <!--<fr:SubForm Grid.Row="4" Grid.ColumnSpan="3" Background="{StaticResource HappyBlue}">
-                <fr:FormList>
+            <fr:SubForm Grid.Row="4" Grid.ColumnSpan="5" Background="{StaticResource HappyBlue}" ParentRecord="{Binding CurrentRecord}">
+                <fr:FormList DataContext="{Binding Appointments}">
                     <fr:FormList.Header>
-                        <Label Content="Service(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
+                        <Label Content="Appointment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>
+                    <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                        <fr:Lista.Header>
+                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,100,100,70">
+                                <Label Grid.Column="1" Content="Service"/>
+                                <Label Grid.Column="2" Content="Dentist"/>
+                                <Label Grid.Column="3" Content="Room Num"/>
+                                <Label Grid.Column="4" Content="Date"/>
+                                <Label Grid.Column="5" Content="Time"/>
+                                <Label Grid.Column="6" Content="Notes"/>
+                                <Label Grid.Column="7" Content="Attended"/>
+                            </Grid>
+                        </fr:Lista.Header>
+                        <fr:Lista.ItemTemplate>
+                            <DataTemplate>
+                                <fr:FormRow>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,100,100,70">
+                                        <fr:Combo ItemsSource="{Binding Services}" SelectedItem="{Binding Service}"/>
+                                        <fr:Combo Grid.Column="1" ItemsSource="{Binding Dentists}" SelectedItem="{Binding Dentist}"/>
+                                        <fr:Text Grid.Column="2" Text="{Binding RoomNumber}"/>
+                                        <DatePicker Grid.Column="3" SelectedDate="{Binding DOA}"/>
+                                        <DatePicker Grid.Column="4" SelectedDate="{Binding TOA}"/>
+                                        <fr:Text Grid.Column="5" Text="{Binding Notes}"/>
+                                        <CheckBox Grid.Column="6" IsChecked="{Binding Attended}"/>
+                                    </Grid>
+                                </fr:FormRow>
+                            </DataTemplate>
+                        </fr:Lista.ItemTemplate>                        
+                    </fr:Lista>
                 </fr:FormList>
-            </fr:SubForm>-->
+            </fr:SubForm>
         </Grid>
     </fr:Form>
 </Window>

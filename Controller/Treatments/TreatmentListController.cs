@@ -11,7 +11,7 @@ namespace DentistStudioApp.Controller
 
         public override int DatabaseIndex => 7;
 
-        public TreatmentListController() 
+        public TreatmentListController()
         {
 
         }
@@ -36,13 +36,9 @@ namespace DentistStudioApp.Controller
 
         
         protected override void Open(Treatment? model)
-        {           
-            if (model.IsNewRecord()) 
-            {
-                model.Patient = (Patient?)ParentRecord;
-                model.IsDirty = false;
-            }
-
+        {
+            model.Patient = (Patient?)ParentRecord;
+            model.IsDirty = false;
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }

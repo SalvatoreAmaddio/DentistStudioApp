@@ -32,8 +32,12 @@ namespace DentistStudioApp.Model
         {
             _treatmentId = reader.GetInt64(0);
             _startDate = reader.GetDateTime(1);
-            _endDate = reader.GetDateTime(2);   
-            _patient = new Patient(reader.GetInt64(4));
+            try 
+            {
+                _endDate = reader.GetDateTime(2);
+            }
+            catch { }
+            _patient = new Patient(reader.GetInt64(3));
         }
         #endregion
 
