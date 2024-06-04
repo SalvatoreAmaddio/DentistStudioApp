@@ -25,4 +25,22 @@
     <Folder Include="PatientImages\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="View\DentistList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\ClinicList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\ServiceList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="View\ServiceList.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

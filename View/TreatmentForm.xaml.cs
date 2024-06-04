@@ -15,7 +15,16 @@ namespace DentistStudioApp.View
 
         public TreatmentForm(Treatment? treatment) : this()
         {
-            ((TreatmentController)DataContext).GoAt(treatment);
+            TreatmentController controller = (TreatmentController)DataContext;
+
+            if (treatment.IsNewRecord()) 
+            {
+                controller.GoAt(treatment);
+                controller.CurrentRecord.Patient = treatment.Patient;
+                controller.CurrentRecord.IsDirty = false;
+                return;
+            }
+            controller.GoAt(treatment);
         }
 
     }

@@ -13,7 +13,6 @@ namespace DentistStudioApp.Controller
 
         public TreatmentListController()
         {
-
         }
 
         public override async void OnSubFormFilter()

@@ -3,11 +3,15 @@ using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using FrontEnd.FilterSource;
 
 namespace DentistStudioApp.Controller
 {
     public class AppointmentListController : AbstractFormListController<Appointment>
     {
+        public SourceOption ServiceOptions { get; private set; }
+        public SourceOption DentistOptions { get; private set; }
+
         public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
         public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Appointment)} WHERE TreatmentID = @treatmentID;";
@@ -16,6 +20,8 @@ namespace DentistStudioApp.Controller
         
         public AppointmentListController() 
         {
+            ServiceOptions = new(Services, "ServiceName");
+            DentistOptions = new(Dentists, "FullName");
             NewRecordEvent += OnNewRecordEvent;
             OpenWindowOnNew = false;
         }

@@ -27,6 +27,30 @@
                 </Frame>
             </TabItem>
 
+            <TabItem Header="Services">
+                <Frame>
+                    <Frame.Content>
+                        <local:ServiceList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+
+            <TabItem Header="Dentists">
+                <Frame>
+                    <Frame.Content>
+                        <local:DentistList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+
+            <TabItem Header="Clinics">
+                <Frame>
+                    <Frame.Content>
+                        <local:ClinicList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+
             <TabItem Header="Calendar">
                 <Frame>
                     <Frame.Content>
