@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DentistStudioApp.Model;
+using FrontEnd.Events;
+using FrontEnd.Forms.Calendar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +29,12 @@ namespace DentistStudioApp.View
 
         private void CalendarForm_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Hello!");
+            MessageBox.Show($"{((CalendarForm)sender).SelectedSlot.Model}");
+        }
+
+        private void CalendarForm_OnPreparing(object sender, OnPreparingCalendarFormEventArgs e)
+        {
+            e.Model = new Patient() { FirstName="Salvo" };
         }
     }
 }
