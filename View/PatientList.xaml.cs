@@ -1,9 +1,9 @@
 ﻿using DentistStudioApp.Controller;
-using System.Windows;
+using System.Windows.Controls;
 
 namespace DentistStudioApp.View
 {
-    public partial class PatientList : Window
+    public partial class PatientList : Page
     {
         public PatientList()
         {

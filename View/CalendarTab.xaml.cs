@@ -1,32 +1,24 @@
-﻿using DentistStudioApp.Model;
+﻿using Backend.Database;
+using DentistStudioApp.Controller;
+using DentistStudioApp.Model;
 using FrontEnd.Events;
 using FrontEnd.Forms.Calendar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FrontEnd.Model;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DentistStudioApp.View
 {
-    /// <summary>
-    /// Interaction logic for CalendarTab.xaml
-    /// </summary>
-    public partial class CalendarTab : Window
+    public partial class CalendarTab : Page
     {
+        private AppointmentListController AppointmentListController = new();
+        private IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
         public CalendarTab()
         {
             InitializeComponent();
         }
-
+        
         private void CalendarForm_MouseUp(object sender, MouseButtonEventArgs e)
         {
             MessageBox.Show($"{((CalendarForm)sender).SelectedSlot.Model}");
@@ -34,8 +26,9 @@ namespace DentistStudioApp.View
 
         private void CalendarForm_OnPreparing(object sender, OnPreparingCalendarFormEventArgs e)
         {
-            if (e.Date == DateTime.Today)
-                e.Model = new Patient() { FirstName="Salvo" };
+            Appointment? firstAppointment = AppointmentListController.AsRecordSource().FirstOrDefault(s=>s.DOA == e.Date);
+            if (firstAppointment != null) 
+                e.Model = (AbstractModel?)treatmentDB?.MasterSource.FirstOrDefault(s => s.Equals(firstAppointment.Treatment));
         }
     }
 }

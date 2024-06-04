@@ -10,7 +10,7 @@
             WindowStartupLocation="CenterScreen"
             Title="Welcome" Height="450" Width="450">
 
-    <fr:LoadingMask MainWindow="CalendarTab">
+    <fr:LoadingMask MainWindow="MainWindow">
         <Image Stretch="Fill"/>
     </fr:LoadingMask>
 </Window>

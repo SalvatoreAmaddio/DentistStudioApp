@@ -1,0 +1,39 @@
+﻿<Window x:Class="DentistStudioApp.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        Title="Dentist Studio App" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu VerticalAlignment="Top">
+            <fr:OpenCurtain Click="OpenCurtain_Click"/>
+        </Menu>
+        <fr:Curtain x:Name="Curtain"/>
+        <TabControl x:Name="MainTab" Grid.Row="1">
+
+            <TabItem Header="Patients">
+                <Frame>
+                    <Frame.Content>
+                        <local:PatientList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+
+            <TabItem Header="Calendar">
+                <Frame>
+                    <Frame.Content>
+                        <local:CalendarTab/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
