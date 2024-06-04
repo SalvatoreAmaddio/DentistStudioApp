@@ -47,6 +47,12 @@ namespace DentistStudioApp.Model
 
         public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
 
+        public Task FetchPatientAsync()
+        {
+            _patient = (Patient?)DatabaseManager.Find<Patient>()?.MasterSource.FirstOrDefault(s => s.Equals(_patient));
+            return Task.CompletedTask;
+        }
+
         public async Task CountServices() 
         {
 
