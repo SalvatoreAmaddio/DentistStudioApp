@@ -24,7 +24,7 @@
                 <Grid fr:Definition.ColumnDefinitions="100, 100, 100, 50,50">
                     <Label Grid.Column="1" Content="First Name"/>
                     <Label Grid.Column="2" Content="Last Name"/>
-                    <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding ClinicOptions}" Text="ClinicName"/>
+                    <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding ClinicOptions}" Text="Clinic"/>
                     <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
                 </Grid>
             </fr:Lista.Header>
