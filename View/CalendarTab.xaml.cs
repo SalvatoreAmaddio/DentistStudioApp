@@ -34,7 +34,8 @@ namespace DentistStudioApp.View
 
         private void CalendarForm_OnPreparing(object sender, OnPreparingCalendarFormEventArgs e)
         {
-            e.Model = new Patient() { FirstName="Salvo" };
+            if (e.Date == DateTime.Today)
+                e.Model = new Patient() { FirstName="Salvo" };
         }
     }
 }
