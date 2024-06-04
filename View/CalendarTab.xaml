@@ -8,5 +8,5 @@
         xmlns:fr="clr-namespace:FrontEnd.Forms.Calendar;assembly=FrontEnd"
         Title="CalendarTab" Height="450" Width="800">
    
-        <fr:CalendarForm MyClick="CalendarForm_MouseUp" OnPreparing="CalendarForm_OnPreparing"/>
+        <fr:CalendarForm OnDayClick="CalendarForm_MouseUp" OnPreparing="CalendarForm_OnPreparing"/>
 </Window>
