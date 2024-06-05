@@ -4,6 +4,7 @@ using System.Data.Common;
 
 namespace DentistStudioApp.Model
 {
+    [Table(nameof(PaymentType))]
     public class PaymentType : AbstractModel
     {
         #region backing fields
@@ -12,7 +13,9 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region properties
+        [PK]
         public long PaymentTypeID { get => _paymentTypeID; set => UpdateProperty(ref value, ref _paymentTypeID); }
+        [Field]
         public string PaymentBy { get => _paymentBy; set => UpdateProperty(ref value, ref _paymentBy); }
         #endregion
 

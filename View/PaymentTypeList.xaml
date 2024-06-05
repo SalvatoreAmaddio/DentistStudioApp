@@ -1,0 +1,42 @@
+﻿<Page x:Class="DentistStudioApp.View.PaymentTypeList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="ClinicList"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        d:DataContext="{d:DesignInstance Type=controller:PaymentTypeListController, IsDesignTimeCreatable=False}"
+        >
+
+    <fr:FormList>
+        <fr:FormList.Header>
+            <Grid Background="{StaticResource DefaultWhite}">
+                <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
+                    <fr:Text Placeholder="Search..." Text="{Binding Search}"/>
+                </StackPanel>
+            </Grid>
+        </fr:FormList.Header>
+        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="100,50,50">
+                    <Label Grid.Column="1" Content="Clinic"/>
+                    <Label Grid.Column="2" Grid.ColumnSpan="2" Content="COMMANDS"/>
+                </Grid>
+            </fr:Lista.Header>
+            <fr:Lista.ItemTemplate>
+                <DataTemplate>
+                    <fr:FormRow>
+                        <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,50,50">
+                            <fr:Text Text="{Binding PaymentBy}"/>
+                            <fr:SaveButton Grid.Column="1" IsWithinList="True"/>
+                            <fr:DeleteButton Grid.Column="2" IsWithinList="True"/>
+                        </Grid>
+                    </fr:FormRow>
+                </DataTemplate>
+            </fr:Lista.ItemTemplate>
+        </fr:Lista>        
+    </fr:FormList>
+</Page>

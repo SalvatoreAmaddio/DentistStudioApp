@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="View\PaymentTypeList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\DentistList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
