@@ -1,4 +1,5 @@
 ﻿using DentistStudioApp.Controller;
+using FrontEnd.ExtensionMethods;
 using System.Windows.Controls;
 
 namespace DentistStudioApp.View
@@ -8,8 +9,7 @@ namespace DentistStudioApp.View
         public ClinicList()
         {
             InitializeComponent();
-            DataContext = new ClinicListController();
-            ((ClinicListController)DataContext).UI = this;
+            this.SetController(new ClinicListController());
         }
     }
 }

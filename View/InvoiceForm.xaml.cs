@@ -1,5 +1,6 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
+using FrontEnd.ExtensionMethods;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -9,8 +10,7 @@ namespace DentistStudioApp.View
         public InvoiceForm()
         {
             InitializeComponent();
-            DataContext = new InvoiceController();
-            ((InvoiceController)DataContext).UI = this;
+            this.SetController(new InvoiceController());
         }
 
         public InvoiceForm(Patient? patient) : this()

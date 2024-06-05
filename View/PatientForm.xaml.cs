@@ -1,5 +1,6 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
+using FrontEnd.ExtensionMethods;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -9,13 +10,12 @@ namespace DentistStudioApp.View
         public PatientForm()
         {
             InitializeComponent();
-            DataContext = new PatientController();
-            ((PatientController)DataContext).UI = this;
+            this.SetController(new PatientController());
         }
 
         public PatientForm(Patient? patient) : this()
         {
-            ((PatientController)DataContext).GoAt(patient);
+            this.GetController<PatientController>().GoAt(patient);
         }
 
     }

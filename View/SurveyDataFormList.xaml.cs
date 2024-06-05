@@ -1,5 +1,6 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
+using FrontEnd.ExtensionMethods;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -9,13 +10,12 @@ namespace DentistStudioApp.View
         public SurveyDataFormList()
         {
             InitializeComponent();
-            DataContext = new SurveyDataListController();
-            ((SurveyDataListController)DataContext).UI = this;
+            this.SetController(new SurveyDataListController());
         }
 
         public SurveyDataFormList(Survey survey, IEnumerable<SurveyData> data) : this()
         {
-            SurveyDataListController controller = (SurveyDataListController)DataContext;
+            SurveyDataListController controller = this.GetController<SurveyDataListController>();
             controller.SurveyController.GoAt(survey);
             controller.AsRecordSource().ReplaceRange(data);
         }
