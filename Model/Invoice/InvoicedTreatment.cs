@@ -8,14 +8,14 @@ namespace DentistStudioApp.Model
     public class InvoicedTreatment : AbstractModel
     {
         #region backing fields
-        private long _invoiceTreatmentId;
+        private long _invoicedTreatmentId;
         private Invoice? _invoice;
         private Treatment? _treatment;
         #endregion
 
         #region Properties
         [PK]
-        public long InvoiceTreatmentID { get => _invoiceTreatmentId; set => UpdateProperty(ref value, ref _invoiceTreatmentId); }
+        public long InvoicedTreatmentID { get => _invoicedTreatmentId; set => UpdateProperty(ref value, ref _invoicedTreatmentId); }
 
         [FK]
         public Invoice? Invoice { get => _invoice; set => UpdateProperty(ref value, ref _invoice); }
@@ -33,7 +33,7 @@ namespace DentistStudioApp.Model
 
         public InvoicedTreatment(DbDataReader reader)
         {
-            _invoiceTreatmentId = reader.GetInt64(0);
+            _invoicedTreatmentId = reader.GetInt64(0);
             _invoice = new Invoice(reader.GetInt64(1));
             _treatment = new Treatment(reader.GetInt64(2));
         }

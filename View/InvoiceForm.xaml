@@ -9,23 +9,31 @@
         d:DataContext="{d:DesignInstance Type=controller:InvoiceController, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Invoice Form" Height="300" Width="500">
+        Title="Invoice Form" Height="700" Width="600">
 
     <fr:Form>
-        <Grid Margin="15" fr:Definition.RowDefinitions="30,30,30,30,30,30,10,300" fr:Definition.ColumnDefinitions="100,150,30,120,110">
+        <Grid Margin="15" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,30,30,10,300" fr:Definition.ColumnDefinitions="100,150,30,120,110">
             <Label Grid.Row="0" Content="Patient"/>
             <Label Grid.Row="1" Content="Invoice ID"/>
             <Label Grid.Row="2" Content="Date"/>
-            <Label Grid.Row="3" Content="Discount"/>
-            <Label Grid.Row="4" Content="Payment"/>
-            <Label Grid.Row="5" Content="Paid"/>
+            <Label Grid.Row="3" Content="Amount"/>
+            <Label Grid.Row="4" Content="Discount"/>
+            <Label Grid.Row="5" Content="Deposit"/>
+            <Label Grid.Row="6" Content="Total Due"/>
+            <Label Grid.Row="7" Content="Payment"/>
+            <Label Grid.Row="8" Content="Paid"/>
 
             <Label Grid.Row="0" Grid.Column="1" Content="{Binding Patient}"/>
             <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
             <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOI}"/>
-            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
-            <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
-            <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
+            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}}"/>
+            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
+            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}}"/>
+            <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}}"/>
+
+            <fr:Combo Grid.Row="7" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
+            <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
+            
             <Border Grid.Column="3" Grid.RowSpan="7" VerticalAlignment="Top" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
                 <Grid>
                     <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
@@ -47,7 +55,7 @@
                 </Grid>
             </Border>
 
-            <fr:SubForm Grid.Row="7" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+            <fr:SubForm Grid.Row="10" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
                 <fr:FormList DataContext="{Binding Treatments}">
                     <fr:FormList.Header>
                         <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
@@ -74,8 +82,8 @@
                                         <Label Grid.Column="1" Content="{Binding EndDate}"/>
                                         <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <CheckBox Grid.Column="3" IsChecked="{Binding Invoiced}"/>
-                                        <Button Content="Add" Grid.Column="4"/>
-                                        <Button Content="Remove" Grid.Column="5"/>
+                                        <Button Content="Add" fr:Extension.IsWithinList="True" Grid.Column="4" Command="{Binding AddInvoiceCMD}"/>
+                                        <Button Content="Remove" fr:Extension.IsWithinList="True" Grid.Column="5" Command="{Binding RemoveInvoiceCMD}"/>
                                         <fr:OpenButton IsWithinList="True" Grid.Column="6"/>
                                     </Grid>
                                 </fr:FormRow>

@@ -4,6 +4,7 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.Source;
+using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
@@ -52,44 +53,61 @@ namespace DentistStudioApp.Controller
         }
     }
 
-    public class TreatmentToInvoiceListController : TreatmentListController 
+    public class TreatmentToInvoiceListController : TreatmentListController
     {
-        public IEnumerable<Treatment>? ToInvoice;
         public Patient? Patient;
         private IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
+        public ICommand AddInvoiceCMD { get; }
+        public ICommand RemoveInvoiceCMD { get; }
 
-        private void Invoice() 
+        public TreatmentToInvoiceListController() 
         {
+            AddInvoiceCMD = new CMDAsync(Invoice);
+            RemoveInvoiceCMD = new CMDAsync(Remove);
+        }
+
+        public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
+        private async Task Invoice() 
+        {
+            Task<object> total = Task.Run(CurrentRecord.GetTotalCost);
             InvoicedTreatment invoicedTreatment = new()
             {
                 Treatment = CurrentRecord,
-                Invoice = (Invoice?)ParentRecord
+                Invoice = CurrentInvoice
             };
 
             InvoicedTreatmentDB.Model = invoicedTreatment;
-            InvoicedTreatmentDB.Crud(CRUD.UPDATE);
+            InvoicedTreatmentDB.Crud(CRUD.INSERT);
             CurrentRecord.Invoiced = true;
+            CurrentRecord.IsDirty = false;
+            object? amount = await total;
+            CurrentInvoice?.SetAmount((double)amount);
             PerformUpdate();
         }
 
         private async Task  Remove()
         {
+            Task<object> total = Task.Run(CurrentRecord.GetTotalCost);
             string? sql = $"SELECT * FROM {nameof(InvoicedTreatment)} WHERE TreatmentID = @id";
             List<QueryParameter> para = [];
-            para.Add(new("name", CurrentRecord.TreatmentID));
+            para.Add(new("id", CurrentRecord.TreatmentID));
             var records  = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
             InvoicedTreatment? toRemove = records.FirstOrDefault();
             if (toRemove == null) return;
-
+            object? amount = await total;
+            CurrentInvoice?.RemoveAmount((double)amount);
             InvoicedTreatmentDB.Model = toRemove;
             InvoicedTreatmentDB.Crud(CRUD.DELETE);
             CurrentRecord.Invoiced = false;
+            CurrentRecord.IsDirty = false;
             PerformUpdate();
         }
 
         public override async void OnSubFormFilter()
         {
             List<Task> serviceCountTasks = [];
+
+            IEnumerable<Treatment> ToInvoice = await Treatment.GetUnvoiced(Patient.PatientID);
 
             if (ToInvoice?.Count() > 0)
                 foreach (Treatment record in ToInvoice)
@@ -103,6 +121,7 @@ namespace DentistStudioApp.Controller
         protected override void Open(Treatment? model)
         {
             model.Patient = Patient;
+            model.IsDirty = false;
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }

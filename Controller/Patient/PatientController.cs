@@ -51,9 +51,7 @@ namespace DentistStudioApp.Controller
             if (CurrentRecord.IsDirty) 
                 if (!PerformUpdate()) return;
 
-            IEnumerable<Treatment> fetchTreatmentsTask = await Task.Run(CurrentRecord.FetchTreatments);
-
-            InvoiceForm win = new(fetchTreatmentsTask, CurrentRecord);
+            InvoiceForm win = new(CurrentRecord);
             win.ShowDialog();
         }
 
