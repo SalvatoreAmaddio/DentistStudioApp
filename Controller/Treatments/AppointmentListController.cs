@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
@@ -16,7 +17,8 @@ namespace DentistStudioApp.Controller
 
         public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Appointment)} WHERE TreatmentID = @treatmentID";
+
+        public override string SearchQry { get; set; } = new Appointment().Where().EqualsTo("TreatmentID", "@treatmentID").Statement();
 
         public override int DatabaseIndex => 9;
         

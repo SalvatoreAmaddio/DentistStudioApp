@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Source;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
@@ -12,7 +13,7 @@ namespace DentistStudioApp.Controller
     {
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Patient)} WHERE (LOWER(FirstName) LIKE @name OR LOWER(LastName) LIKE @name)"; 
+        public override string SearchQry { get; set; } = new Patient().Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket().Statement();
         public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!); 
         
@@ -22,7 +23,7 @@ namespace DentistStudioApp.Controller
         {
             TitleOptions = new(Titles, "Title");
             GenderOptions = new(Genders, "GenderName");
-            AfterUpdate += OnAfterUpdate; ;
+            AfterUpdate += OnAfterUpdate; 
         }
 
         private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)

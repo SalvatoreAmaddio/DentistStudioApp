@@ -4,13 +4,15 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Controller
 {
     public class DentistListController : AbstractFormListController<Dentist>
     {
         public SourceOption ClinicOptions { get; private set; }
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Dentist)} WHERE (LOWER(FirstName) LIKE @name OR LOWER(LastName) LIKE @name)";
+
+        public override string SearchQry { get; set; } = new Dentist().Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket().Statement();
         public RecordSource Clinics { get; private set; } = new(DatabaseManager.Find<Clinic>()!);
         public override int DatabaseIndex => 10;
 

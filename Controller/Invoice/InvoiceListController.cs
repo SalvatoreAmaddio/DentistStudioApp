@@ -1,12 +1,13 @@
 ﻿using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Controller
 {
     public class InvoiceListController : AbstractFormListController<Invoice>
     {
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Invoice)}";
+        public override string SearchQry { get; set; } = string.Empty;
 
         public override int DatabaseIndex => 12;
 

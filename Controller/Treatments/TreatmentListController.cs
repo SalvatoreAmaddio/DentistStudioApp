@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
@@ -10,7 +11,7 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @patientID;";
+        public override string SearchQry { get; set; } =  new Treatment().Where().EqualsTo("PatientID", "@patientID").Statement();
 
         public override int DatabaseIndex => 7;
 
@@ -46,8 +47,11 @@ namespace DentistStudioApp.Controller
         
         protected override void Open(Treatment? model)
         {
-            model.Patient = (Patient?)ParentRecord;
-            model.IsDirty = false;
+            if (model!=null) 
+            {
+                model.Patient = (Patient?)ParentRecord;
+                model.IsDirty = false;
+            }
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }
@@ -62,44 +66,61 @@ namespace DentistStudioApp.Controller
 
         public TreatmentToInvoiceListController() 
         {
-            AddInvoiceCMD = new CMDAsync(Invoice);
-            RemoveInvoiceCMD = new CMDAsync(Remove);
+            AddInvoiceCMD = new CMDAsync(InvoiceTreatment);
+            RemoveInvoiceCMD = new CMDAsync(RemoveTreatment);
         }
 
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
-        private async Task Invoice() 
+        private async Task InvoiceTreatment() 
         {
-            Task<object> total = Task.Run(CurrentRecord.GetTotalCost);
+            if (CurrentRecord == null) throw new NullReferenceException();
+            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
+
+            
+            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
+
             InvoicedTreatment invoicedTreatment = new()
             {
                 Treatment = CurrentRecord,
                 Invoice = CurrentInvoice
             };
 
+            object? amount = await total;
+            if (amount != null)
+                CurrentInvoice?.SetAmount((double)amount);
+
             InvoicedTreatmentDB.Model = invoicedTreatment;
             InvoicedTreatmentDB.Crud(CRUD.INSERT);
+
             CurrentRecord.Invoiced = true;
-            CurrentRecord.IsDirty = false;
-            object? amount = await total;
-            CurrentInvoice?.SetAmount((double)amount);
             PerformUpdate();
         }
 
-        private async Task  Remove()
+        private async Task RemoveTreatment()
         {
-            Task<object> total = Task.Run(CurrentRecord.GetTotalCost);
-            string? sql = $"SELECT * FROM {nameof(InvoicedTreatment)} WHERE TreatmentID = @id";
-            List<QueryParameter> para = [];
-            para.Add(new("id", CurrentRecord.TreatmentID));
-            var records  = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
+            if (CurrentRecord == null) throw new NullReferenceException();
+
+            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
+
+            string? sql = new InvoicedTreatment().Where().EqualsTo("TreatmentID", "@id").Statement();
+            List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
+
+            var records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+
             InvoicedTreatment? toRemove = records.FirstOrDefault();
+
             if (toRemove == null) return;
+
             object? amount = await total;
-            CurrentInvoice?.RemoveAmount((double)amount);
+
+            if (amount != null) 
+                CurrentInvoice?.RemoveAmount((double)amount);
+ 
             InvoicedTreatmentDB.Model = toRemove;
             InvoicedTreatmentDB.Crud(CRUD.DELETE);
+
             CurrentRecord.Invoiced = false;
-            CurrentRecord.IsDirty = false;
             PerformUpdate();
         }
 
@@ -107,21 +128,29 @@ namespace DentistStudioApp.Controller
         {
             List<Task> serviceCountTasks = [];
 
+            if (Patient == null) throw new NullReferenceException();
+
             IEnumerable<Treatment> ToInvoice = await Treatment.GetUnvoiced(Patient.PatientID);
 
             if (ToInvoice?.Count() > 0)
                 foreach (Treatment record in ToInvoice)
                     serviceCountTasks.Add(record.CountServices());
 
+            if (ToInvoice == null) throw new NullReferenceException();
             AsRecordSource().ReplaceRange(ToInvoice);
+
             GoFirst();
+
             await Task.WhenAll(serviceCountTasks);
         }
 
         protected override void Open(Treatment? model)
         {
-            model.Patient = Patient;
-            model.IsDirty = false;
+            if (model!=null) 
+            {
+                model.Patient = Patient;
+                model.IsDirty = false;
+            }
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }

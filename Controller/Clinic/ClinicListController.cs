@@ -1,12 +1,13 @@
 ﻿using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Controller
 {
     public class ClinicListController : AbstractFormListController<Clinic>
     {
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Clinic)} WHERE LOWER(ClinicName) LIKE @name";
+        public override string SearchQry { get; set; } = new Clinic().Where().Like("LOWER(ClinicName)", "@name").Statement();
 
         public override int DatabaseIndex => 11;
         

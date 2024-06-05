@@ -68,7 +68,7 @@ namespace DentistStudioApp.Model
             _deposit = reader.TryFetchDouble(6);
         }
 
-        public void SetAmount(double amount) 
+        public void SetAmount(double amount)
         { 
             _amount += amount;
             RaisePropertyChanged(nameof(Amount));
