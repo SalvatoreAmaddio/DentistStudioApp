@@ -4,6 +4,8 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using System.IO;
+using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
@@ -14,7 +16,7 @@ namespace DentistStudioApp.Controller
 
         public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Appointment)} WHERE TreatmentID = @treatmentID;";
+        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Appointment)} WHERE TreatmentID = @treatmentID";
 
         public override int DatabaseIndex => 9;
         
@@ -45,13 +47,15 @@ namespace DentistStudioApp.Controller
             GoFirst();
         }
 
-        private void Treatment_ServiceUpdateEvent(object? sender, EventArgs e)
+        public override async void OnOptionFilter(FilterEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void OnOptionFilter(FilterEventArgs e)
-        {
+            QueryBuiler.Clear();
+            QueryBuiler.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
+            QueryBuiler.AddCondition(ServiceOptions.Conditions(QueryBuiler));
+            QueryBuiler.AddCondition(DentistOptions.Conditions(QueryBuiler));
+            var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
 
         public override Task<IEnumerable<Appointment>> SearchRecordAsync()
