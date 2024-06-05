@@ -7,7 +7,7 @@ namespace DentistStudioApp.Controller
 {
     public class PaymentTypeListController : AbstractFormListController<PaymentType>
     {
-        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(PaymentType)} WHERE PaymentBy = @name";
+        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(PaymentType)} WHERE LOWER(PaymentBy) LIKE @name";
         public override int DatabaseIndex => 13;
 
         public PaymentTypeListController() 
@@ -31,7 +31,6 @@ namespace DentistStudioApp.Controller
         public async override Task<IEnumerable<PaymentType>> SearchRecordAsync()
         {
             QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            MessageBox.Show(QueryBuiler.Query);
             return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
         }
 

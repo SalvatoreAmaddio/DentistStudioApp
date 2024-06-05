@@ -8,7 +8,7 @@ namespace DentistStudioApp.View
         public ServiceList()
         {
             InitializeComponent();
-            DataContext = new ServiceListController();
+//            SetController(new ServiceListController());
             ((ServiceListController)DataContext).UI = this;
         }
     }
