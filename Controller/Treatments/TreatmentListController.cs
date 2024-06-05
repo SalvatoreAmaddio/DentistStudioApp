@@ -1,7 +1,9 @@
-﻿using DentistStudioApp.Model;
+﻿using Backend.Database;
+using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
@@ -54,6 +56,37 @@ namespace DentistStudioApp.Controller
     {
         public IEnumerable<Treatment>? ToInvoice;
         public Patient? Patient;
+        private IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
+
+        private void Invoice() 
+        {
+            InvoicedTreatment invoicedTreatment = new()
+            {
+                Treatment = CurrentRecord,
+                Invoice = (Invoice?)ParentRecord
+            };
+
+            InvoicedTreatmentDB.Model = invoicedTreatment;
+            InvoicedTreatmentDB.Crud(CRUD.UPDATE);
+            CurrentRecord.Invoiced = true;
+            PerformUpdate();
+        }
+
+        private async Task  Remove()
+        {
+            string? sql = $"SELECT * FROM {nameof(InvoicedTreatment)} WHERE TreatmentID = @id";
+            List<QueryParameter> para = [];
+            para.Add(new("name", CurrentRecord.TreatmentID));
+            var records  = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+            InvoicedTreatment? toRemove = records.FirstOrDefault();
+            if (toRemove == null) return;
+
+            InvoicedTreatmentDB.Model = toRemove;
+            InvoicedTreatmentDB.Crud(CRUD.DELETE);
+            CurrentRecord.Invoiced = false;
+            PerformUpdate();
+        }
+
         public override async void OnSubFormFilter()
         {
             List<Task> serviceCountTasks = [];

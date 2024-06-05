@@ -33,7 +33,7 @@ namespace DentistStudioApp.Model
         { 
             
         }
-
+        public Invoice(long id) => _invoiceid = id;
         public Invoice(DbDataReader reader)
         {
             _invoiceid = reader.GetInt64(0);

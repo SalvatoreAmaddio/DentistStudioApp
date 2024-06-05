@@ -32,7 +32,7 @@ namespace DentistStudioApp
             //Invoice
             DatabaseManager.Add(new SQLiteDatabase(new Invoice()));//12
             DatabaseManager.Add(new SQLiteDatabase(new PaymentType()));//13
-
+            DatabaseManager.Add(new SQLiteDatabase(new InvoicedTreatment()));//14
         }
     }
 
