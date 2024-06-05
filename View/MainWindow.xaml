@@ -51,6 +51,14 @@
                 </Frame>
             </TabItem>
 
+            <TabItem Header="Payment Types">
+                <Frame>
+                    <Frame.Content>
+                        <local:PaymentTypeList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+            
             <TabItem Header="Calendar">
                 <Frame>
                     <Frame.Content>

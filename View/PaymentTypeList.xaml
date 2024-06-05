@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="ClinicList"
+        Title="PaymentTypeList"
         xmlns:local="clr-namespace:DentistStudioApp.View"
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
@@ -22,7 +22,7 @@
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
                 <Grid fr:Definition.ColumnDefinitions="100,50,50">
-                    <Label Grid.Column="1" Content="Clinic"/>
+                    <Label Grid.Column="1" Content="Payment Method"/>
                     <Label Grid.Column="2" Grid.ColumnSpan="2" Content="COMMANDS"/>
                 </Grid>
             </fr:Lista.Header>

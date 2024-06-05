@@ -1,6 +1,7 @@
 ﻿using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
@@ -30,6 +31,7 @@ namespace DentistStudioApp.Controller
         public async override Task<IEnumerable<PaymentType>> SearchRecordAsync()
         {
             QueryBuiler.AddParameter("name", Search.ToLower() + "%");
+            MessageBox.Show(QueryBuiler.Query);
             return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
         }
 

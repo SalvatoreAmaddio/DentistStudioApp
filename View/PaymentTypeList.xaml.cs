@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace DentistStudioApp.View
 {
-    public partial class PaymentType : Page
+    public partial class PaymentTypeList : Page
     {
-        public PaymentType()
+        public PaymentTypeList()
         {
             InitializeComponent();
             DataContext = new PaymentTypeListController();
