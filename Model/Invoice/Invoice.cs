@@ -10,9 +10,9 @@ namespace DentistStudioApp.Model
     {
         #region backing fields
         private long _invoiceid;
-        private DateTime? _doi;
+        private DateTime? _doi = DateTime.Today;
         private double _discount;
-        private PaymentType? _paymentType;
+        private PaymentType? _paymentType = new(1);
         private bool _paid;
         #endregion
 
@@ -23,6 +23,8 @@ namespace DentistStudioApp.Model
         public DateTime? DOI { get => _doi; set => UpdateProperty(ref value, ref _doi); }
         [Field]
         public double Discount { get => _discount; set => UpdateProperty(ref value, ref _discount); }
+        [Field]
+        public bool Paid { get => _paid; set => UpdateProperty(ref value, ref _paid); }
         [FK]
         public PaymentType? PaymentType { get => _paymentType; set => UpdateProperty(ref value, ref _paymentType); }
         #endregion

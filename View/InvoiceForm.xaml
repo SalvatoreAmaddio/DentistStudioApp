@@ -8,37 +8,25 @@
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         d:DataContext="{d:DesignInstance Type=controller:InvoiceController, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="Invoice Form" Height="510" Width="640">
+        Title="Invoice Form" Height="300" Width="500">
 
-    <!--<fr:Form>
-        <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
-            <Label Content="First Name"/>
-            <Label Grid.Row="1" Content="Last Name"/>
-            <Label Grid.Row="2" Content="Date of Birth"/>
-            <Label Grid.Row="3" Content="Gender"/>
-            <Label Grid.Row="4" Content="Job Title"/>
-            <Label Grid.Row="5" Content="Phone Number"/>
-            <Label Grid.Row="6" Content="Email"/>
+    <fr:Form>
+        <Grid Margin="15" fr:Definition.RowDefinitions="30,30,30,30,30,30,10,300" fr:Definition.ColumnDefinitions="100,150,30,120,110">
+            <Label Grid.Row="0" Content="Patient"/>
+            <Label Grid.Row="1" Content="Invoice ID"/>
+            <Label Grid.Row="2" Content="Date"/>
+            <Label Grid.Row="3" Content="Discount"/>
+            <Label Grid.Row="4" Content="Payment"/>
+            <Label Grid.Row="5" Content="Paid"/>
 
-            <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
-            <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
-            <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOB}"/>
-            <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
-            <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
-            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
-            <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
-
-            <fr:PhotoFrame Grid.Column="3" Grid.RowSpan="7" Source="{Binding CurrentRecord.PicturePath}"/>
-            --><!--<Border Grid.Column="3" Grid.RowSpan="7" BorderBrush="Black" CornerRadius="10" BorderThickness="1">
-                <Grid>
-                    <Button Content="X" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="Red" BorderThickness="0" Margin="0,-2,1,0" FontWeight="Bold"/>
-                    <Image Cursor="Hand" MouseUp="OnPhotoFrameClicked" VerticalAlignment="Stretch" Stretch="Uniform" Source="{Binding CurrentRecord.PicturePath}"/>
-                </Grid>
-            </Border>--><!--
-
-            <Border Grid.Column="5" Grid.RowSpan="7" VerticalAlignment="Center" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
+            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Patient}"/>
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOI}"/>
+            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
+            <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
+            <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
+            <Border Grid.Column="3" Grid.RowSpan="7" VerticalAlignment="Top" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
                 <Grid>
                     <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
                     <StackPanel Margin="0,5,0,0">
@@ -47,46 +35,48 @@
                                 <Setter Property="Height" Value="25"/>
                             </Style>
                             <Style TargetType="fr:SaveButton">
-                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Height" Value="30"/>
                             </Style>
                             <Style TargetType="fr:DeleteButton">
-                                <Setter Property="Height" Value="25"/>
+                                <Setter Property="Height" Value="30"/>
                             </Style>
                         </StackPanel.Resources>
                         <fr:SaveButton/>
                         <fr:DeleteButton/>
-                        <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
-                        <Button Content="Check up"/>
-                        <Button Content="Teeth Screen"/>
-                        <Button Content="Make Invoice"/>
-                        <Button Content="Invoices"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+            <fr:SubForm Grid.Row="7" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
                 <fr:FormList DataContext="{Binding Treatments}">
                     <fr:FormList.Header>
                         <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,90,100">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,90,30,50,50,50">
                                 <Label Grid.Column="1" Content="Start Date"/>
                                 <Label Grid.Column="2" Content="End Date"/>
                                 <Label Grid.Column="3" Content="N. of Services"/>
-                                <Label Grid.Column="4" Content="COMMANDS"/>
+                                <Label Grid.Column="5" Grid.ColumnSpan="3" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
-                                        <DatePicker SelectedDate="{Binding StartDate}"/>
-                                        <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,30,50,50,50" fr:Definition.RowDefinitions="30">
+                                        <Grid.Resources>
+                                            <Style TargetType="Label">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
+                                        <Label Grid.Column="1" Content="{Binding EndDate}"/>
                                         <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                                        <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
-                                        <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
+                                        <CheckBox Grid.Column="3" IsChecked="{Binding Invoiced}"/>
+                                        <Button Content="Add" Grid.Column="4"/>
+                                        <Button Content="Remove" Grid.Column="5"/>
+                                        <fr:OpenButton IsWithinList="True" Grid.Column="6"/>
                                     </Grid>
                                 </fr:FormRow>
                             </DataTemplate>
@@ -95,5 +85,5 @@
                 </fr:FormList>        
             </fr:SubForm>
         </Grid>
-    </fr:Form>-->
+    </fr:Form>
 </Window>

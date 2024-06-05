@@ -1,7 +1,9 @@
-﻿using Backend.ExtensionMethods;
+﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Utils;
 using FrontEnd.Model;
+using FrontEnd.Source;
 using System.Data.Common;
 
 namespace DentistStudioApp.Model
@@ -77,6 +79,27 @@ namespace DentistStudioApp.Model
             _picturePath = reader.TryFetchString(8, _picturePath, _picturePath);
         }
         #endregion
+
+        public async Task<long?> TreatmentCount() 
+        {
+            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
+            if (treatmentDB == null) throw new NullReferenceException();
+            List<QueryParameter> para = [];
+            para.Add(new QueryParameter("id", PatientID));
+            para.Add(new QueryParameter("invoiced", false));
+            return await treatmentDB.CountRecordsAsync($"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @id AND Invoiced = @invoiced", para);
+        }
+
+        public async Task<IEnumerable<Treatment>> FetchTreatments()
+        {
+            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
+            if (treatmentDB == null) throw new NullReferenceException();
+            List<QueryParameter> para = [];
+            para.Add(new QueryParameter("id", PatientID));
+            para.Add(new QueryParameter("invoiced", false));
+            string? sql = $"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @id AND Invoiced = @invoiced";
+            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
+        }
 
         public override string ToString() => $"{FirstName} {LastName}";
 

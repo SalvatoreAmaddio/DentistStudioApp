@@ -1,7 +1,9 @@
 ﻿using Backend.Database;
 using Backend.Source;
 using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
+using FrontEnd.Dialogs;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
@@ -16,9 +18,43 @@ namespace DentistStudioApp.Controller
 
         public ICommand AddSurveyCMD { get; }
 
+        public ICommand AddInvoiceCMD { get; }
+
         public PatientController() : base()
         {
-            AddSurveyCMD = new CMDAsync(OpenSurvey);        
+            AddSurveyCMD = new CMDAsync(OpenSurvey);    
+            AddInvoiceCMD = new CMDAsync(AddInvoice);
+        }
+
+        private async Task AddInvoice() 
+        {
+            if (CurrentRecord == null) 
+            {
+                Failure.Allert("Record is null");
+                return;
+            }
+
+            long? count = await Task.Run(CurrentRecord.TreatmentCount);
+
+            if (!count.HasValue || count.Value == 0)
+            {
+                Failure.Allert("There are no treatments to invoice.");
+                return;
+            }
+
+            if (CurrentRecord.IsNewRecord())
+            {
+                Failure.Allert("This record does not exist yet");
+                return;
+            }
+
+            if (CurrentRecord.IsDirty) 
+                if (!PerformUpdate()) return;
+
+            IEnumerable<Treatment> fetchTreatmentsTask = await Task.Run(CurrentRecord.FetchTreatments);
+
+            InvoiceForm win = new(fetchTreatmentsTask, CurrentRecord);
+            win.ShowDialog();
         }
 
         /// <summary>

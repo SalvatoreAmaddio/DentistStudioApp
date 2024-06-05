@@ -16,6 +16,7 @@ namespace DentistStudioApp.Model
         private DateTime? _endDate;
         private Patient? _patient;
         private int _totalServices;
+        private bool _invoiced;
         #endregion
 
         #region Properties
@@ -27,6 +28,9 @@ namespace DentistStudioApp.Model
         public DateTime? EndDate { get => _endDate; set => UpdateProperty(ref value, ref _endDate); }
         [FK]
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
+
+        [Field]
+        public bool Invoiced { get => _invoiced; set => UpdateProperty(ref value, ref _invoiced); }
 
         public int TotalServices { get => _totalServices; private set => UpdateProperty(ref value, ref _totalServices); }
         #endregion
@@ -40,6 +44,7 @@ namespace DentistStudioApp.Model
             _startDate = reader.TryFetchDate(1);
             _endDate = reader.TryFetchDate(2);
             _patient = new Patient(reader.GetInt64(3));
+            _invoiced = reader.GetBoolean(4);
         }
         #endregion
 
@@ -63,9 +68,9 @@ namespace DentistStudioApp.Model
                 _totalServices = (int)count;
         }
 
-        public void UpdateTotalServiceCount(ArithmeticOperation bo) 
+        public void UpdateTotalServiceCount(ArithmeticOperation arithmeticOperation) 
         {
-            if (bo == ArithmeticOperation.ADD)
+            if (arithmeticOperation == ArithmeticOperation.ADD)
                 _totalServices++;
             else
                 _totalServices--;

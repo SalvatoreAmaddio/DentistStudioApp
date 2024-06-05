@@ -49,4 +49,29 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
     }
+
+    public class TreatmentToInvoiceListController : TreatmentListController 
+    {
+        public IEnumerable<Treatment>? ToInvoice;
+        public Patient? Patient;
+        public override async void OnSubFormFilter()
+        {
+            List<Task> serviceCountTasks = [];
+
+            if (ToInvoice?.Count() > 0)
+                foreach (Treatment record in ToInvoice)
+                    serviceCountTasks.Add(record.CountServices());
+
+            AsRecordSource().ReplaceRange(ToInvoice);
+            GoFirst();
+            await Task.WhenAll(serviceCountTasks);
+        }
+
+        protected override void Open(Treatment? model)
+        {
+            model.Patient = Patient;
+            TreatmentForm? win = new(model);
+            win.ShowDialog();
+        }
+    }
 }

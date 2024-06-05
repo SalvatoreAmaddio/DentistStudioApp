@@ -13,9 +13,12 @@ namespace DentistStudioApp.View
             this.SetController(new InvoiceController());
         }
 
-        public InvoiceForm(Patient? patient) : this()
+        public InvoiceForm(IEnumerable<Treatment> treatments, Patient patient) : this()
         {
-            ((PatientController)DataContext).GoAt(patient);
+            InvoiceController controller = this.GetController<InvoiceController>();
+            controller.GoNew();
+            controller.Patient = patient;
+            controller.Treatments.ToInvoice = treatments;
         }
 
     }

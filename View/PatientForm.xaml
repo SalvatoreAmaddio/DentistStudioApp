@@ -31,12 +31,6 @@
             <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
 
             <fr:PhotoFrame Grid.Column="3" Grid.RowSpan="7" Source="{Binding CurrentRecord.PicturePath}"/>
-            <!--<Border Grid.Column="3" Grid.RowSpan="7" BorderBrush="Black" CornerRadius="10" BorderThickness="1">
-                <Grid>
-                    <Button Content="X" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Foreground="Red" BorderThickness="0" Margin="0,-2,1,0" FontWeight="Bold"/>
-                    <Image Cursor="Hand" MouseUp="OnPhotoFrameClicked" VerticalAlignment="Stretch" Stretch="Uniform" Source="{Binding CurrentRecord.PicturePath}"/>
-                </Grid>
-            </Border>-->
 
             <Border Grid.Column="5" Grid.RowSpan="7" VerticalAlignment="Center" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
                 <Grid>
@@ -58,7 +52,7 @@
                         <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
                         <Button Content="Check up"/>
                         <Button Content="Teeth Screen"/>
-                        <Button Content="Make Invoice"/>
+                        <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
                         <Button Content="Invoices"/>
                     </StackPanel>
                 </Grid>
