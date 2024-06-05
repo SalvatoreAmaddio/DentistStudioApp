@@ -6,22 +6,34 @@ namespace DentistStudioApp.Controller
 {
     public class ClinicListController : AbstractFormListController<Clinic>
     {
-        public override string SearchQry { get; set; } = string.Empty;
+        public override string SearchQry { get; set; } = $"SELECT * FROM {nameof(Clinic)} WHERE LOWER(ClinicName) LIKE @name";
 
         public override int DatabaseIndex => 11;
-
-        public override void OnOptionFilter(FilterEventArgs e)
+        
+        public ClinicListController() 
         {
+            AfterUpdate += OnAfterUpdate;
+            OpenWindowOnNew = false;
         }
 
-        public override Task<IEnumerable<Clinic>> SearchRecordAsync()
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Is(nameof(Search)))
+            {
+                var results = await Task.Run(SearchRecordAsync);
+                AsRecordSource().ReplaceRange(results);
+                GoFirst();
+            }
         }
 
-        protected override void Open(Clinic? model)
+        public override void OnOptionFilter(FilterEventArgs e) { }
+
+        public override async Task<IEnumerable<Clinic>> SearchRecordAsync()
         {
-            throw new NotImplementedException();
+            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
+            return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
         }
+
+        protected override void Open(Clinic? model) { }
     }
 }
