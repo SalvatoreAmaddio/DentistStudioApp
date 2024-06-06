@@ -35,15 +35,11 @@ namespace DentistStudioApp.Controller
             PaymentTypesOptions = new(PaymentTypes, "PaymentBy");
         }
 
-        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Search))) 
             {
-                var results = await Task.Run(SearchRecordAsync);
-                AsRecordSource().ReplaceRange(results);
-
-                if (sender is not FilterEventArgs filterEvtArgs)
-                    GoFirst();
+                OnSearchPropertyRequery(sender);
             }
         }
 

@@ -27,7 +27,12 @@ namespace DentistStudioApp.Model
         [Field]
         public double Discount { get => _discount; set => UpdateProperty(ref value, ref _discount); }
         [Field]
-        public bool Paid { get => _paid; set => UpdateProperty(ref value, ref _paid); }
+        public bool Paid 
+        { 
+            get => _paid; 
+            set => UpdateProperty(ref value, ref _paid); 
+        }
+
         [FK]
         public PaymentType? PaymentType { get => _paymentType; set => UpdateProperty(ref value, ref _paymentType); }
 

@@ -5,8 +5,6 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using System.IO;
-using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
