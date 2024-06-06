@@ -51,19 +51,20 @@ namespace DentistStudioApp.Controller
 
         public override SelectBuilder InstantiateSearchQry()
         {
-           return new InvoicedTreatment()
-            .SelectFields("Invoice.*")
-            .OpenBracket()
-            .InnerJoin("Treatment", "TreatmentID")
-            .InnerJoin(new Invoice())
-            .CloseBracket()
-            .InnerJoin("Patient", "Treatment", "PatientID", "PatientID")
-            .Where()
-            .OpenBracket()
-            .Like("LOWER(Patient.FirstName)", "@name")
-            .OR()
-            .Like("LOWER(Patient.LastName)", "@name")
-            .CloseBracket();
+            return new InvoicedTreatment()
+             .SelectFields("Invoice.*")
+             .OpenBracket()
+                 .InnerJoin("Treatment", "TreatmentID")
+                 .InnerJoin(new Invoice())
+                 .InnerJoin("PaymentType", "Invoice", "PaymentTypeID")
+             .CloseBracket()
+             .InnerJoin("Patient", "Treatment", "PatientID")
+             .Where()
+             .OpenBracket()
+             .Like("LOWER(Patient.FirstName)", "@name")
+             .OR()
+             .Like("LOWER(Patient.LastName)", "@name")
+             .CloseBracket();
         }
     }
 }

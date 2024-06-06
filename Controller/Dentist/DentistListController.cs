@@ -46,7 +46,7 @@ namespace DentistStudioApp.Controller
 
         public override SelectBuilder InstantiateSearchQry()
         {
-            return new Dentist().Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
+            return new Dentist().InnerJoin(new Clinic()).Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
         }
     }
 }
