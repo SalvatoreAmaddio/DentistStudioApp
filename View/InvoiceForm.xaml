@@ -82,8 +82,8 @@
                                         <Label Grid.Column="1" Content="{Binding EndDate}"/>
                                         <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <CheckBox Grid.Column="3" IsChecked="{Binding Invoiced}"/>
-                                        <Button Content="Add" fr:Extension.IsWithinList="True" Grid.Column="4" Command="{Binding AddInvoiceCMD}"/>
-                                        <Button Content="Remove" fr:Extension.IsWithinList="True" Grid.Column="5" Command="{Binding RemoveInvoiceCMD}"/>
+                                        <Button Content="Add" fr:Extension.IsWithinList="True" Grid.Column="4" Command="{Binding AddInvoiceTreatmentCMD}"/>
+                                        <Button Content="Remove" fr:Extension.IsWithinList="True" Grid.Column="5" Command="{Binding RemoveInvoiceTreatmentCMD}"/>
                                         <fr:OpenButton IsWithinList="True" Grid.Column="6"/>
                                     </Grid>
                                 </fr:FormRow>

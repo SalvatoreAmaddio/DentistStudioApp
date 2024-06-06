@@ -4,4 +4,5 @@
                     >
 
     <converter:FetchClinicName x:Key="GetClinic"/>
+    <converter:FetchPatient x:Key="GetPatient"/>
 </ResourceDictionary>

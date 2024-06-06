@@ -37,10 +37,7 @@ namespace DentistStudioApp.Model
         [Field]
         public double Deposit { get => _deposit; set => UpdateProperty(ref value, ref _deposit); }
 
-        public double TotalDue 
-        { 
-            get => Amount - Deposit; 
-        }
+        public double TotalDue => Amount - Deposit; 
         #endregion
 
         public Invoice() 
@@ -83,5 +80,8 @@ namespace DentistStudioApp.Model
         }
 
         public override ISQLModel Read(DbDataReader reader) => new Invoice(reader);
+
+        public override string ToString() => $"{InvoiceID}";
+
     }
 }

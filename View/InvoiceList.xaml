@@ -1,0 +1,55 @@
+﻿<Page x:Class="DentistStudioApp.View.InvoiceList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="InvoiceList"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        d:DataContext="{d:DesignInstance Type=controller:InvoiceListController, IsDesignTimeCreatable=False}"
+        >
+
+    <fr:FormList>
+        <fr:FormList.Header>
+            <Grid Background="{StaticResource DefaultWhite}">
+                <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
+                    <fr:Text Placeholder="Search Invoice..." Text="{Binding Search}"/>
+                </StackPanel>
+            </Grid>
+        </fr:FormList.Header>
+        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="100,85,100,80,90,100,50,50,50,50">
+                    <Label Grid.Column="1" Content="Patient"/>
+                    <Label Grid.Column="2" Content="Invoice Num"/>
+                    <Label Grid.Column="3" Content="Date"/>
+                    <Label Grid.Column="4" Content="Amount"/>
+                    <Label Grid.Column="5" Content="Amount Due"/>
+                    <Label Grid.Column="6" Content="Payment Type"/>
+                    <Label Grid.Column="7" Content="Paid"/>
+                    <Label Grid.Column="8" Grid.ColumnSpan="3" Content="COMMANDS"/>
+                </Grid>
+            </fr:Lista.Header>
+            <fr:Lista.ItemTemplate>
+                <DataTemplate>
+                    <fr:FormRow>
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,85,100,80,90,100,50,50,50,50">
+                            <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatient}}"/>
+                            <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
+                            <DatePicker Grid.Column="2" SelectedDate="{Binding DOI}"/>
+                            <fr:Text Grid.Column="3" Text="{Binding Amount, StringFormat={}{0:C2}}"/>
+                            <fr:Text Grid.Column="4" IsReadOnly="True" Text="{Binding TotalDue, Mode=OneWay, StringFormat={}{0:C2}}"/>
+                            <fr:Combo Grid.Column="5" ControllerRecordSource="PaymentTypes" SelectedItem="{Binding PaymentType}"/>
+                            <CheckBox Grid.Column="6" IsChecked="{Binding Paid}" HorizontalAlignment="Center"/>
+                            <fr:SaveButton Grid.Column="7" IsWithinList="True"/>
+                            <fr:DeleteButton Grid.Column="8" IsWithinList="True"/>
+                            <fr:OpenButton Grid.Column="9" IsWithinList="True"/>
+                        </Grid>
+                    </fr:FormRow>
+                </DataTemplate>
+            </fr:Lista.ItemTemplate>
+        </fr:Lista>
+    </fr:FormList>
+</Page>

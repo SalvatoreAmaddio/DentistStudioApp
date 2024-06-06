@@ -61,13 +61,13 @@ namespace DentistStudioApp.Controller
     {
         public Patient? Patient;
         private IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
-        public ICommand AddInvoiceCMD { get; }
-        public ICommand RemoveInvoiceCMD { get; }
+        public ICommand AddInvoiceTreatmentCMD { get; }
+        public ICommand RemoveInvoiceTreatmentCMD { get; }
 
         public TreatmentToInvoiceListController() 
         {
-            AddInvoiceCMD = new CMDAsync(InvoiceTreatment);
-            RemoveInvoiceCMD = new CMDAsync(RemoveTreatment);
+            AddInvoiceTreatmentCMD = new CMDAsync(InvoiceTreatment);
+            RemoveInvoiceTreatmentCMD = new CMDAsync(RemoveTreatment);
         }
 
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
