@@ -13,6 +13,7 @@ namespace DentistStudioApp.Converters
 {
     public class FetchPatient : IValueConverter
     {
+        private Invoice? invoice;
         IAbstractDatabase? db => DatabaseManager.Find<Patient>();
 
         string sql = new InvoicedTreatment()
@@ -29,14 +30,14 @@ namespace DentistStudioApp.Converters
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Invoice invoice = (Invoice)value;
+            invoice = (Invoice)value;
             para.Add(new("id",invoice.InvoiceID));
             return (Patient?)db?.Retrieve(sql, para).FirstOrDefault();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value;
+            return invoice;
         }
     }
 }

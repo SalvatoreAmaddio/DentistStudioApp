@@ -4,6 +4,8 @@ using FrontEnd.Events;
 using Backend.ExtensionMethods;
 using Backend.Source;
 using Backend.Database;
+using FrontEnd.Forms;
+using System.Windows.Controls.Primitives;
 
 namespace DentistStudioApp.Controller
 {
@@ -26,5 +28,15 @@ namespace DentistStudioApp.Controller
         protected override void Open(Invoice? model)
         {
         }
+
+    //SELECT Invoice.*
+    //FROM (
+    //InvoicedTreatment
+    //INNER JOIN Treatment ON InvoicedTreatment.TreatmentID = Treatment.TreatmentID
+    //INNER JOIN Invoice ON InvoicedTreatment.InvoiceID = Invoice.InvoiceID
+    //)
+    //INNER JOIN Patient ON Treatment.PatientID = Patient.PatientID
+    //WHERE Patient.PatientiD = 1
+    //;
     }
 }
