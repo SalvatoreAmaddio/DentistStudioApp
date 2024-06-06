@@ -47,7 +47,7 @@ namespace DentistStudioApp.Model
 
         public Invoice() 
         {
-            //AfterUpdate += OnAfterUpdate;
+            AfterUpdate += OnAfterUpdate;
         }
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)

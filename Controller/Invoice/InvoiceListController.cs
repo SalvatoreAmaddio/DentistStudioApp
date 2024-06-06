@@ -33,6 +33,7 @@ namespace DentistStudioApp.Controller
         {
             AfterUpdate += OnAfterUpdate;
             PaymentTypesOptions = new(PaymentTypes, "PaymentBy");
+            AllowNewRecord = false;
         }
 
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
