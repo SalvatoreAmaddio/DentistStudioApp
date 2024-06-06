@@ -60,7 +60,6 @@ namespace DentistStudioApp.Model
 
         public async Task CountServices() 
         {
-
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>();
             if (appointmentDB == null) throw new NullReferenceException();
             string sql = new Appointment().CountAll().Where().EqualsTo(nameof(TreatmentID), TreatmentID.ToString()).Statement();
@@ -71,8 +70,7 @@ namespace DentistStudioApp.Model
 
         public static async Task<IEnumerable<Treatment>> GetUnvoiced(long patientID = 0)
         {
-            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
-            if (treatmentDB == null) throw new NullReferenceException();
+            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();
             string? sql;
             if (patientID > 0)
@@ -89,10 +87,8 @@ namespace DentistStudioApp.Model
 
         public async Task<object?> GetTotalCost() 
         {
-            IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>();
-            if (appointmentDB == null) throw new NullReferenceException();
+            IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();
             List<QueryParameter> para = [];
-            //string? sql = "SELECT sum(Service.Cost) FROM Appointment INNER JOIN Service ON Appointment.ServiceID = Service.ServiceID INNER JOIN Treatment ON Appointment.TreatmentID = Treatment.TreatmentID WHERE Appointment.TreatmentID = @id;";
             string? sql = new Appointment().Sum("Service.Cost").InnerJoin(new Service()).InnerJoin(new Treatment()).Where().EqualsTo("Treatment.TreatmentID", "@id").Statement();
             para.Add(new("id",TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
