@@ -90,7 +90,7 @@ namespace DentistStudioApp.Controller
             return Task.FromResult(surveyDataDB.Retrieve($"SELECT * FROM SurveyData WHERE SurveyID = {Survey.SurveyID}").Cast<SurveyData>());
         }
 
-        private async Task<IEnumerable<SurveyData>> AddPatientSurveyData() 
+        private async Task<IEnumerable<SurveyData>> AddPatientSurveyData()
         {
             IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
             Survey = await CreateNewSurveyAsync();

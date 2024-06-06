@@ -40,9 +40,9 @@
                     <DataTemplate>
                         <fr:FormRow>
                             <Grid fr:Definition.ColumnDefinitions="150,50,150">
-                                <Label Content="{Binding SurveyQuestion.Question}"/>
+                                <Label Content="{Binding SurveyQuestion, Converter={StaticResource GetQuestion}}"/>
                                 <CheckBox Grid.Column="1" IsChecked="{Binding Have}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <Label Grid.Column="2" Content="{Binding SurveyQuestion.Category}"/>
+                                <Label Grid.Column="2" Content="{Binding SurveyQuestion, Converter={StaticResource GetCategory}}"/>
                             </Grid>
                         </fr:FormRow>
                     </DataTemplate>
