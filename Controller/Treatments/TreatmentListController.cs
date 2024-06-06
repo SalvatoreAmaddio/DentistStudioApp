@@ -34,7 +34,7 @@ namespace DentistStudioApp.Controller
             await Task.WhenAll(serviceCountTasks);
         }
 
-        public override void OnOptionFilter(FilterEventArgs e)
+        public override void OnOptionFilterClicked(FilterEventArgs e)
         {
         }
 

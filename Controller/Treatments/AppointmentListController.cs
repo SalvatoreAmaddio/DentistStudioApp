@@ -46,7 +46,7 @@ namespace DentistStudioApp.Controller
             GoFirst();
         }
 
-        public override async void OnOptionFilter(FilterEventArgs e)
+        public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());

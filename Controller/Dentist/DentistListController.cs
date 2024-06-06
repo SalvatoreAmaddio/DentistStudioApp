@@ -28,7 +28,7 @@ namespace DentistStudioApp.Controller
             OnSearchPropertyRequery(sender);
         }
 
-        public override void OnOptionFilter(FilterEventArgs e)
+        public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
             ClinicOptions.Conditions(SearchQry);

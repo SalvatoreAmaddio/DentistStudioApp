@@ -24,7 +24,7 @@ namespace DentistStudioApp.Controller
             }
         }
 
-        public override void OnOptionFilter(FilterEventArgs e) { }
+        public override void OnOptionFilterClicked(FilterEventArgs e) { }
 
         public override async Task<IEnumerable<Clinic>> SearchRecordAsync()
         {
