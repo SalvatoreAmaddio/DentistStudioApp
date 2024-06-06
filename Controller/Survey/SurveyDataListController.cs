@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
@@ -52,6 +53,12 @@ namespace DentistStudioApp.Controller
 
         public override Task<IEnumerable<SurveyData>> SearchRecordAsync()
         {
+            //new SurveyData()
+            //    .InnerJoin(nameof(SurveyQuestion), nameof(SurveyData), "SurveyQuestionID")
+            //    .InnerJoin(nameof(Survey), nameof(SurveyData), "SurveyID")
+            //    .Where()
+            //    .EqualsTo("Survey.PatientID", "id");
+
             IAbstractDatabase? surveryQuestionsDb = DatabaseManager.Find<SurveyQuestion>();
             List<SurveyQuestion>? surveyQuestions = surveryQuestionsDb?.MasterSource.Cast<SurveyQuestion>().ToList();
             IEnumerable<SurveyQuestion>? questions = surveyQuestions?.Where(s => s.Question.ToLower().StartsWith(Search.ToLower()));

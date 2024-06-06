@@ -88,7 +88,7 @@ namespace DentistStudioApp.Controller
 
         public override SelectBuilder InstantiateSearchQry()
         {
-            return new Appointment().Where().EqualsTo("TreatmentID", "@treatmentID");
+            return new Appointment().InnerJoin(new Dentist()).InnerJoin(new Service()).Where().EqualsTo("TreatmentID", "@treatmentID");
         }
     }
 }
