@@ -1,5 +1,6 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
+using Backend.Model;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
@@ -11,8 +12,6 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
-        public override string SearchQry { get; set; } =  new Treatment().Where().EqualsTo("PatientID", "@patientID").Statement();
-
         public override int DatabaseIndex => 7;
 
         public TreatmentListController()
@@ -22,9 +21,9 @@ namespace DentistStudioApp.Controller
         public override async void OnSubFormFilter()
         {
             List<Task> serviceCountTasks = [];
-            QueryBuiler.Clear();
-            QueryBuiler.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
-            var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            ReloadSearchQry();
+            SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
+            var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             
             if (results.Count > 0)
                 foreach (Treatment record in results)
@@ -54,6 +53,11 @@ namespace DentistStudioApp.Controller
             }
             TreatmentForm? win = new(model);
             win.ShowDialog();
+        }
+
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return new Treatment().Where().EqualsTo("PatientID", "@patientID");
         }
     }
 

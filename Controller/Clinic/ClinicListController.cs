@@ -2,13 +2,12 @@
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using Backend.ExtensionMethods;
+using Backend.Model;
 
 namespace DentistStudioApp.Controller
 {
     public class ClinicListController : AbstractFormListController<Clinic>
     {
-        public override string SearchQry { get; set; } = new Clinic().Where().Like("LOWER(ClinicName)", "@name").Statement();
-
         public override int DatabaseIndex => 11;
         
         public ClinicListController() 
@@ -29,10 +28,15 @@ namespace DentistStudioApp.Controller
 
         public override async Task<IEnumerable<Clinic>> SearchRecordAsync()
         {
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(Clinic? model) { }
+
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return new Clinic().Where().Like("LOWER(ClinicName)", "@name");
+        }
     }
 }

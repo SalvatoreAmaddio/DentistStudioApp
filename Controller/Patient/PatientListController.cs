@@ -1,5 +1,6 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
+using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
@@ -13,7 +14,6 @@ namespace DentistStudioApp.Controller
     {
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
-        public override string SearchQry { get; set; } = new Patient().Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket().Statement();
         public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!); 
         
@@ -34,23 +34,33 @@ namespace DentistStudioApp.Controller
 
         public override void OnOptionFilter(FilterEventArgs e)
         {
-            QueryBuiler.Clear();
-            QueryBuiler.AddCondition(GenderOptions.Conditions(QueryBuiler));
-            QueryBuiler.AddCondition(TitleOptions.Conditions(QueryBuiler));
+            ReloadSearchQry();
+            GenderOptions.Conditions(SearchQry);
+            TitleOptions.Conditions(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
         public override async Task<IEnumerable<Patient>> SearchRecordAsync()
         {
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            var x = SearchQry.Statement();
+            return await CreateFromAsyncList(x, SearchQry.Params());
         }
 
         protected override void Open(Patient? model)
         {
             PatientForm win = new(model);
             win.ShowDialog();
+        }
+
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return 
+                new Patient()
+                .InnerJoin(new Gender())
+                .InnerJoin(new JobTitle())
+                .Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
         }
     }
 }

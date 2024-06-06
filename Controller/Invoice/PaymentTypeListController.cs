@@ -2,12 +2,12 @@
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using Backend.ExtensionMethods;
+using Backend.Model;
 
 namespace DentistStudioApp.Controller
 {
     public class PaymentTypeListController : AbstractFormListController<PaymentType>
     {
-        public override string SearchQry { get; set; } = new PaymentType().Where().Like("LOWER(PaymentBy)", "@name").Statement();
         public override int DatabaseIndex => 13;
 
         public PaymentTypeListController() 
@@ -28,11 +28,15 @@ namespace DentistStudioApp.Controller
 
         public async override Task<IEnumerable<PaymentType>> SearchRecordAsync()
         {
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(PaymentType? model) { }
 
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return new PaymentType().Where().Like("LOWER(PaymentBy)", "@name");
+        }
     }
 }

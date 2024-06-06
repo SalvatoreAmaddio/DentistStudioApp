@@ -5,26 +5,13 @@ using Backend.ExtensionMethods;
 using Backend.Source;
 using Backend.Database;
 using FrontEnd.FilterSource;
+using Backend.Model;
 
 namespace DentistStudioApp.Controller
 {
     public class InvoiceListController : AbstractFormListController<Invoice>
     {
         public RecordSource PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
-        public override string SearchQry { get; set; } = new InvoicedTreatment()
-            .SelectFields("Invoice.*")
-            .OpenBracket()
-            .InnerJoin("Treatment", "TreatmentID")
-            .InnerJoin(new Invoice())
-            .CloseBracket()
-            .InnerJoin("Patient", "Treatment", "PatientID", "PatientID")
-            .Where()
-            .OpenBracket()
-            .Like("LOWER(Patient.FirstName)", "@name")
-            .OR()
-            .Like("LOWER(Patient.LastName)", "@name")
-            .CloseBracket()
-            .Statement();
 
         public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
@@ -46,21 +33,37 @@ namespace DentistStudioApp.Controller
 
         public override void OnOptionFilter(FilterEventArgs e)
         {
-            QueryBuiler.Clear();
-            QueryBuiler.AddCondition(PaymentTypesOptions.Conditions(QueryBuiler));
+            ReloadSearchQry();
+            PaymentTypesOptions.Conditions(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
         public override async Task<IEnumerable<Invoice>> SearchRecordAsync()
         {
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            QueryBuiler.AddParameter("name", Search.ToLower() + "%");
-            return await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(Invoice? model)
         {
         }
 
+        public override SelectBuilder InstantiateSearchQry()
+        {
+           return new InvoicedTreatment()
+            .SelectFields("Invoice.*")
+            .OpenBracket()
+            .InnerJoin("Treatment", "TreatmentID")
+            .InnerJoin(new Invoice())
+            .CloseBracket()
+            .InnerJoin("Patient", "Treatment", "PatientID", "PatientID")
+            .Where()
+            .OpenBracket()
+            .Like("LOWER(Patient.FirstName)", "@name")
+            .OR()
+            .Like("LOWER(Patient.LastName)", "@name")
+            .CloseBracket();
+        }
     }
 }

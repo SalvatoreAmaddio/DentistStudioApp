@@ -1,5 +1,6 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
+using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
@@ -15,8 +16,6 @@ namespace DentistStudioApp.Controller
 
         public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
-
-        public override string SearchQry { get; set; } = new Appointment().Where().EqualsTo("TreatmentID", "@treatmentID").Statement();
 
         public override int DatabaseIndex => 9;
         
@@ -40,20 +39,20 @@ namespace DentistStudioApp.Controller
 
         public override async void OnSubFormFilter()
         {
-            QueryBuiler.Clear();
-            QueryBuiler.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
-            var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            ReloadSearchQry();
+            SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
+            var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
 
         public override async void OnOptionFilter(FilterEventArgs e)
         {
-            QueryBuiler.Clear();
-            QueryBuiler.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
-            QueryBuiler.AddCondition(ServiceOptions.Conditions(QueryBuiler));
-            QueryBuiler.AddCondition(DentistOptions.Conditions(QueryBuiler));
-            var results = await CreateFromAsyncList(QueryBuiler.Query, QueryBuiler.Params);
+            ReloadSearchQry();
+            SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
+            ServiceOptions.Conditions(SearchQry);
+            DentistOptions.Conditions(SearchQry);
+            var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
@@ -85,6 +84,11 @@ namespace DentistStudioApp.Controller
             if (result)
                 ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.SUBTRACT);
             return result;
+        }
+
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return new Appointment().Where().EqualsTo("TreatmentID", "@treatmentID");
         }
     }
 }

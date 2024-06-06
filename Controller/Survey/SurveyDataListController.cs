@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
@@ -13,7 +14,6 @@ namespace DentistStudioApp.Controller
 
         public RecordSource SurveyQuestionCategories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SurveyController SurveyController { get; } = new();
-        public override string SearchQry { get; set; } = string.Empty;
 
         public override int DatabaseIndex => 4;
 
@@ -68,6 +68,10 @@ namespace DentistStudioApp.Controller
         {
         }
 
+        public override SelectBuilder InstantiateSearchQry()
+        {
+            return null;
+        }
     }
 
 }
