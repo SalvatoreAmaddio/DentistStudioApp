@@ -6,7 +6,6 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using System.IO;
 
 namespace DentistStudioApp.Controller
 {
@@ -15,7 +14,6 @@ namespace DentistStudioApp.Controller
         public SourceOption CategoryOptions { get; private set; }
         public RecordSource SurveyQuestionCategories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SurveyController SurveyController { get; } = new();
-
         public override int DatabaseIndex => 4;
 
         public SurveyDataListController()
@@ -46,9 +44,7 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        protected override void Open(SurveyData? model)
-        {
-        }
+        protected override void Open(SurveyData? model) { }
 
         public override SelectBuilder InstantiateSearchQry()
         {
@@ -57,10 +53,10 @@ namespace DentistStudioApp.Controller
                 .InnerJoin(nameof(SurveyQuestionCategory), nameof(SurveyQuestion), "SurveyQuestionCategoryID")
                 .Where()
                 .EqualsTo("SurveyID", "@id")
-                .AND().OpenBracket()
+                .AND()
+                .OpenBracket()
                 .Like("Question", "@question")
                 .CloseBracket();
         }
     }
-
 }
