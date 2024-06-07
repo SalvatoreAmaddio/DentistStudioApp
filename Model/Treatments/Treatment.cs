@@ -84,11 +84,11 @@ namespace DentistStudioApp.Model
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();
             List<QueryParameter> para = [];
             string? sql = new Appointment().Sum("Service.Cost").InnerJoin(new Service()).InnerJoin(new Treatment()).Where().EqualsTo("Treatment.TreatmentID", "@id").Statement();
-            para.Add(new("id",TreatmentID));
+            para.Add(new("id", TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
         }
 
-        public void UpdateTotalServiceCount(ArithmeticOperation arithmeticOperation) 
+        public void UpdateTotalServiceCount(ArithmeticOperation arithmeticOperation)
         {
             if (arithmeticOperation == ArithmeticOperation.ADD)
                 _totalServices++;
