@@ -17,7 +17,8 @@ namespace DentistStudioApp.View
         {
             SurveyDataListController controller = this.GetController<SurveyDataListController>();
             controller.SurveyController.GoAt(survey);
-            controller.AsRecordSource().ReplaceRange(data);
+            controller.AsRecordSource().ReplaceRecords(data);
+            controller.GoFirst();
         }
     }
 }
