@@ -11,16 +11,14 @@ namespace DentistStudioApp.Converters
         private Invoice? invoice;
         IAbstractDatabase? db => DatabaseManager.Find<Patient>();
 
-        string sql = new InvoicedTreatment()
+        private readonly string sql = new InvoicedTreatment()
         .Select("Patient.*")
         .From()
-        .OpenBracket()
-            .InnerJoin("Treatment", "TreatmentID")
-        .CloseBracket()
-            .InnerJoin(nameof(Patient),nameof(Treatment),"PatientID")
+        .InnerJoin(nameof(Treatment), "TreatmentID")
+        .InnerJoin(nameof(Treatment), nameof(Patient),"PatientID")
         .Where().EqualsTo("InvoicedTreatment.InvoiceID", "@id")
         .Limit().Statement();
-                   
+
         List<QueryParameter> para = [];
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -30,9 +28,6 @@ namespace DentistStudioApp.Converters
             return (Patient?)db?.Retrieve(sql, para).FirstOrDefault();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return invoice;
-        }
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => invoice;
     }
 }
