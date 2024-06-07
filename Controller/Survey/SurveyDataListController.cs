@@ -6,13 +6,13 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using System.IO;
 
 namespace DentistStudioApp.Controller
 {
     public class SurveyDataListController : AbstractFormListController<SurveyData>
     {
         public SourceOption CategoryOptions { get; private set; }
-
         public RecordSource SurveyQuestionCategories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SurveyController SurveyController { get; } = new();
 
@@ -34,41 +34,16 @@ namespace DentistStudioApp.Controller
 
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
+            ReloadSearchQry();
+            CategoryOptions.Conditions(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
-        private bool Filter(SurveyData data, IEnumerable<SurveyQuestion> questions)
+        public override async Task<IEnumerable<SurveyData>> SearchRecordAsync()
         {
-            Survey? s = data.Survey;
-            SurveyQuestion? q = data.SurveyQuestion;
-            bool condition1 = (s == null) ? false : s.Equals(SurveyController.CurrentRecord);
-            bool condition2 = questions.Any(s => s.Equals(q));
-            bool condition3 = true;
-
-            if (CategoryOptions.Selected().Any())
-                condition3 = CategoryOptions.Selected().Any(s => s.Equals(data.SurveyQuestion.Category));
-
-            return condition1 && condition2 && condition3;
-        }
-
-        public override Task<IEnumerable<SurveyData>> SearchRecordAsync()
-        {
-            //new SurveyData()
-            //    .InnerJoin(nameof(SurveyQuestion), nameof(SurveyData), "SurveyQuestionID")
-            //    .InnerJoin(nameof(Survey), nameof(SurveyData), "SurveyID")
-            //    .Where()
-            //    .EqualsTo("Survey.PatientID", "id");
-
-            IAbstractDatabase? surveryQuestionsDb = DatabaseManager.Find<SurveyQuestion>();
-            List<SurveyQuestion>? surveyQuestions = surveryQuestionsDb?.MasterSource.Cast<SurveyQuestion>().ToList();
-            IEnumerable<SurveyQuestion>? questions = surveyQuestions?.Where(s => s.Question.ToLower().StartsWith(Search.ToLower()));
-
-            if (questions == null) throw new NullReferenceException();
-            if (MasterSource == null) throw new NullReferenceException();
-
-            IEnumerable<SurveyData> result = MasterSource.Where(s => Filter(s, questions));
-
-            return Task.FromResult(result);
+            SearchQry.AddParameter("id", SurveyController?.CurrentRecord?.SurveyID);
+            SearchQry.AddParameter("question", Search.ToLower() + "%");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(SurveyData? model)
@@ -77,7 +52,14 @@ namespace DentistStudioApp.Controller
 
         public override SelectBuilder InstantiateSearchQry()
         {
-            return null;
+            return new SurveyData()
+                .InnerJoin(nameof(SurveyQuestion), nameof(SurveyData), "SurveyQuestionID")
+                .InnerJoin(nameof(SurveyQuestionCategory), nameof(SurveyQuestion), "SurveyQuestionCategoryID")
+                .Where()
+                .EqualsTo("SurveyID", "@id")
+                .AND().OpenBracket()
+                .Like("Question", "@question")
+                .CloseBracket();
         }
     }
 

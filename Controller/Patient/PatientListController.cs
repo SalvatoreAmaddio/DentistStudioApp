@@ -44,8 +44,7 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
             SearchQry.AddParameter("name", Search.ToLower() + "%");
-            var x = SearchQry.Statement();
-            return await CreateFromAsyncList(x, SearchQry.Params());
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(Patient? model)
