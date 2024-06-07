@@ -50,14 +50,6 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new SurveyData(reader);
-
-        public async Task FetchSurveyQuestionAsync()
-        {
-            _surveyQuestion = (SurveyQuestion?)DatabaseManager.Find<SurveyQuestion>()?.MasterSource.FirstOrDefault(s => s.Equals(_surveyQuestion));
-            if (_surveyQuestion != null) 
-                await _surveyQuestion.FetchCategory();
-        }
-
         public override string? ToString() => $"{Survey} {SurveyQuestion}";
 
     }

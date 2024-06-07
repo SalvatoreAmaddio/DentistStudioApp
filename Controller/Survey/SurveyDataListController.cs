@@ -41,16 +41,20 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("id", SurveyController?.CurrentRecord?.SurveyID);
             SearchQry.AddParameter("question", Search.ToLower() + "%");
-            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            var x = SearchQry.Statement();
+            return await CreateFromAsyncList(x, SearchQry.Params());
         }
 
         protected override void Open(SurveyData? model) { }
 
         public override IWhereClause InstantiateSearchQry()
         {
-            return new SurveyData().From()
-                .InnerJoin(nameof(SurveyQuestion), nameof(SurveyData), "SurveyQuestionID")
-                .InnerJoin(nameof(SurveyQuestionCategory), nameof(SurveyQuestion), "SurveyQuestionCategoryID")
+            return new SurveyData()
+                .From()
+                .OpenBracket()
+                .InnerJoin(nameof(SurveyQuestion), "SurveyQuestionID")
+                .CloseBracket()
+                .InnerJoin(nameof(SurveyQuestion), nameof(SurveyQuestionCategory), "SurveyQuestionCategoryID")
                 .Where()
                 .EqualsTo("SurveyID", "@id")
                 .AND()
