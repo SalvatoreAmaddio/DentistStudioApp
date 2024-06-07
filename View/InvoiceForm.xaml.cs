@@ -14,14 +14,14 @@ namespace DentistStudioApp.View
             this.SetController(new InvoiceController());
         }
 
-        public InvoiceForm(Patient patient) : this()
+        public InvoiceForm(Patient? patient) : this()
         {
             InvoiceController controller = this.GetController<InvoiceController>();
             controller.GoNew();
             controller.Patient = patient;
         }
 
-        public InvoiceForm(Invoice invoice) : this() 
+        public InvoiceForm(Invoice? invoice) : this() 
         {
             FetchPatient fetchPatient = new ();
             InvoiceController controller = this.GetController<InvoiceController>();
