@@ -6,6 +6,7 @@ using Backend.Source;
 using Backend.Database;
 using FrontEnd.FilterSource;
 using Backend.Model;
+using DentistStudioApp.View;
 
 namespace DentistStudioApp.Controller
 {
@@ -47,6 +48,8 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Invoice? model)
         {
+            InvoiceForm invoideForm = new(model);
+            invoideForm.ShowDialog();
         }
 
         public override SelectBuilder InstantiateSearchQry()

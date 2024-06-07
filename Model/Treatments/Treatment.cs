@@ -62,6 +62,23 @@ namespace DentistStudioApp.Model
                 _totalServices = (int)count;
         }
 
+        public static async Task<IEnumerable<Treatment>> GetAll(long patientID = 0)
+        {
+            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
+            Treatment treatment = new();
+            string? sql;
+            if (patientID > 0)
+            {
+                sql = treatment.Where().EqualsTo("PatientID", "@id").Statement();
+                List<QueryParameter> para = [];
+                para.Add(new("id", patientID));
+                return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
+            }
+
+            sql = treatment.SelectAll().Statement();
+            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql).Cast<Treatment>());
+        }
+
         public static async Task<IEnumerable<Treatment>> GetUnvoiced(long patientID = 0)
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();

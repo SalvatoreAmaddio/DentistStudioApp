@@ -90,8 +90,17 @@ namespace DentistStudioApp.Controller
             };
 
             object? amount = await total;
-            if (amount != null)
+
+            if (amount != null) 
+            {
                 CurrentInvoice?.SetAmount((double)amount);
+                if (ParentController!=null) 
+                {
+                    CurrentInvoice!.IsDirty = true;
+                    ParentController.CurrentModel = CurrentInvoice;
+                    ParentController.PerformUpdate();
+                }
+            }
 
             InvoicedTreatmentDB.Model = invoicedTreatment;
             InvoicedTreatmentDB.Crud(CRUD.INSERT);
@@ -118,9 +127,17 @@ namespace DentistStudioApp.Controller
 
             object? amount = await total;
 
-            if (amount != null) 
+            if (amount != null)
+            {
                 CurrentInvoice?.RemoveAmount((double)amount);
- 
+                if (ParentController != null)
+                {
+                    CurrentInvoice!.IsDirty = true;
+                    ParentController.CurrentModel = CurrentInvoice;
+                    ParentController.PerformUpdate();
+                }
+            }
+
             InvoicedTreatmentDB.Model = toRemove;
             InvoicedTreatmentDB.Crud(CRUD.DELETE);
 
@@ -134,7 +151,7 @@ namespace DentistStudioApp.Controller
 
             if (Patient == null) throw new NullReferenceException();
 
-            IEnumerable<Treatment> ToInvoice = await Treatment.GetUnvoiced(Patient.PatientID);
+            IEnumerable<Treatment> ToInvoice = await Treatment.GetAll(Patient.PatientID);
 
             if (ToInvoice?.Count() > 0)
                 foreach (Treatment record in ToInvoice)

@@ -21,5 +21,10 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 12;
         public RecordSource PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
 
+        public InvoiceController() 
+        {
+            AddSubControllers(Treatments);
+        }
+
     }
 }
