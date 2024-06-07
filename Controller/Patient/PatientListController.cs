@@ -44,7 +44,9 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
             SearchQry.AddParameter("name", Search.ToLower() + "%");
-            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            var y = SearchQry.Params();
+            var x = SearchQry.Statement();
+            return await CreateFromAsyncList(x, y);
         }
 
         protected override void Open(Patient? model)
@@ -53,10 +55,10 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
             return 
-                new Patient()
+                new Patient().From()
                 .InnerJoin(new Gender())
                 .InnerJoin(new JobTitle())
                 .Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();

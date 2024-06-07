@@ -1,12 +1,7 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using DentistStudioApp.Model;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace DentistStudioApp.Converters
@@ -17,15 +12,15 @@ namespace DentistStudioApp.Converters
         IAbstractDatabase? db => DatabaseManager.Find<Patient>();
 
         string sql = new InvoicedTreatment()
-        .SelectFields("Patient.*")
+        .Select("Patient.*")
+        .From()
         .OpenBracket()
             .InnerJoin("Treatment", "TreatmentID")
         .CloseBracket()
-            .InnerJoin(nameof(Patient),nameof(Treatment),"PatientID", "PatientID")
+            .InnerJoin(nameof(Patient),nameof(Treatment),"PatientID")
         .Where().EqualsTo("InvoicedTreatment.InvoiceID", "@id")
-        .LIMIT().Statement();
-    
-               
+        .Limit().Statement();
+                   
         List<QueryParameter> para = [];
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)

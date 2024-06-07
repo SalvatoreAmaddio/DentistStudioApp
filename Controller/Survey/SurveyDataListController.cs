@@ -46,9 +46,9 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(SurveyData? model) { }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
-            return new SurveyData()
+            return new SurveyData().From()
                 .InnerJoin(nameof(SurveyQuestion), nameof(SurveyData), "SurveyQuestionID")
                 .InnerJoin(nameof(SurveyQuestionCategory), nameof(SurveyQuestion), "SurveyQuestionCategoryID")
                 .Where()

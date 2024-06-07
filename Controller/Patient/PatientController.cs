@@ -77,7 +77,7 @@ namespace DentistStudioApp.Controller
         private Task<Survey?> FetchSurvey() 
         {
            if (surveyDB == null) throw new NullReferenceException();
-           string sql = new Survey().Where().EqualsTo("PatientID","@id").LIMIT().Statement();
+           string sql = new Survey().Where().EqualsTo("PatientID","@id").Limit().Statement();
            List<QueryParameter> param = [];
            param.Add(new("id",CurrentRecord?.PatientID));
            return Task.FromResult(surveyDB.Retrieve(sql, param).Cast<Survey>().FirstOrDefault());

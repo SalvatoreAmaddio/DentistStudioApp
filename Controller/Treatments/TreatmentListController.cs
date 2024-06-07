@@ -55,7 +55,7 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
             return new Treatment().Where().EqualsTo("PatientID", "@patientID");
         }

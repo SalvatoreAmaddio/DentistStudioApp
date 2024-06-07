@@ -75,7 +75,7 @@ namespace DentistStudioApp.Model
                 return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
             }
 
-            sql = treatment.SelectAll().Statement();
+            sql = treatment.SelectAll().From().Statement();
             return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql).Cast<Treatment>());
         }
 
@@ -86,13 +86,13 @@ namespace DentistStudioApp.Model
             string? sql;
             if (patientID > 0)
             {
-                sql = treatment.LeftJoin(nameof(InvoicedTreatment),"TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").AND().EqualsTo("Treatment.PatientID","@id").Statement();
+                sql = treatment.From().LeftJoin(nameof(InvoicedTreatment),"TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").AND().EqualsTo("Treatment.PatientID","@id").Statement();
                 List<QueryParameter> para = [];
                 para.Add(new("id", patientID));
                 return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
             }
 
-            sql = treatment.LeftJoin(nameof(InvoicedTreatment), "TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").Statement();
+            sql = treatment.From().LeftJoin(nameof(InvoicedTreatment), "TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").Statement();
             return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql).Cast<Treatment>());
         }
 
@@ -100,7 +100,7 @@ namespace DentistStudioApp.Model
         {
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();
             List<QueryParameter> para = [];
-            string? sql = new Appointment().Sum("Service.Cost").InnerJoin(new Service()).InnerJoin(new Treatment()).Where().EqualsTo("Treatment.TreatmentID", "@id").Statement();
+            string? sql = new Appointment().Sum("Service.Cost").From().InnerJoin(new Service()).InnerJoin(new Treatment()).Where().EqualsTo("Treatment.TreatmentID", "@id").Statement();
             para.Add(new("id", TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
         }

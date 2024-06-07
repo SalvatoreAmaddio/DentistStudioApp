@@ -34,7 +34,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(PaymentType? model) { }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
             return new PaymentType().Where().Like("LOWER(PaymentBy)", "@name");
         }

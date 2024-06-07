@@ -52,10 +52,11 @@ namespace DentistStudioApp.Controller
             invoideForm.ShowDialog();
         }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
             return new InvoicedTreatment()
-             .SelectFields("Invoice.*")
+             .Select("Invoice.*")
+             .From()
              .OpenBracket()
                  .InnerJoin("Treatment", "TreatmentID")
                  .InnerJoin(new Invoice())

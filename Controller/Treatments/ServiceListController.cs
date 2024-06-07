@@ -37,9 +37,9 @@ namespace DentistStudioApp.Controller
 
         }
 
-        public override SelectBuilder InstantiateSearchQry()
+        public override IWhereClause InstantiateSearchQry()
         {
-            return new Service().Where().Like("LOWER(ServiceName)", "@name");
+            return new Service().From().Where().Like("LOWER(ServiceName)", "@name");
         }
     }
 }
