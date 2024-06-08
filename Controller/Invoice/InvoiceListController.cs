@@ -38,21 +38,14 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             PaymentTypesOptions.Conditions(SearchQry);
-            PaidOptions.Conditions(SearchQry, true);
+            PaidOptions.Conditions(SearchQry); // Filtering by a primitive data type, not by an object. In this case a boolean.
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
         public override async Task<IEnumerable<Invoice>> SearchRecordAsync()
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
-            SearchQry.AddParameter("name", Search.ToLower() + "%");
-           
-            foreach(var x in SearchQry.Params()) 
-            {
-                var h = x.Value;
-                var d = x.Placeholder;
-            }
-            var a = SearchQry.Statement();
+            SearchQry.AddParameter("name", Search.ToLower() + "%");           
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
