@@ -62,40 +62,32 @@ namespace DentistStudioApp.Model
                 _totalServices = (int)count;
         }
 
-        public static async Task<IEnumerable<Treatment>> GetAll(long patientID = 0)
+        //SELECT Treatment.*
+        //FROM Treatment LEFT JOIN InvoicedTreatment ON Treatment.TreatmentID = InvoicedTreatment.TreatmentID
+        //WHERE InvoicedTreatment.InvoiceID IS NULL AND Treatment.PatientID = 1
+        public static async Task<IEnumerable<Treatment>> GetToInvoice(long patientID)
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();
-            string? sql;
-            if (patientID > 0)
-            {
-                sql = treatment.Where().EqualsTo("PatientID", "@id").Statement();
-                List<QueryParameter> para = [];
-                para.Add(new("id", patientID));
-                return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
-            }
-
-            sql = treatment.SelectAll().From().Statement();
-            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql).Cast<Treatment>());
+            string? sql = treatment.From().LeftJoin(nameof(InvoicedTreatment), "InvoicedTreatment.TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID").Statement();
+            List<QueryParameter> para = [];
+            para.Add(new("patientID", patientID));
+            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
         }
 
-        public static async Task<IEnumerable<Treatment>> GetUnvoiced(long patientID = 0)
+        //SELECT Treatment.*
+        //FROM Treatment INNER JOIN InvoicedTreatment ON Treatment.TreatmentID = InvoicedTreatment.TreatmentID
+        //WHERE InvoicedTreatment.InvoiceID IS NULL AND Treatment.PatientID = 1
+        public static async Task<IEnumerable<Treatment>> GetInvoiced(long patientID, long invoiceID)
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();
-            string? sql;
-            if (patientID > 0)
-            {
-                sql = treatment.From().LeftJoin(nameof(InvoicedTreatment),"TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").AND().EqualsTo("Treatment.PatientID","@id").Statement();
-                List<QueryParameter> para = [];
-                para.Add(new("id", patientID));
-                return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
-            }
-
-            sql = treatment.From().LeftJoin(nameof(InvoicedTreatment), "TreatmentID").Where().IsNull("InvoicedTreatment.TreatmentID").Statement();
-            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql).Cast<Treatment>());
+            string? sql = treatment.From().InnerJoin(nameof(InvoicedTreatment), "InvoicedTreatment.TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID","@invoiceID").Statement();
+            List<QueryParameter> para = [];
+            para.Add(new("patientID", patientID));
+            para.Add(new("invoiceID", patientID));
+            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
         }
-
         public async Task<object?> GetTotalCost() 
         {
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();
