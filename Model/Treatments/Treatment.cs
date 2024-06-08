@@ -69,7 +69,7 @@ namespace DentistStudioApp.Model
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();
-            string? sql = treatment.From().LeftJoin(nameof(InvoicedTreatment), "InvoicedTreatment.TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID").Statement();
+            string? sql = treatment.From().LeftJoin(nameof(InvoicedTreatment),"TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID").Statement();
             List<QueryParameter> para = [];
             para.Add(new("patientID", patientID));
             return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
@@ -82,10 +82,10 @@ namespace DentistStudioApp.Model
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();
-            string? sql = treatment.From().InnerJoin(nameof(InvoicedTreatment), "InvoicedTreatment.TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID","@invoiceID").Statement();
+            string? sql = treatment.From().InnerJoin(nameof(InvoicedTreatment), "TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID","@invoiceID").Statement();
             List<QueryParameter> para = [];
             para.Add(new("patientID", patientID));
-            para.Add(new("invoiceID", patientID));
+            para.Add(new("invoiceID", invoiceID));
             return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
         }
         public async Task<object?> GetTotalCost() 

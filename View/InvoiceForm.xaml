@@ -92,7 +92,7 @@
             </fr:SubForm>
 
             <fr:SubForm  x:Name="Invoiced" Grid.Row="10" Grid.Column="6" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                <fr:FormList DataContext="{Binding Treatments}">
+                <fr:FormList DataContext="{Binding Treatments2}">
                     <fr:FormList.Header>
                         <Label Content="Invoiced Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>

@@ -84,8 +84,6 @@ namespace DentistStudioApp.Controller
         {
             List<Task> serviceCountTasks = [];
 
-            if (Patient == null) throw new NullReferenceException();
-
             IEnumerable<Treatment> ToInvoice = await FetchInvoiceTask();
 
             if (ToInvoice?.Count() > 0)
