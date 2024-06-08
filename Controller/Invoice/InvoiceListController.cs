@@ -13,7 +13,6 @@ namespace DentistStudioApp.Controller
     public class InvoiceListController : AbstractFormListController<Invoice>
     {
         public RecordSource PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
-
         public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
         public SourceOption PaidOptions { get; private set; }

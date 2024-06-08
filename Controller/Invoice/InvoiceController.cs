@@ -25,9 +25,17 @@ namespace DentistStudioApp.Controller
 
         public InvoiceController() 
         {
+            Treatments.NotifyParentEvent += Treatments_NotifyParentEvent;
+            Treatments2.NotifyParentEvent += Treatments_NotifyParentEvent;
             AddSubControllers(Treatments);
             AddSubControllers(Treatments2);
         }
 
+        private async void Treatments_NotifyParentEvent(object? sender, EventArgs e)
+        {
+            Task t1 = Treatments.RequeryAsync();
+            Task t2 = Treatments2.RequeryAsync();
+            await Task.WhenAll(t1, t2);
+        }
     }
 }

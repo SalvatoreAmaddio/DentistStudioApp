@@ -14,10 +14,6 @@ namespace DentistStudioApp.Controller
     {
         public override int DatabaseIndex => 7;
 
-        public TreatmentListController()
-        {
-        }
-
         public override async void OnSubFormFilter()
         {
             List<Task> serviceCountTasks = [];
@@ -34,8 +30,9 @@ namespace DentistStudioApp.Controller
             await Task.WhenAll(serviceCountTasks);
         }
 
-        public override void OnOptionFilterClicked(FilterEventArgs e)
+        public override void OnOptionFilterClicked(FilterEventArgs e) 
         {
+            throw new NotImplementedException();
         }
 
         public override Task<IEnumerable<Treatment>> SearchRecordAsync()
@@ -43,7 +40,6 @@ namespace DentistStudioApp.Controller
             throw new NotImplementedException();
         }
 
-        
         protected override void Open(Treatment? model)
         {
             if (model!=null) 
@@ -55,10 +51,7 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override IWhereClause InstantiateSearchQry()
-        {
-            return new Treatment().Where().EqualsTo("PatientID", "@patientID");
-        }
+        public override IWhereClause InstantiateSearchQry() => new Treatment().Where().EqualsTo("PatientID", "@patientID");
     }
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController 
