@@ -8,11 +8,11 @@
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         d:DataContext="{d:DesignInstance Type=controller:InvoiceController, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="Invoice Form" Height="700" Width="600">
+        WindowState="Maximized"
+        Title="Invoice Form" Height="500" Width="500">
 
     <fr:Form>
-        <Grid Margin="15" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,30,30,10,300" fr:Definition.ColumnDefinitions="100,150,30,120,110">
+        <Grid Margin="15" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,30,30,10,300" fr:Definition.ColumnDefinitions="100,150,30,120,60,30,460">
             <Label Grid.Row="0" Content="Patient"/>
             <Label Grid.Row="1" Content="Invoice ID"/>
             <Label Grid.Row="2" Content="Date"/>
@@ -55,24 +55,24 @@
                 </Grid>
             </Border>
 
-            <fr:SubForm Grid.Row="10" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+            <fr:SubForm x:Name="ToInvoice" Grid.Row="10" Grid.ColumnSpan="5" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
                 <fr:FormList DataContext="{Binding Treatments}">
                     <fr:FormList.Header>
-                        <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
+                        <Label Content="Treatment(s) to invoice" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,90,30,50,50,50">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50">
                                 <Label Grid.Column="1" Content="Start Date"/>
                                 <Label Grid.Column="2" Content="End Date"/>
                                 <Label Grid.Column="3" Content="N. of Services"/>
-                                <Label Grid.Column="5" Grid.ColumnSpan="3" Content="COMMANDS"/>
+                                <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,30,50,50,50" fr:Definition.RowDefinitions="30">
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
                                         <Grid.Resources>
                                             <Style TargetType="Label">
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -81,10 +81,8 @@
                                         <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
                                         <Label Grid.Column="1" Content="{Binding EndDate}"/>
                                         <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                                        <CheckBox Grid.Column="3" IsChecked="{Binding Invoiced}" HorizontalAlignment="Center"/>
-                                        <Button Content="Add" fr:Extension.IsWithinList="True" Grid.Column="4" Command="{Binding AddInvoiceTreatmentCMD}"/>
-                                        <Button Content="Remove" fr:Extension.IsWithinList="True" Grid.Column="5" Command="{Binding RemoveInvoiceTreatmentCMD}"/>
-                                        <fr:OpenButton IsWithinList="True" Grid.Column="6"/>
+                                        <Button Grid.Column="3" Content="Add" fr:Extension.IsWithinList="True" Command="{Binding AddInvoiceTreatmentCMD}"/>
+                                        <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
                                     </Grid>
                                 </fr:FormRow>
                             </DataTemplate>
@@ -92,6 +90,43 @@
                     </fr:Lista>
                 </fr:FormList>        
             </fr:SubForm>
+
+            <fr:SubForm  x:Name="Invoiced" Grid.Row="10" Grid.Column="6" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+                <fr:FormList DataContext="{Binding Treatments}">
+                    <fr:FormList.Header>
+                        <Label Content="Invoiced Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
+                    </fr:FormList.Header>
+                    <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                        <fr:Lista.Header>
+                            <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50">
+                                <Label Grid.Column="1" Content="Start Date"/>
+                                <Label Grid.Column="2" Content="End Date"/>
+                                <Label Grid.Column="3" Content="N. of Services"/>
+                                <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
+                            </Grid>
+                        </fr:Lista.Header>
+                        <fr:Lista.ItemTemplate>
+                            <DataTemplate>
+                                <fr:FormRow>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
+                                        <Grid.Resources>
+                                            <Style TargetType="Label">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
+                                        <Label Grid.Column="1" Content="{Binding EndDate}"/>
+                                        <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                        <Button Grid.Column="3" Content="Remove" fr:Extension.IsWithinList="True" Command="{Binding AddInvoiceTreatmentCMD}"/>
+                                        <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
+                                    </Grid>
+                                </fr:FormRow>
+                            </DataTemplate>
+                        </fr:Lista.ItemTemplate>
+                    </fr:Lista>
+                </fr:FormList>
+            </fr:SubForm>
+
         </Grid>
     </fr:Form>
 </Window>
