@@ -16,11 +16,13 @@ namespace DentistStudioApp.Controller
 
         public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
+        public SourceOption PaidOptions { get; private set; }
 
         public InvoiceListController()
         {
             AfterUpdate += OnAfterUpdate;
             PaymentTypesOptions = new(PaymentTypes, "PaymentBy");
+            PaidOptions = new(AsRecordSource(), "InvoiceID", "Paid");
             AllowNewRecord = false;
         }
 
@@ -36,6 +38,7 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             PaymentTypesOptions.Conditions(SearchQry);
+            PaidOptions.Conditions(SearchQry, true);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
@@ -43,6 +46,13 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
             SearchQry.AddParameter("name", Search.ToLower() + "%");
+           
+            foreach(var x in SearchQry.Params()) 
+            {
+                var h = x.Value;
+                var d = x.Placeholder;
+            }
+            var a = SearchQry.Statement();
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 

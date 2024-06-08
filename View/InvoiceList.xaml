@@ -29,7 +29,7 @@
                     <Label Grid.Column="5" Content="Deposit"/>
                     <Label Grid.Column="6" Content="Amount Due"/>
                     <fr:HeaderFilter Grid.Column="7" Text="Payment Type" IsWithinList="True" ItemsSource="{Binding PaymentTypesOptions}"/>
-                    <Label Grid.Column="8" Content="Paid"/>
+                    <fr:HeaderFilter Grid.Column="8" Text="Paid" IsWithinList="True" ItemsSource="{Binding PaidOptions}"/>
                     <Label Grid.Column="9" Grid.ColumnSpan="3" Content="COMMANDS"/>
                 </Grid>
             </fr:Lista.Header>
