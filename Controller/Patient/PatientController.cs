@@ -45,7 +45,12 @@ namespace DentistStudioApp.Controller
 
             if (obj == null) 
             {
+                string temp = CurrentRecord.PicturePath;
                 CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
+                bool x = File.Exists(temp);
+                if (x)
+                    File.Delete(temp);
+
                 return;
             }
             FileTransfer fileTransfer = new();
