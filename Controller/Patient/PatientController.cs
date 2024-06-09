@@ -35,7 +35,7 @@ namespace DentistStudioApp.Controller
             AddSubControllers(Treatments);
         }
 
-        private void Prova(FilePickerCatch? obj) 
+        private async void Prova(FilePickerCatch? obj) 
         {
             if (CurrentRecord == null) return;
             if (CurrentRecord.IsDirty) 
@@ -47,10 +47,7 @@ namespace DentistStudioApp.Controller
             {
                 string temp = CurrentRecord.PicturePath;
                 CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
-                bool x = File.Exists(temp);
-                if (x)
-                    File.Delete(temp);
-
+                await Task.Run(()=>Sys.TryDelete(temp));
                 return;
             }
             FileTransfer fileTransfer = new();
