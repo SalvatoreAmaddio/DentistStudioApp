@@ -1,7 +1,6 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
-using DentistStudioApp.Utils;
 using FrontEnd.Model;
 using FrontEnd.Source;
 using System.Data.Common;
@@ -56,7 +55,6 @@ namespace DentistStudioApp.Model
         [Field] //This attribute tells this property represents a Field of the Employee Table.
         public string PhoneNumber { get => _phoneNumber; set => UpdateProperty(ref value, ref _phoneNumber); }
 
-        [Mandatory] //This attribute tells this property cannot be null or empty if it is a string.
         [Field] //This attribute tells this property represents a Field of the Employee Table.
         public string PicturePath 
         { 

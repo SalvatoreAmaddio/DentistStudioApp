@@ -1,18 +1,20 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Source;
+using Backend.Utils;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
+using FrontEnd.Forms;
+using System.IO;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
     public class PatientController : AbstractFormController<Patient>
     {
-        private IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();
-       
+        private IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();  
         public TreatmentListController Treatments { get; } = new();
         private Survey? Survey { get; set; }
         public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
@@ -23,10 +25,36 @@ namespace DentistStudioApp.Controller
 
         public ICommand AddInvoiceCMD { get; }
 
+        public ICommand FilePickerCMD { get; }
+
         public PatientController() : base()
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
             AddInvoiceCMD = new CMDAsync(AddInvoice);
+            FilePickerCMD = new Command<FilePickerCatch>(Prova);
+            AddSubControllers(Treatments);
+        }
+
+        private void Prova(FilePickerCatch? obj) 
+        {
+            if (CurrentRecord == null) return;
+            if (CurrentRecord.IsDirty) 
+            { 
+                if (!PerformUpdate()) return;
+            }
+
+            if (obj == null) 
+            {
+                CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
+                return;
+            }
+            FileTransfer fileTransfer = new();
+            if (string.IsNullOrEmpty(obj.FilePath)) return;
+            fileTransfer.SourceFilePath = obj.FilePath;
+            fileTransfer.DestinationFolder = Path.Combine(Sys.AppPath(), "PatientImages");
+            fileTransfer.NewFileName = $"{CurrentRecord.PatientID}_{CurrentRecord.FirstName}_{CurrentRecord.LastName}_PROFILE_PICTURE.{obj.Extension}";
+            fileTransfer.Copy();
+            CurrentRecord.PicturePath = fileTransfer.DestinationFilePath;
         }
 
         private async Task AddInvoice() 
