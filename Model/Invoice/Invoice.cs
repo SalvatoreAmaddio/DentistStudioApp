@@ -86,7 +86,7 @@ namespace DentistStudioApp.Model
 
         public override ISQLModel Read(DbDataReader reader) => new Invoice(reader);
 
-        public override string ToString() => $"{InvoiceID}";
+        public override string ToString() => $"{InvoiceID} - Date: {DOI} - Amount: {Amount} - Deposit {Deposit} - Paid: {Paid} - PaymentType: {PaymentType}";
 
     }
 }

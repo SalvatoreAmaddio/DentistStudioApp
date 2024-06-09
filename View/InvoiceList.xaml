@@ -15,7 +15,8 @@
         <fr:FormList.Header>
             <Grid Background="{StaticResource DefaultWhite}">
                 <StackPanel VerticalAlignment="Center" Margin="5,0,5,0">
-                    <fr:Text Placeholder="Search Invoice..." Text="{Binding Search}"/>
+                    <Button Content="CLICK" Click="Button_Click"/>
+                    <!--<fr:Text Placeholder="Search Invoice..." Text="{Binding Search}"/>-->
                 </StackPanel>
             </Grid>
         </fr:FormList.Header>
@@ -37,7 +38,7 @@
                 <DataTemplate>
                     <fr:FormRow>
                         <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,100,80,90,90,105,50,50,50,50">
-                            <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatient}}"/>
+                            <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay}"/>
                             <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
                             <DatePicker Grid.Column="2" SelectedDate="{Binding DOI}"/>
                             <fr:Text Grid.Column="3" IsReadOnly="True" Text="{Binding Amount, StringFormat={}{0:C2}}"/>

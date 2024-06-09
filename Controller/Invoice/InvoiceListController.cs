@@ -35,10 +35,10 @@ namespace DentistStudioApp.Controller
 
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
-            ReloadSearchQry();
-            PaymentTypesOptions.Conditions(SearchQry);
-            PaidOptions.Conditions(SearchQry); // Filtering by a primitive data type, not by an object. In this case a boolean.
-            OnAfterUpdate(e, new(null, null, nameof(Search)));
+            //ReloadSearchQry();
+            //PaymentTypesOptions.Conditions(SearchQry);
+            //PaidOptions.Conditions(SearchQry); // Filtering by a primitive data type, not by an object. In this case a boolean.
+            //OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
         public override async Task<IEnumerable<Invoice>> SearchRecordAsync()
