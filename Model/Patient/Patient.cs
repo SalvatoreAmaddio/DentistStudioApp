@@ -58,7 +58,11 @@ namespace DentistStudioApp.Model
 
         [Mandatory] //This attribute tells this property cannot be null or empty if it is a string.
         [Field] //This attribute tells this property represents a Field of the Employee Table.
-        public string PicturePath { get => _picturePath; set => UpdateProperty(ref value, ref _picturePath); }
+        public string PicturePath 
+        { 
+            get => _picturePath;
+            set => UpdateProperty(ref value, ref _picturePath);
+        }
 
         #endregion
 
