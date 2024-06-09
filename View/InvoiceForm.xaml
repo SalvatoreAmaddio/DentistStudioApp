@@ -56,7 +56,7 @@
             </Border>
 
             <fr:SubForm x:Name="ToInvoice" Grid.Row="10" Grid.ColumnSpan="5" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                <fr:FormList DataContext="{Binding Treatments}">
+                <fr:FormList DataContext="{Binding TreatmentsToInvoice}">
                     <fr:FormList.Header>
                         <Label Content="Treatment(s) to invoice" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>
@@ -92,7 +92,7 @@
             </fr:SubForm>
 
             <fr:SubForm  x:Name="Invoiced" Grid.Row="10" Grid.Column="6" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                <fr:FormList DataContext="{Binding Treatments2}">
+                <fr:FormList DataContext="{Binding TreatmentsInvoiced}">
                     <fr:FormList.Header>
                         <Label Content="Invoiced Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
                     </fr:FormList.Header>

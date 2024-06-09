@@ -2,6 +2,8 @@
 using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
+using FrontEnd.Dialogs;
+using FrontEnd.Events;
 
 namespace DentistStudioApp.Controller
 {
@@ -14,27 +16,38 @@ namespace DentistStudioApp.Controller
             set
             {
                 UpdateProperty(ref value, ref _patient);
-                Treatments.Patient = value;
-                Treatments2.Patient = value;
+                TreatmentsToInvoice.Patient = value;
+                TreatmentsInvoiced.Patient = value;
             }
         }
-        public TreatmentToInvoiceListController Treatments { get; } = new();
-        public TreatmentInvoicedListController Treatments2 { get; } = new();
+        public TreatmentToInvoiceListController TreatmentsToInvoice { get; } = new();
+        public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
         public override int DatabaseIndex => 12;
         public RecordSource PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
 
         public InvoiceController() 
         {
-            Treatments.NotifyParentEvent += Treatments_NotifyParentEvent;
-            Treatments2.NotifyParentEvent += Treatments_NotifyParentEvent;
-            AddSubControllers(Treatments);
-            AddSubControllers(Treatments2);
+            TreatmentsToInvoice.NotifyParentEvent += OnNotifyParentEvent;
+            TreatmentsInvoiced.NotifyParentEvent += OnNotifyParentEvent;
+            AddSubControllers(TreatmentsToInvoice);
+            AddSubControllers(TreatmentsInvoiced);
+            NewRecordEvent += OnNewRecordEvent;
         }
 
-        private async void Treatments_NotifyParentEvent(object? sender, EventArgs e)
+        private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
         {
-            Task t1 = Treatments.RequeryAsync();
-            Task t2 = Treatments2.RequeryAsync();
+            if (TreatmentsToInvoice.Source.Count == 0) 
+            {
+                Failure.Allert("No more treatments to invoice");
+                GoPrevious();
+                e.Cancel = true;
+            }
+        }
+
+        private async void OnNotifyParentEvent(object? sender, EventArgs e)
+        {
+            Task t1 = TreatmentsToInvoice.RequeryAsync();
+            Task t2 = TreatmentsInvoiced.RequeryAsync();
             await Task.WhenAll(t1, t2);
         }
     }
