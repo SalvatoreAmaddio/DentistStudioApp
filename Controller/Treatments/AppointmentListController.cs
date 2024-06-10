@@ -125,7 +125,6 @@ namespace DentistStudioApp.Controller
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
-            var x = SearchQry.Statement();
             RecordSource<Appointment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
