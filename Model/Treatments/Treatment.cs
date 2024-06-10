@@ -65,7 +65,7 @@ namespace DentistStudioApp.Model
         //SELECT Treatment.*
         //FROM Treatment LEFT JOIN InvoicedTreatment ON Treatment.TreatmentID = InvoicedTreatment.TreatmentID
         //WHERE InvoicedTreatment.InvoiceID IS NULL AND Treatment.PatientID = 1
-        public static async Task<IEnumerable<Treatment>> GetToInvoice(long patientID)
+        public static async Task<IEnumerable<Treatment>> GetToInvoice(long? patientID)
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             Treatment treatment = new();

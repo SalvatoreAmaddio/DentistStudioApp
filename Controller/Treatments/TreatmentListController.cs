@@ -60,6 +60,8 @@ namespace DentistStudioApp.Controller
         protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
         public ICommand InvoiceTreatmentCMD { get; }
+        public abstract CRUD Crud { get; }
+        private bool Invoicing => Crud == CRUD.INSERT;
         public AbstractTreatmentInvoice() => InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
         protected override void Open(Treatment? model)
         {
@@ -71,7 +73,43 @@ namespace DentistStudioApp.Controller
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }
-        protected abstract Task InvoiceTreatmentTask();
+        protected virtual async Task InvoiceTreatmentTask()
+        {
+            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
+            if (CurrentRecord == null) throw new NullReferenceException();
+
+            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
+
+            string? sql = new InvoicedTreatment().Where().EqualsTo("TreatmentID", "@id").Statement();
+            List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
+
+            RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+
+            InvoicedTreatment? invoicedTreatment = records.FirstOrDefault();
+
+            if (invoicedTreatment == null) return;
+
+            object? amount = await total;
+
+            if (amount != null)
+                if (Invoicing)
+                    CurrentInvoice?.SetAmount((double)amount);
+                else 
+                    CurrentInvoice?.RemoveAmount((double)amount);
+
+            InvoicedTreatmentDB.Model = invoicedTreatment;
+            InvoicedTreatmentDB.Crud(Crud);
+
+            CurrentRecord.Invoiced = Invoicing;
+            PerformUpdate();
+
+            if (ParentController != null)
+            {
+                CurrentInvoice!.IsDirty = true;
+                ParentController.CurrentModel = CurrentInvoice;
+                ParentController.PerformUpdate();
+            }
+        }
         public abstract Task<IEnumerable<Treatment>> FetchInvoiceTask();
         public override async void OnSubFormFilter()
         {
@@ -94,95 +132,14 @@ namespace DentistStudioApp.Controller
 
     public class TreatmentToInvoiceListController : AbstractTreatmentInvoice
     {
-        protected override async Task InvoiceTreatmentTask()
-        {
-            if (CurrentRecord == null) throw new NullReferenceException();
-            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
+        public override CRUD Crud => CRUD.INSERT;
 
-            
-            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
-
-            InvoicedTreatment invoicedTreatment = new()
-            {
-                Treatment = CurrentRecord,
-                Invoice = CurrentInvoice
-            };
-
-            object? amount = await total;
-
-            if (amount != null) 
-            {
-                CurrentInvoice?.SetAmount((double)amount);
-                if (ParentController!=null) 
-                {
-                    CurrentInvoice!.IsDirty = true;
-                    ParentController.CurrentModel = CurrentInvoice;
-                    ParentController.PerformUpdate();
-                }
-            }
-
-            InvoicedTreatmentDB.Model = invoicedTreatment;
-            InvoicedTreatmentDB.Crud(CRUD.INSERT);
-
-            CurrentRecord.Invoiced = true;
-            PerformUpdate();
-
-            if (ParentController != null)
-            {
-                CurrentInvoice!.IsDirty = true;
-                ParentController.CurrentModel = CurrentInvoice;
-                ParentController.PerformUpdate();
-            }
-        }
-
-        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetToInvoice(Patient.PatientID);
+        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetToInvoice(Patient?.PatientID);
     }
 
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
     {
-        protected override async Task InvoiceTreatmentTask()
-        {
-            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
-            if (CurrentRecord == null) throw new NullReferenceException();
-
-            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
-
-            string? sql = new InvoicedTreatment().Where().EqualsTo("TreatmentID", "@id").Statement();
-            List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
-
-            var records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
-
-            InvoicedTreatment? toRemove = records.FirstOrDefault();
-
-            if (toRemove == null) return;
-
-            object? amount = await total;
-
-            if (amount != null)
-            {
-                CurrentInvoice?.RemoveAmount((double)amount);
-                if (ParentController != null)
-                {
-                    CurrentInvoice!.IsDirty = true;
-                    ParentController.CurrentModel = CurrentInvoice;
-                    ParentController.PerformUpdate();
-                }
-            }
-
-            InvoicedTreatmentDB.Model = toRemove;
-            InvoicedTreatmentDB.Crud(CRUD.DELETE);
-
-            CurrentRecord.Invoiced = false;
-            PerformUpdate();
-
-            if (ParentController != null)
-            {
-                CurrentInvoice!.IsDirty = true;
-                ParentController.CurrentModel = CurrentInvoice;
-                ParentController.PerformUpdate();
-            }
-        }
-
+        public override CRUD Crud => CRUD.DELETE;
         public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetInvoiced(Patient?.PatientID, CurrentInvoice?.InvoiceID);
     }
 }
