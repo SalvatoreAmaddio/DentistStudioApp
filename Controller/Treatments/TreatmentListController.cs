@@ -169,6 +169,6 @@ namespace DentistStudioApp.Controller
             PerformUpdate();
         }
 
-        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetInvoiced(Patient.PatientID, CurrentInvoice.InvoiceID);
+        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetInvoiced(Patient?.PatientID, CurrentInvoice?.InvoiceID);
     }
 }

@@ -44,7 +44,7 @@ namespace DentistStudioApp.Controller
         public override async Task<IEnumerable<Invoice>> SearchRecordAsync()
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
-            SearchQry.AddParameter("name", Search.ToLower() + "%");           
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
