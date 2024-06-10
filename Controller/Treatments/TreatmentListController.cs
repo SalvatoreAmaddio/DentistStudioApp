@@ -126,6 +126,13 @@ namespace DentistStudioApp.Controller
 
             CurrentRecord.Invoiced = true;
             PerformUpdate();
+
+            if (ParentController != null)
+            {
+                CurrentInvoice!.IsDirty = true;
+                ParentController.CurrentModel = CurrentInvoice;
+                ParentController.PerformUpdate();
+            }
         }
 
         public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetToInvoice(Patient.PatientID);
@@ -167,6 +174,13 @@ namespace DentistStudioApp.Controller
 
             CurrentRecord.Invoiced = false;
             PerformUpdate();
+
+            if (ParentController != null)
+            {
+                CurrentInvoice!.IsDirty = true;
+                ParentController.CurrentModel = CurrentInvoice;
+                ParentController.PerformUpdate();
+            }
         }
 
         public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetInvoiced(Patient?.PatientID, CurrentInvoice?.InvoiceID);

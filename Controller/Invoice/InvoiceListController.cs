@@ -21,7 +21,7 @@ namespace DentistStudioApp.Controller
         {
             AfterUpdate += OnAfterUpdate;
             PaymentTypesOptions = new(PaymentTypes, "PaymentBy");
-            PaidOptions = new(AsRecordSource(), "InvoiceID", "Paid");
+            PaidOptions = new PrimitiveSourceOption(AsRecordSource(), "InvoiceID", "Paid");
             AllowNewRecord = false;
         }
 
