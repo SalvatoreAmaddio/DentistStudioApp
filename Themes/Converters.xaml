@@ -4,7 +4,8 @@
                     >
 
     <converter:FetchClinicName x:Key="GetClinic"/>
-    <converter:FetchPatient x:Key="GetPatient"/>
+    <converter:FetchPatientFromInvoicedTreatment x:Key="GetPatientFromInvoicedTreatment"/>
+    <converter:FetchPatientFromAppointmentTreatment x:Key="GetPatientFromAppointmentTreatment"/>
     <converter:FetchSurveyQuestion x:Key="GetQuestion"/>
     <converter:FetchSurveyQuestionCategory x:Key="GetCategory"/>
 </ResourceDictionary>

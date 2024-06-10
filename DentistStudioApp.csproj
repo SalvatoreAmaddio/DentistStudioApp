@@ -32,6 +32,9 @@
     <Compile Update="View\InvoiceForm.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\AppointmentListFormWin.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\PaymentTypeList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

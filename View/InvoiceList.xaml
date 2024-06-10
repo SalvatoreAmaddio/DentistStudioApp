@@ -47,7 +47,7 @@
                 <DataTemplate>
                     <fr:FormRow>
                         <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,100,80,90,90,105,50,50,50,50">
-                            <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatient}}"/>
+                            <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatientFromInvoicedTreatment}}"/>
                             <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
                             <DatePicker Grid.Column="2" SelectedDate="{Binding DOI}"/>
                             <fr:Text Grid.Column="3" IsReadOnly="True" Text="{Binding Amount, StringFormat={}{0:C2}}"/>

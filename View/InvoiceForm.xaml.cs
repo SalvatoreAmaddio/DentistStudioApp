@@ -23,7 +23,7 @@ namespace DentistStudioApp.View
 
         public InvoiceForm(Invoice? invoice) : this() 
         {
-            FetchPatient fetchPatient = new ();
+            FetchPatientFromInvoicedTreatment fetchPatient = new ();
             InvoiceController controller = this.GetController<InvoiceController>();
             controller.GoAt(invoice);
             controller.Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);

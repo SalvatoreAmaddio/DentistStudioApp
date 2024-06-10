@@ -68,5 +68,6 @@ namespace DentistStudioApp.Model
 
         public override ISQLModel Read(DbDataReader reader) => new Appointment(reader);
 
+        public override string ToString() => $"Date: {DOA} - Time: {TOA} - Service: {Service} - Dentist: {Dentist} - Room Number: {RoomNumber} Attended: {Attended}";
     }
 }

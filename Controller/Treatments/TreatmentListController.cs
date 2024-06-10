@@ -109,7 +109,7 @@ namespace DentistStudioApp.Controller
             CurrentRecord.Invoiced = Invoicing;
             PerformUpdate();
 
-            if (ParentController != null)
+            if (ParentController != null) //Requery ChildSources of Invoices
             {
                 CurrentInvoice!.IsDirty = true;
                 ParentController.CurrentModel = CurrentInvoice;

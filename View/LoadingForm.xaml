@@ -10,7 +10,7 @@
             WindowStartupLocation="CenterScreen"
             Title="Welcome" Height="450" Width="450">
 
-    <fr:LoadingMask MainWindow="MainWindow">
+    <fr:LoadingMask MainWindow="AppointmentListFormWin">
         <Image Stretch="Fill"/>
     </fr:LoadingMask>
 </Window>
