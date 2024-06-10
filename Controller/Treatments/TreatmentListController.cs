@@ -83,9 +83,15 @@ namespace DentistStudioApp.Controller
             string? sql = new InvoicedTreatment().Where().EqualsTo("TreatmentID", "@id").Statement();
             List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
 
-            RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+            InvoicedTreatment? invoicedTreatment = null;
 
-            InvoicedTreatment? invoicedTreatment = records.FirstOrDefault();
+            if (Invoicing) 
+                invoicedTreatment = new(CurrentInvoice, CurrentRecord);
+            else 
+            {
+                RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+                invoicedTreatment = records.FirstOrDefault();
+            }
 
             if (invoicedTreatment == null) return;
 

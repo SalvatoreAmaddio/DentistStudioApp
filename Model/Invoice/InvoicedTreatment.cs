@@ -30,6 +30,11 @@ namespace DentistStudioApp.Model
         
         }
 
+        public InvoicedTreatment(Invoice? invoice, Treatment? treatment)
+        {
+            this._invoice = invoice;
+            this._treatment = treatment;
+        }
 
         public InvoicedTreatment(DbDataReader reader)
         {
