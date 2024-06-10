@@ -6,6 +6,7 @@ using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
@@ -42,7 +43,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Appointment? model)
         {
-            throw new NotImplementedException();
+            
         }
 
     }
@@ -124,7 +125,8 @@ namespace DentistStudioApp.Controller
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
-            var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            var x = SearchQry.Statement();
+            RecordSource<Appointment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
