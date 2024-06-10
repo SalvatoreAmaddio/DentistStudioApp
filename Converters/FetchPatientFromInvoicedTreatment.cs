@@ -9,18 +9,18 @@ namespace DentistStudioApp.Converters
 {
     public abstract class AbstractFetchModel<M,D> : IValueConverter where M : AbstractModel, new() where D : AbstractModel, new()
     {
-        protected M? Object; 
+        protected M? Record; 
         protected IAbstractDatabase? Db => DatabaseManager.Find<D>();
-        protected abstract string sql { get; }
-        protected List<QueryParameter> para = [];
+        protected abstract string Sql { get; }
+        protected readonly List<QueryParameter> para = [];
         public abstract object? Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        public virtual object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Object;
+        public virtual object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Record;
 
     }
 
     public class FetchPatientFromInvoicedTreatment : AbstractFetchModel<Invoice, Patient>
     {
-        protected override string sql => new InvoicedTreatment()
+        protected override string Sql => new InvoicedTreatment()
         .Select("Patient.*")
         .From()
         .InnerJoin(nameof(Treatment), "TreatmentID")
@@ -30,16 +30,16 @@ namespace DentistStudioApp.Converters
 
         public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Object = (Invoice)value;
-            para.Add(new("id", Object.InvoiceID));
-            return (Patient?)Db?.Retrieve(sql, para).FirstOrDefault();
+            Record = (Invoice)value;
+            para.Add(new("id", Record.InvoiceID));
+            return (Patient?)Db?.Retrieve(Sql, para).FirstOrDefault();
         }
 
     }
 
     public class FetchPatientFromAppointmentTreatment : AbstractFetchModel<Appointment, Patient>
     {
-        protected override string sql => new Patient()
+        protected override string Sql => new Patient()
         .Select("Patient.*")
         .From()
         .InnerJoin(nameof(Treatment), "PatientID")
@@ -48,9 +48,9 @@ namespace DentistStudioApp.Converters
 
         public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Object = (Appointment?)value;
-            para.Add(new("id", Object?.Treatment?.TreatmentID));
-            return (Patient?)Db?.Retrieve(sql, para).FirstOrDefault();
+            Record = (Appointment?)value;
+            para.Add(new("id", Record?.Treatment?.TreatmentID));
+            return (Patient?)Db?.Retrieve(Sql, para).FirstOrDefault();
         }
     }
 

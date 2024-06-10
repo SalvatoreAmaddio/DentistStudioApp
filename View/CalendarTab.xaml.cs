@@ -2,30 +2,31 @@
 using DentistStudioApp.Model;
 using FrontEnd.Events;
 using FrontEnd.Forms.Calendar;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.View
 {
     public partial class CalendarTab : Page
     {
         private IAbstractDatabase? AppointmentDB = DatabaseManager.Find<Appointment>();
-        private IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
         public CalendarTab()
         {
             InitializeComponent();
         }
         
-        private async void CalendarForm_MouseUp(object sender, MouseButtonEventArgs e)
+        private void CalendarForm_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var x = ((CalendarForm)sender)?.SelectedSlot?.Models?.Count();
-            MessageBox.Show(x?.ToString());
+            DateTime? date = ((CalendarForm?)sender)?.SelectedSlot?.Date;
+            IEnumerable<Appointment>? records = ((CalendarForm?)sender)?.SelectedSlot?.Models?.Cast<Appointment>();
+            AppointmentListFormWin win = new (date);
+            win.ShowDialog();
         }
 
         private void CalendarForm_OnPreparing(object sender, OnPreparingCalendarFormEventArgs e)
         {
-            e.Model = AppointmentDB?.MasterSource.Cast<Appointment>().Where(s => s.DOA == e.Date);
+            e.Records = AppointmentDB?.MasterSource.Cast<Appointment>().Where(s => s.DOA == e.Date);
         }
     }
 }

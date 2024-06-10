@@ -13,7 +13,8 @@ namespace DentistStudioApp.Controller
     {
         public SourceOption ServiceOptions { get; private set; }
         public SourceOption DentistOptions { get; private set; }
-
+        public SourceOption AttendedOptions { get; private set; }
+        public SourceOption DatesOptions { get; private set; }
         public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
 
@@ -23,8 +24,23 @@ namespace DentistStudioApp.Controller
         {
             ServiceOptions = new(Services, "ServiceName");
             DentistOptions = new(Dentists, "FullName");
+            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "Attended");
+            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "DOA");
             NewRecordEvent += OnNewRecordEvent;
             OpenWindowOnNew = false;
+        }
+
+        public void SetTreatment(Treatment? treatment) 
+        {
+            ParentRecord = treatment;
+        }
+
+        public void ReloadFilters() 
+        {
+            ServiceOptions = new(Services, "ServiceName");
+            DentistOptions = new(Dentists, "FullName");
+            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "Attended");
+            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "DOA");
         }
 
         private void OnNewRecordEvent(object? sender, EventArgs e)
@@ -52,6 +68,7 @@ namespace DentistStudioApp.Controller
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
+            DatesOptions.Conditions(SearchQry);
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
@@ -71,7 +88,7 @@ namespace DentistStudioApp.Controller
         {
             bool? IsNewRecord = model?.IsNewRecord();
             bool result = base.Update(model);
-            if (result) 
+            if (result)
                 if (IsNewRecord!=null) 
                     if (IsNewRecord.Value) 
                         ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.ADD);
