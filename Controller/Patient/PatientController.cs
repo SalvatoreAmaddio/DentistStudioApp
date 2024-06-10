@@ -26,37 +26,39 @@ namespace DentistStudioApp.Controller
 
         public ICommand AddInvoiceCMD { get; }
 
-        public ICommand FilePickerCMD { get; }
+        public ICommand FilePickedCMD { get; }
 
         public PatientController() : base()
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
             AddInvoiceCMD = new CMDAsync(AddInvoice);
-            FilePickerCMD = new Command<FilePickerCatch>(Prova);
+            FilePickedCMD = new Command<FilePickerCatch>(Prova);
             AddSubControllers(Treatments);
         }
 
         private void Prova(FilePickerCatch? obj) 
         {
-            if (CurrentRecord == null) return;
+            if (CurrentRecord == null || obj == null) return;
             if (CurrentRecord.IsDirty) 
-            { 
                 if (!PerformUpdate()) return;
-            }
 
-            if (obj == null) 
+            if (obj.FileRemoved)
             {
                 string temp = CurrentRecord.PicturePath;
                 CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
-                File.Delete(temp);
+                Sys.AttemptFileDelete(temp);
                 return;
             }
-            FileTransfer fileTransfer = new();
+
             if (string.IsNullOrEmpty(obj.FilePath)) return;
+
+            FileTransfer fileTransfer = new();
+
             fileTransfer.SourceFilePath = obj.FilePath;
             fileTransfer.DestinationFolder = Path.Combine(Sys.AppPath(), "PatientImages");
             fileTransfer.NewFileName = $"{CurrentRecord.PatientID}_{CurrentRecord.FirstName}_{CurrentRecord.LastName}_PROFILE_PICTURE.{obj.Extension}";
             fileTransfer.Copy();
+
             CurrentRecord.PicturePath = fileTransfer.DestinationFilePath;
         }
 
