@@ -7,7 +7,6 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
 using FrontEnd.Forms;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Input;
 
