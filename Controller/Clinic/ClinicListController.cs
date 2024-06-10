@@ -16,11 +16,11 @@ namespace DentistStudioApp.Controller
             OpenWindowOnNew = false;
         }
 
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Search)))
             {
-                OnSearchPropertyRequery(sender);
+                await OnSearchPropertyRequeryAsync(sender);
             }
         }
 

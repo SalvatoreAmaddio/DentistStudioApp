@@ -20,7 +20,7 @@ namespace DentistStudioApp.Controller
         {
             if (e.Is(nameof(Search))) 
             {
-                OnSearchPropertyRequery(sender);
+                OnSearchPropertyRequeryAsync(sender);
             }
         }
 
