@@ -35,7 +35,7 @@ namespace DentistStudioApp.Controller
             AddSubControllers(Treatments);
         }
 
-        private async void Prova(FilePickerCatch? obj) 
+        private void Prova(FilePickerCatch? obj) 
         {
             if (CurrentRecord == null) return;
             if (CurrentRecord.IsDirty) 

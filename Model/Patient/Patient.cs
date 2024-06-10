@@ -3,7 +3,9 @@ using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using FrontEnd.Source;
+using FrontEnd.Utils;
 using System.Data.Common;
+using System.Windows.Media.Imaging;
 
 namespace DentistStudioApp.Model
 {
@@ -61,7 +63,6 @@ namespace DentistStudioApp.Model
             get => _picturePath;
             set => UpdateProperty(ref value, ref _picturePath);
         }
-
         #endregion
 
         #region Constructor
