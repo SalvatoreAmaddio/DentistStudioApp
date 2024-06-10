@@ -19,7 +19,6 @@ namespace DentistStudioApp.View
         private void CalendarForm_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DateTime? date = ((CalendarForm?)sender)?.SelectedSlot?.Date;
-            IEnumerable<Appointment>? records = ((CalendarForm?)sender)?.SelectedSlot?.Models?.Cast<Appointment>();
             AppointmentListFormWin win = new (date);
             win.ShowDialog();
         }

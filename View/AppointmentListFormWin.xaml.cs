@@ -1,21 +1,18 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
 using FrontEnd.ExtensionMethods;
-using FrontEnd.Model;
 using System.Windows;
 
 namespace DentistStudioApp.View
 {
     public partial class AppointmentListFormWin : Window
     {
-        private AppointmentListController Controller;
+        private AppointListController2 Controller;
         public AppointmentListFormWin()
         {
             InitializeComponent();
-            this.SetController(new AppointmentListController());
-            Controller = this.GetController<AppointmentListController>();
-            Controller.AllowNewRecord = false;
-            Controller.OpenWindowOnNew = true;
+            this.SetController(new AppointListController2());
+            Controller = this.GetController<AppointListController2>();
         }
 
         public AppointmentListFormWin(DateTime? date) : this()
@@ -23,8 +20,7 @@ namespace DentistStudioApp.View
             Appointment? appointment = Controller.AsRecordSource().FirstOrDefault(s=>s.DOA.Equals(date)); 
             Controller.SetTreatment(appointment?.Treatment);
             Controller.ReloadFilters();
-            Controller.DatesOptions.FirstOrDefault(s => s.Value.Equals(date)).IsSelected = true;
-            Controller.OnOptionFilterClicked(new());
+            Controller.TriggerFilter(date);
         }
 
 
