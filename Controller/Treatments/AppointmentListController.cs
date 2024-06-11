@@ -25,8 +25,8 @@ namespace DentistStudioApp.Controller
         {
             ServiceOptions = new(Services, "ServiceName");
             DentistOptions = new(Dentists, "FullName");
-            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "Attended");
-            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "DOA");
+            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "Attended");
+            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "DOA");
             OpenWindowOnNew = false;
         }
 
@@ -34,8 +34,8 @@ namespace DentistStudioApp.Controller
         {
             ServiceOptions = new(Services, "ServiceName");
             DentistOptions = new(Dentists, "FullName");
-            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "Attended");
-            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "AppointmentID", "DOA");
+            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "Attended");
+            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "DOA");
         }
         public override Task<IEnumerable<Appointment>> SearchRecordAsync()
         {

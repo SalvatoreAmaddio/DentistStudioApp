@@ -47,7 +47,7 @@
                                 <fr:HeaderFilter Grid.Column="1" IsWithinList="True" ItemsSource="{Binding ServiceOptions}" Text="Service"/>
                                 <fr:HeaderFilter Grid.Column="2" IsWithinList="True" ItemsSource="{Binding DentistOptions}" Text="Dentist"/>
                                 <Label Grid.Column="3" Content="Room Num"/>
-                                <Label Grid.Column="4" Content="Date"/>
+                                <fr:HeaderFilter Grid.Column="4" IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date"/>
                                 <Label Grid.Column="5" Content="Time"/>
                                 <Label Grid.Column="6" Content="Notes"/>
                                 <Label Grid.Column="7" Content="Attended"/>

@@ -16,12 +16,14 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
         public SourceOption PaidOptions { get; private set; }
+        public SourceOption DatesOptions { get; private set; }
 
         public InvoiceListController()
         {
             AfterUpdate += OnAfterUpdate;
             PaymentTypesOptions = new(PaymentTypes, "PaymentBy");
-            PaidOptions = new PrimitiveSourceOption(AsRecordSource(), "InvoiceID", "Paid");
+            PaidOptions = new PrimitiveSourceOption(this, "Paid");
+            DatesOptions = new PrimitiveSourceOption(this, "DOI");
             AllowNewRecord = false;
         }
 
@@ -37,7 +39,8 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             PaymentTypesOptions.Conditions(SearchQry);
-            PaidOptions.Conditions(SearchQry); // Filtering by a primitive data type, not by an object. In this case a boolean.
+            PaidOptions.Conditions(SearchQry);
+            DatesOptions.Conditions(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 

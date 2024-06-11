@@ -41,6 +41,7 @@ namespace DentistStudioApp.View
         private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
         {
             SubController?.ServiceOptions.FirstOrDefault(s => s.Record.Equals(appointment?.Service))?.Select();
+            SubController?.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == appointment?.DOA)?.Select();
             SubController?.OnOptionFilterClicked(new());
             if (SubController != null)
                 SubController.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
