@@ -1,18 +1,18 @@
 ﻿using Backend.Database;
-using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
 using Backend.ExtensionMethods;
 using Backend.Model;
+using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
     public class DentistListController : AbstractFormListController<Dentist>
     {
         public SourceOption ClinicOptions { get; private set; }
-        public RecordSource Clinics { get; private set; } = new(DatabaseManager.Find<Clinic>()!);
+        public RecordSource<Clinic> Clinics { get; private set; } = new(DatabaseManager.Find<Clinic>()!);
         public override int DatabaseIndex => 10;
 
         public DentistListController() 

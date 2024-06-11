@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="Treatment Form" Height="450" Width="800">
+        Title="Treatment Form" Height="450" Width="810">
     <fr:Form>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
@@ -43,21 +43,21 @@
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65,50,50">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,65,100,70,100,80,50,50">
                                 <fr:HeaderFilter Grid.Column="1" IsWithinList="True" ItemsSource="{Binding ServiceOptions}" Text="Service"/>
                                 <fr:HeaderFilter Grid.Column="2" IsWithinList="True" ItemsSource="{Binding DentistOptions}" Text="Dentist"/>
-                                <Label Grid.Column="3" Content="Room Num"/>
+                                <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding RoomsOptions}" Text="Room"/>
                                 <fr:HeaderFilter Grid.Column="4" IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date"/>
-                                <Label Grid.Column="5" Content="Time"/>
+                                <fr:HeaderFilter Grid.Column="5" IsWithinList="True" ItemsSource="{Binding TimesOptions}" Text="Time"/>
                                 <Label Grid.Column="6" Content="Notes"/>
-                                <Label Grid.Column="7" Content="Attended"/>
+                                <fr:HeaderFilter Grid.Column="7" IsWithinList="True" ItemsSource="{Binding AttendedOptions}" Text="Attended"/>
                                 <Label Grid.Column="8" Grid.ColumnSpan="2" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,75,100,70,100,65,50,50" fr:Definition.RowDefinitions="30">
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,65,100,70,100,80,50,50" fr:Definition.RowDefinitions="30">
                                         <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}"/>
 
                                         <fr:Combo Grid.Column="1" ControllerRecordSource="Dentists" SelectedItem="{Binding Dentist}">

@@ -1,13 +1,12 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
-using Backend.Source;
+using FrontEnd.Source;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
@@ -17,16 +16,20 @@ namespace DentistStudioApp.Controller
         public SourceOption DentistOptions { get; private set; }
         public SourceOption AttendedOptions { get; private set; }
         public SourceOption DatesOptions { get; private set; }
-        public RecordSource Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
-        public RecordSource Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
+        public SourceOption TimesOptions { get; private set; }
+        public SourceOption RoomsOptions { get; private set; }
+        public RecordSource<Service> Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
+        public RecordSource<Dentist> Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
         public override int DatabaseIndex => 9;
 
         public AbstractAppointmentListController()
         {
             ServiceOptions = new(Services, "ServiceName");
             DentistOptions = new(Dentists, "FullName");
-            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "Attended");
-            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "DOA");
+            AttendedOptions = new PrimitiveSourceOption(this, "Attended");
+            DatesOptions = new PrimitiveSourceOption(this, "DOA");
+            TimesOptions = new PrimitiveSourceOption(this, "TOA");
+            RoomsOptions = new PrimitiveSourceOption(this, "RoomNumber");
             OpenWindowOnNew = false;
         }
 
@@ -34,9 +37,12 @@ namespace DentistStudioApp.Controller
         {
             ServiceOptions = new(Services, "ServiceName");
             DentistOptions = new(Dentists, "FullName");
-            AttendedOptions = new PrimitiveSourceOption(AsRecordSource(), "Attended");
-            DatesOptions = new PrimitiveSourceOption(AsRecordSource(), "DOA");
+            AttendedOptions = new PrimitiveSourceOption(this, "Attended");
+            DatesOptions = new PrimitiveSourceOption(this, "DOA");
+            TimesOptions = new PrimitiveSourceOption(this, "TOA");
+            RoomsOptions = new PrimitiveSourceOption(this, "RoomNumber");
         }
+
         public override Task<IEnumerable<Appointment>> SearchRecordAsync()
         {
             throw new NotImplementedException();
@@ -76,10 +82,15 @@ namespace DentistStudioApp.Controller
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
+
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
+            AttendedOptions.Conditions(SearchQry);
+            RoomsOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
+            TimesOptions.Conditions(SearchQry);
+
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
@@ -125,11 +136,13 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
+            AttendedOptions.Conditions(SearchQry);
+            RoomsOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
+            TimesOptions.Conditions(SearchQry);
+
             if (!SearchQry.HasWhereConditions()) 
-            {
                 SearchQry.RemoveLastChange(); // remove WHERE
-            }
 
             string sql = SearchQry.OrderBy().Field("DOA").Field("TOA").Statement();
             RecordSource<Appointment> results = await CreateFromAsyncList(sql, SearchQry.Params());

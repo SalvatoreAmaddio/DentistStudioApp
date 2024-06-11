@@ -1,9 +1,9 @@
 ﻿using Backend.Database;
-using Backend.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
 using FrontEnd.Events;
+using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
@@ -23,7 +23,7 @@ namespace DentistStudioApp.Controller
         public TreatmentToInvoiceListController TreatmentsToInvoice { get; } = new();
         public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
         public override int DatabaseIndex => 12;
-        public RecordSource PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
+        public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
 
         public InvoiceController() 
         {

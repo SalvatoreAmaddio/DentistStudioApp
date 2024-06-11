@@ -1,7 +1,7 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
-using Backend.Source;
+using FrontEnd.Source;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
@@ -12,7 +12,7 @@ namespace DentistStudioApp.Controller
     public class SurveyDataListController : AbstractFormListController<SurveyData>
     {
         public SourceOption CategoryOptions { get; private set; }
-        public RecordSource SurveyQuestionCategories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
+        public RecordSource<SurveyQuestionCategory> SurveyQuestionCategories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SurveyController SurveyController { get; } = new();
         public override int DatabaseIndex => 4;
 

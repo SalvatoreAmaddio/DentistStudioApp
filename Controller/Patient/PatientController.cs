@@ -1,6 +1,6 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
-using Backend.Source;
+using FrontEnd.Source;
 using Backend.Utils;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
@@ -17,8 +17,8 @@ namespace DentistStudioApp.Controller
         private IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();  
         public TreatmentListController Treatments { get; } = new();
         private Survey? Survey { get; set; }
-        public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
-        public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
+        public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
+        public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
         public override int DatabaseIndex => 0;
 
         public ICommand AddSurveyCMD { get; }

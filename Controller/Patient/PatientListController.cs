@@ -1,7 +1,7 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
-using Backend.Source;
+using FrontEnd.Source;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
@@ -14,8 +14,8 @@ namespace DentistStudioApp.Controller
     {
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
-        public RecordSource Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
-        public RecordSource Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!); 
+        public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
+        public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!); 
         
         public override int DatabaseIndex => 0;
 
