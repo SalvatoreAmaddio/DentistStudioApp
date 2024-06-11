@@ -125,6 +125,8 @@ namespace DentistStudioApp.Controller
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
+            if (!SearchQry.HasWhereConditions()) // No selection was made
+                SearchQry.RemoveLastChange(); // remove WHERE
             RecordSource<Appointment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
