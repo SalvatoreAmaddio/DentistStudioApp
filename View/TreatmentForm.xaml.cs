@@ -7,25 +7,43 @@ namespace DentistStudioApp.View
 {
     public partial class TreatmentForm : Window
     {
+        public TreatmentController? Controller;
+        public AppointmentListController? SubController => Controller?.Appointments;
+        private Appointment? appointment;
+
         public TreatmentForm()
         {
             InitializeComponent();
             this.SetController(new TreatmentController());
         }
 
-        public TreatmentForm(Treatment? treatment) : this()
+        public TreatmentForm(Treatment treatment) : this()
         {
-            TreatmentController controller = this.GetController<TreatmentController>();
+            Controller = this.GetController<TreatmentController>();
 
             if (treatment.IsNewRecord()) 
             {
-                controller.GoAt(treatment);
-                controller.CurrentRecord.Patient = treatment.Patient;
-                controller.CurrentRecord.IsDirty = false;
+                Controller.GoAt(treatment);
+                Controller.CurrentRecord.Patient = treatment.Patient;
+                Controller.CurrentRecord.IsDirty = false;
                 return;
             }
-            controller.GoAt(treatment);
+            Controller.GoAt(treatment);
         }
 
+        public TreatmentForm(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
+        {
+            this.appointment = appointment;
+            if (SubController != null)
+                SubController.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
+        }
+
+        private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
+        {
+            SubController?.ServiceOptions.FirstOrDefault(s => s.Record.Equals(appointment?.Service))?.Select();
+            SubController?.OnOptionFilterClicked(new());
+            if (SubController != null)
+                SubController.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
+        }
     }
 }

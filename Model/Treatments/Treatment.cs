@@ -88,6 +88,17 @@ namespace DentistStudioApp.Model
             para.Add(new("invoiceID", invoiceID));
             return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
         }
+
+        public async Task SetPatientAsync()
+        {
+            IAbstractDatabase? db = DatabaseManager.Find<Patient>() ?? throw new NullReferenceException();
+            string? sql = new Patient().From().Where().EqualsTo("PatientID", "@patientID").Limit().Statement();
+            List<QueryParameter> para = [];
+            para.Add(new("patientID", this.Patient?.PatientID));
+            RecordSource<Patient> result = await RecordSource<Patient>.CreateFromAsyncList(db.RetrieveAsync(sql, para).Cast<Patient>());
+            this._patient = result.FirstOrDefault();
+        }
+
         public async Task<object?> GetTotalCost() 
         {
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();

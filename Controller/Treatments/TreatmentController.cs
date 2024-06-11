@@ -8,6 +8,9 @@ namespace DentistStudioApp.Controller
     {
         public AppointmentListController Appointments { get; } = new();
         public override int DatabaseIndex => 7;
-
+        public TreatmentController() 
+        {
+            AddSubControllers(Appointments);
+        }
     }
 }

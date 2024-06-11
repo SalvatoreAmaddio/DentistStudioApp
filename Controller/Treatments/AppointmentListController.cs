@@ -3,6 +3,7 @@ using Backend.ExtensionMethods;
 using Backend.Model;
 using Backend.Source;
 using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
@@ -10,7 +11,7 @@ using FrontEnd.Source;
 
 namespace DentistStudioApp.Controller
 {
-    public abstract class AbstractAppointmentListController : AbstractFormListController<Appointment> 
+    public abstract class AbstractAppointmentListController : AbstractFormListController<Appointment>
     {
         public SourceOption ServiceOptions { get; private set; }
         public SourceOption DentistOptions { get; private set; }
@@ -41,18 +42,17 @@ namespace DentistStudioApp.Controller
             throw new NotImplementedException();
         }
 
-        protected override void Open(Appointment? model)
+        protected override async void Open(Appointment? model)
         {
-            
+            if (model == null) return;
+            await model.SetTreatmentAsync();
+            TreatmentForm treatmentForm = new(model);
+            treatmentForm.ShowDialog();
         }
-
     }
 
     public class AppointmentListController : AbstractAppointmentListController
     {
-        
-        public AppointmentListController() => NewRecordEvent += OnNewRecordEvent;
-
         private void OnNewRecordEvent(object? sender, EventArgs e)
         {
             Treatment? treatment = (Treatment?)ParentRecord;
@@ -68,8 +68,9 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetTablePK()?.GetValue());
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
+            AsRecordSource().ReplaceRecords(results);
             GoFirst();
+            RunAfterSubFormFilterEvent();
         }
 
         public override async void OnOptionFilterClicked(FilterEventArgs e)

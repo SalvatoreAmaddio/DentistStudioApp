@@ -1,6 +1,8 @@
-﻿using Backend.ExtensionMethods;
+﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
+using FrontEnd.Source;
 using System.Data.Common;
 
 namespace DentistStudioApp.Model
@@ -67,6 +69,18 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new Appointment(reader);
+
+        public async Task SetTreatmentAsync()
+        {
+            IAbstractDatabase? db = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
+            string? sql = new Treatment().From().Where().EqualsTo("TreatmentID", "@treatmentID").Limit().Statement();
+            List<QueryParameter> para = [];
+            para.Add(new("treatmentID", this.Treatment?.TreatmentID));
+            RecordSource<Treatment> result = await RecordSource<Treatment>.CreateFromAsyncList(db.RetrieveAsync(sql, para).Cast<Treatment>());
+            this._treatment = result.FirstOrDefault();
+            if (_treatment != null)
+                await this._treatment.SetPatientAsync();
+        }
 
         public override string ToString() => $"Date: {DOA} - Time: {TOA} - Service: {Service} - Dentist: {Dentist} - Room Number: {RoomNumber} Attended: {Attended}";
     }
