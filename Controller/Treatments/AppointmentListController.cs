@@ -125,9 +125,13 @@ namespace DentistStudioApp.Controller
             ServiceOptions.Conditions(SearchQry);
             DentistOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
-            if (!SearchQry.HasWhereConditions()) // No selection was made
+            if (!SearchQry.HasWhereConditions()) 
+            {
                 SearchQry.RemoveLastChange(); // remove WHERE
-            RecordSource<Appointment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            }
+
+            string sql = SearchQry.OrderBy().Field("DOA").Field("TOA").Statement();
+            RecordSource<Appointment> results = await CreateFromAsyncList(sql, SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
