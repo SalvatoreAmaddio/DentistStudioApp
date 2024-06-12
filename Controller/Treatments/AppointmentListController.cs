@@ -130,7 +130,7 @@ namespace DentistStudioApp.Controller
         private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (!e.Is(nameof(Search))) return;
-            await SearchRecordAsync();
+            await OnSearchPropertyRequeryAsync(sender);
         }
 
         public void SetTreatment(Treatment? treatment) => ParentRecord = treatment;
