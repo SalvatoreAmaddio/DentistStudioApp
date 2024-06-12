@@ -8,6 +8,7 @@ using FrontEnd.Events;
 using FrontEnd.FilterSource;
 using FrontEnd.Source;
 using System.Windows.Input;
+using Backend.Enums;
 
 namespace DentistStudioApp.Controller
 {
