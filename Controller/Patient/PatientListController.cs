@@ -26,10 +26,10 @@ namespace DentistStudioApp.Controller
             AfterUpdate += OnAfterUpdate; 
         }
 
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (!e.Is(nameof(Search))) return;
-            OnSearchPropertyRequeryAsync(sender);
+            await OnSearchPropertyRequeryAsync(sender);
         }
 
         public override void OnOptionFilterClicked(FilterEventArgs e)

@@ -14,6 +14,13 @@
 
 
     <fr:FormList>
+        <fr:FormList.Header>
+            <Border Background="{StaticResource DefaultWhite}" Padding="5,0,5,0">
+                <Grid>
+                    <fr:Text Text="{Binding Search}" Placeholder="Search Patient..." VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
                 <Grid fr:Definition.ColumnDefinitions="200,100,100,100,65,65,80,200,50,50">

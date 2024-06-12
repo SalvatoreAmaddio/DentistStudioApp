@@ -43,10 +43,7 @@ namespace DentistStudioApp.Controller
             RoomsOptions = new PrimitiveSourceOption(this, "RoomNumber");
         }
 
-        public override Task<IEnumerable<Appointment>> SearchRecordAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public override Task<IEnumerable<Appointment>> SearchRecordAsync() => throw new NotImplementedException();
 
         protected override async void Open(Appointment? model)
         {
@@ -123,15 +120,22 @@ namespace DentistStudioApp.Controller
 
     public class AppointListController2 : AbstractAppointmentListController 
     {
-        public AppointListController2() 
+        public AppointListController2()
         {
             AllowNewRecord = false;
             OpenWindowOnNew = true;
+            AfterUpdate += OnAfterUpdate;
+        }
+
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (!e.Is(nameof(Search))) return;
+            await SearchRecordAsync();
         }
 
         public void SetTreatment(Treatment? treatment) => ParentRecord = treatment;
 
-        public override async void OnOptionFilterClicked(FilterEventArgs e)
+        public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
             ServiceOptions.Conditions(SearchQry);
@@ -140,25 +144,30 @@ namespace DentistStudioApp.Controller
             RoomsOptions.Conditions(SearchQry);
             DatesOptions.Conditions(SearchQry);
             TimesOptions.Conditions(SearchQry);
-
-            if (!SearchQry.HasWhereConditions()) 
-                SearchQry.RemoveLastChange(); // remove WHERE
-
-            string sql = SearchQry.OrderBy().Field("DOA").Field("TOA").Statement();
-            RecordSource<Appointment> results = await CreateFromAsyncList(sql, SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
-            GoFirst();
+            SearchQry.OrderBy().Field("DOA").Field("TOA");
+            OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
-        
+
         public void TriggerFilter(DateTime? date) 
         {
-            DatesOptions.FirstOrDefault(s => s.Value.Equals(date)).IsSelected = true;
+            DatesOptions.FirstOrDefault(s => s.Value.Equals(date))?.Select();
             OnOptionFilterClicked(new());
+        }
+
+        public override async Task<IEnumerable<Appointment>> SearchRecordAsync() 
+        {
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            SearchQry.AddParameter("name", Search.ToLower() + "%");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         public override IWhereClause InstantiateSearchQry()
         {
-            return new Appointment().From().InnerJoin(new Dentist()).InnerJoin(new Service()).Where();
+            return new Appointment()
+                .From()
+                .InnerJoin(new Dentist()).InnerJoin(new Service()).InnerJoin(new Treatment())
+                .InnerJoin("Treatment","Patient","PatientID")
+                .Where().OpenBracket().Like("LOWER(Patient.FirstName)", "@name").OR().Like("LOWER(Patient.LastName)", "@name").CloseBracket();
         }
 
     }
