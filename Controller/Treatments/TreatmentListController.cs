@@ -13,9 +13,13 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
+        protected List<Task> serviceCountTasks = [];
+
+        #region Properties
         public override int DatabaseIndex => 7;
         public SourceOption DatesOptions { get; private set; }
         public SourceOption DatesOptions2 { get; private set; }
+        #endregion
 
         public TreatmentListController() 
         {
@@ -25,18 +29,24 @@ namespace DentistStudioApp.Controller
 
         public override async void OnSubFormFilter()
         {
-            List<Task> serviceCountTasks = [];
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             
-            if (results.Count > 0)
-                foreach (Treatment record in results)
-                    serviceCountTasks.Add(record.CountServices());
+            CountServices(results);
 
             AsRecordSource().ReplaceRange(results);
             GoFirst();
             await Task.WhenAll(serviceCountTasks);
+        }
+        
+        protected void CountServices(IEnumerable<Treatment> results) 
+        {
+            serviceCountTasks = [];
+            if (results.Count() > 0)
+                foreach (Treatment record in results)
+                    serviceCountTasks.Add(record.CountServices());
+
         }
 
         public override async void OnOptionFilterClicked(FilterEventArgs e) 
@@ -46,15 +56,13 @@ namespace DentistStudioApp.Controller
             DatesOptions2.Conditions(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
-
+            await Task.WhenAll(serviceCountTasks);
         }
 
-        public override Task<IEnumerable<Treatment>> SearchRecordAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public override Task<IEnumerable<Treatment>> SearchRecordAsync() => throw new NotImplementedException();
 
         protected override void Open(Treatment? model)
         {
@@ -70,14 +78,18 @@ namespace DentistStudioApp.Controller
         public override IWhereClause InstantiateSearchQry() => new Treatment().Where().EqualsTo("PatientID", "@patientID");
     }
 
-    public abstract class AbstractTreatmentInvoice : TreatmentListController 
+    public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
         public Patient? Patient;
+
+        #region Properties
         protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
         public ICommand InvoiceTreatmentCMD { get; }
         public abstract CRUD Crud { get; }
         private bool Invoicing => Crud == CRUD.INSERT;
+        #endregion
+
         public AbstractTreatmentInvoice() => InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
         protected override void Open(Treatment? model)
         {
@@ -132,22 +144,28 @@ namespace DentistStudioApp.Controller
                 ParentController.PerformUpdate();
             }
         }
-        public abstract Task<IEnumerable<Treatment>> FetchInvoiceTask();
         public override async void OnSubFormFilter()
         {
-            List<Task> serviceCountTasks = [];
+            ReloadSearchQry();
+            IEnumerable<Treatment> results = await SearchRecordAsync();
 
-            IEnumerable<Treatment> ToInvoice = await FetchInvoiceTask();
+            CountServices(results);
 
-            if (ToInvoice?.Count() > 0)
-                foreach (Treatment record in ToInvoice)
-                    serviceCountTasks.Add(record.CountServices());
-
-            if (ToInvoice == null) throw new NullReferenceException();
-            AsRecordSource().ReplaceRange(ToInvoice);
+            if (results == null) throw new NullReferenceException();
+            AsRecordSource().ReplaceRange(results);
 
             GoFirst();
-
+            await Task.WhenAll(serviceCountTasks);
+        }
+        public override async void OnOptionFilterClicked(FilterEventArgs e)
+        {
+            ReloadSearchQry();
+            DatesOptions.Conditions(SearchQry);
+            DatesOptions2.Conditions(SearchQry);
+            IEnumerable<Treatment> results = await SearchRecordAsync();
+            CountServices(results);
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
             await Task.WhenAll(serviceCountTasks);
         }
     }
@@ -156,12 +174,36 @@ namespace DentistStudioApp.Controller
     {
         public override CRUD Crud => CRUD.INSERT;
 
-        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetToInvoice(Patient?.PatientID);
+        public override async Task<IEnumerable<Treatment>> SearchRecordAsync()
+        {
+            SearchQry.AddParameter("patientID", Patient?.PatientID);
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+        }
+
+        public override IWhereClause InstantiateSearchQry() =>
+                new Treatment()
+                .From()
+                .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
+                .Where()
+                .EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID");
     }
 
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
     {
         public override CRUD Crud => CRUD.DELETE;
-        public override Task<IEnumerable<Treatment>> FetchInvoiceTask() => Treatment.GetInvoiced(Patient?.PatientID, CurrentInvoice?.InvoiceID);
+
+        public async override Task<IEnumerable<Treatment>> SearchRecordAsync()
+        {
+            SearchQry.AddParameter("patientID", Patient?.PatientID);
+            SearchQry.AddParameter("invoiceID", CurrentInvoice?.InvoiceID);
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+        }
+
+        public override IWhereClause InstantiateSearchQry() =>
+            new Treatment()
+            .From()
+            .InnerJoin(nameof(InvoicedTreatment), "TreatmentID")
+            .Where()
+            .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID");
     }
 }
