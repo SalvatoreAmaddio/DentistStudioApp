@@ -66,8 +66,8 @@
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
                             <Grid fr:Definition.ColumnDefinitions="100,100,90,100">
-                                <Label Grid.Column="1" Content="Start Date"/>
-                                <Label Grid.Column="2" Content="End Date"/>
+                                <fr:HeaderFilter Grid.Column="1" ItemsSource="{Binding DatesOptions}" Text="Start Date"/>
+                                <fr:HeaderFilter Grid.Column="2" ItemsSource="{Binding DatesOptions2}" Text="End Date"/>
                                 <Label Grid.Column="3" Content="N. of Services"/>
                                 <Label Grid.Column="4" Content="COMMANDS"/>
                             </Grid>

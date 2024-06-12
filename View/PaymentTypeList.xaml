@@ -21,7 +21,7 @@
         </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="100,50,50">
+                <Grid fr:Definition.ColumnDefinitions="110,50,50">
                     <Label Grid.Column="1" Content="Payment Method"/>
                     <Label Grid.Column="2" Grid.ColumnSpan="2" Content="COMMANDS"/>
                 </Grid>
@@ -29,7 +29,7 @@
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,50,50">
+                        <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="110,50,50">
                             <fr:Text Text="{Binding PaymentBy}"/>
                             <fr:SaveButton Grid.Column="1" IsWithinList="True"/>
                             <fr:DeleteButton Grid.Column="2" IsWithinList="True"/>

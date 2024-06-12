@@ -5,6 +5,7 @@ using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using FrontEnd.FilterSource;
 using FrontEnd.Source;
 using System.Windows.Input;
 
@@ -13,6 +14,14 @@ namespace DentistStudioApp.Controller
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
         public override int DatabaseIndex => 7;
+        public SourceOption DatesOptions { get; private set; }
+        public SourceOption DatesOptions2 { get; private set; }
+
+        public TreatmentListController() 
+        {
+            DatesOptions = new PrimitiveSourceOption(this, "StartDate");
+            DatesOptions2 = new PrimitiveSourceOption(this, "EndDate");
+        }
 
         public override async void OnSubFormFilter()
         {
@@ -30,9 +39,16 @@ namespace DentistStudioApp.Controller
             await Task.WhenAll(serviceCountTasks);
         }
 
-        public override void OnOptionFilterClicked(FilterEventArgs e) 
+        public override async void OnOptionFilterClicked(FilterEventArgs e) 
         {
-            throw new NotImplementedException();
+            ReloadSearchQry();
+            DatesOptions.Conditions(SearchQry);
+            DatesOptions2.Conditions(SearchQry);
+            SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
+            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
+
         }
 
         public override Task<IEnumerable<Treatment>> SearchRecordAsync()
