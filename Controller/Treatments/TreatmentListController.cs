@@ -30,7 +30,7 @@ namespace DentistStudioApp.Controller
         public override async void OnSubFormFilter()
         {
             ReloadSearchQry();
-            SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
+            SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             
             CountServices(results);
@@ -54,7 +54,7 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             DatesOptions.Conditions(SearchQry);
             DatesOptions2.Conditions(SearchQry);
-            SearchQry.AddParameter("patientID", ParentRecord?.GetTablePK()?.GetValue());
+            SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             CountServices(results);
             AsRecordSource().ReplaceRange(results);
