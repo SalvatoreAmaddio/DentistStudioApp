@@ -64,13 +64,10 @@ namespace DentistStudioApp.Controller
 
         public override Task<IEnumerable<Treatment>> SearchRecordAsync() => throw new NotImplementedException();
 
-        protected override void Open(Treatment? model)
+        protected override void Open(Treatment model)
         {
-            if (model!=null) 
-            {
-                model.Patient = (Patient?)ParentRecord;
-                model.IsDirty = false;
-            }
+            model.Patient = (Patient?)ParentRecord;
+            model.IsDirty = false;
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }
