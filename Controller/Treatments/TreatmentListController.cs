@@ -156,8 +156,8 @@ namespace DentistStudioApp.Controller
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            DatesOptions2.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DatesOptions.Conditions(SearchQry);
+            DatesOptions2.Conditions(SearchQry);
             IEnumerable<Treatment> results = await SearchRecordAsync();
             CountServices(results);
             AsRecordSource().ReplaceRange(results);
