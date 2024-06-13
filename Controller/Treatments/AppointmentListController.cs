@@ -81,12 +81,12 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
 
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            ServiceOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            DentistOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            AttendedOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            RoomsOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            TimesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            ServiceOptions.Conditions(SearchQry);
+            DentistOptions.Conditions(SearchQry);
+            AttendedOptions.Conditions(SearchQry);
+            RoomsOptions.Conditions(SearchQry);
+            DatesOptions.Conditions(SearchQry);
+            TimesOptions.Conditions(SearchQry);
 
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
@@ -138,13 +138,12 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            ServiceOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            DentistOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            AttendedOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            RoomsOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            TimesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
-            //SearchQry.OrderBy().Field("DOA").Field("TOA");
+            ServiceOptions.Conditions(SearchQry);
+            DentistOptions.Conditions(SearchQry);
+            AttendedOptions.Conditions(SearchQry);
+            RoomsOptions.Conditions(SearchQry);
+            DatesOptions.Conditions(SearchQry);
+            TimesOptions.Conditions(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 

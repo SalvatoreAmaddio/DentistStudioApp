@@ -181,7 +181,8 @@ namespace DentistStudioApp.Controller
                 .From()
                 .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
                 .Where()
-                .EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID");
+                .EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID")
+                .OrderBy().Field("StartDate DESC");
     }
 
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
@@ -200,6 +201,7 @@ namespace DentistStudioApp.Controller
             .From()
             .InnerJoin(nameof(InvoicedTreatment), "TreatmentID")
             .Where()
-            .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID");
+            .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID")
+            .OrderBy().Field("StartDate DESC");
     }
 }
