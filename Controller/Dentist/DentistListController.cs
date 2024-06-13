@@ -22,16 +22,16 @@ namespace DentistStudioApp.Controller
             AfterUpdate += OnAfterUpdate;
         }
 
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (!e.Is(nameof(Search))) return;
-            OnSearchPropertyRequeryAsync(sender);
+            await OnSearchPropertyRequeryAsync(sender);
         }
 
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            ClinicOptions.Conditions(SearchQry);
+            ClinicOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
@@ -44,7 +44,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Dentist? model) { }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new Dentist().From().InnerJoin(new Clinic()).Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
         }

@@ -16,10 +16,10 @@ namespace DentistStudioApp.Controller
             AfterUpdate += OnAfterUpdate;
         }
 
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (!e.Is(nameof(Search))) return;
-            OnSearchPropertyRequeryAsync(sender);
+            await OnSearchPropertyRequeryAsync(sender);
         }
 
         public override void OnOptionFilterClicked(FilterEventArgs e)
@@ -34,7 +34,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(PaymentType? model) { }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new PaymentType().Where().Like("LOWER(PaymentBy)", "@name");
         }

@@ -35,8 +35,8 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            GenderOptions.Conditions(SearchQry);
-            TitleOptions.Conditions(SearchQry);
+            GenderOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            TitleOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
@@ -53,7 +53,7 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return 
                 new Patient().From()

@@ -38,9 +38,9 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            PaymentTypesOptions.Conditions(SearchQry);
-            PaidOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
+            PaymentTypesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            PaidOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
@@ -57,7 +57,7 @@ namespace DentistStudioApp.Controller
             invoideForm.ShowDialog();
         }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new InvoicedTreatment()
              .Select("Invoice.*")

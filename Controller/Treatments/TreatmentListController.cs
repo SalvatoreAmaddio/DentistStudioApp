@@ -32,8 +32,8 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
-            RecordSource<Treatment> results = await CreateFromAsyncList(sql, SearchQry.Params());
+            //string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
+            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             
             CountServices(results);
 
@@ -57,8 +57,7 @@ namespace DentistStudioApp.Controller
             DatesOptions.Conditions(SearchQry);
             DatesOptions2.Conditions(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
-            RecordSource<Treatment> results = await CreateFromAsyncList(sql, SearchQry.Params());
+            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
@@ -75,7 +74,7 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override IWhereClause InstantiateSearchQry() => new Treatment().Where().EqualsTo("PatientID", "@patientID");
+        public override AbstractClause InstantiateSearchQry() => new Treatment().Where().EqualsTo("PatientID", "@patientID").OrderBy().Field("StartDate DESC");
     }
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
@@ -157,8 +156,8 @@ namespace DentistStudioApp.Controller
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            DatesOptions.Conditions(SearchQry);
-            DatesOptions2.Conditions(SearchQry);
+            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DatesOptions2.Conditions(SearchQry.GetClause<WhereClause>()!);
             IEnumerable<Treatment> results = await SearchRecordAsync();
             CountServices(results);
             AsRecordSource().ReplaceRange(results);
@@ -177,7 +176,7 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        public override IWhereClause InstantiateSearchQry() =>
+        public override AbstractClause InstantiateSearchQry() =>
                 new Treatment()
                 .From()
                 .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
@@ -196,7 +195,7 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        public override IWhereClause InstantiateSearchQry() =>
+        public override AbstractClause InstantiateSearchQry() =>
             new Treatment()
             .From()
             .InnerJoin(nameof(InvoicedTreatment), "TreatmentID")

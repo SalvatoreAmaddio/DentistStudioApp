@@ -16,11 +16,11 @@ namespace DentistStudioApp.Controller
             OpenWindowOnNew = false;
         }
 
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Search))) 
             {
-                OnSearchPropertyRequeryAsync(sender);
+                await OnSearchPropertyRequeryAsync(sender);
             }
         }
 
@@ -37,7 +37,7 @@ namespace DentistStudioApp.Controller
 
         }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new Service().From().Where().Like("LOWER(ServiceName)", "@name");
         }

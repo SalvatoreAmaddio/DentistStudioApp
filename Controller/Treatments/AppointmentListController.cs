@@ -81,12 +81,12 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
 
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            ServiceOptions.Conditions(SearchQry);
-            DentistOptions.Conditions(SearchQry);
-            AttendedOptions.Conditions(SearchQry);
-            RoomsOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
-            TimesOptions.Conditions(SearchQry);
+            ServiceOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DentistOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            AttendedOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            RoomsOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            TimesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
 
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
@@ -112,7 +112,7 @@ namespace DentistStudioApp.Controller
             return result;
         }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new Appointment().From().InnerJoin(new Dentist()).InnerJoin(new Service()).Where().EqualsTo("TreatmentID", "@treatmentID");
         }
@@ -138,13 +138,13 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            ServiceOptions.Conditions(SearchQry);
-            DentistOptions.Conditions(SearchQry);
-            AttendedOptions.Conditions(SearchQry);
-            RoomsOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
-            TimesOptions.Conditions(SearchQry);
-            SearchQry.OrderBy().Field("DOA").Field("TOA");
+            ServiceOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DentistOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            AttendedOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            RoomsOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            DatesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            TimesOptions.Conditions(SearchQry.GetClause<WhereClause>()!);
+            //SearchQry.OrderBy().Field("DOA").Field("TOA");
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
@@ -161,13 +161,14 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new Appointment()
                 .From()
                 .InnerJoin(new Dentist()).InnerJoin(new Service()).InnerJoin(new Treatment())
                 .InnerJoin("Treatment","Patient","PatientID")
-                .Where().OpenBracket().Like("LOWER(Patient.FirstName)", "@name").OR().Like("LOWER(Patient.LastName)", "@name").CloseBracket();
+                .Where().OpenBracket().Like("LOWER(Patient.FirstName)", "@name").OR().Like("LOWER(Patient.LastName)", "@name").CloseBracket()
+                .OrderBy().Field("DOA").Field("TOA");
         }
 
     }

@@ -34,7 +34,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Clinic? model) { }
 
-        public override IWhereClause InstantiateSearchQry()
+        public override AbstractClause InstantiateSearchQry()
         {
             return new Clinic().Where().Like("LOWER(ClinicName)", "@name");
         }
