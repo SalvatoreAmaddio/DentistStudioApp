@@ -32,7 +32,8 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
+            RecordSource<Treatment> results = await CreateFromAsyncList(sql, SearchQry.Params());
             
             CountServices(results);
 
@@ -56,7 +57,8 @@ namespace DentistStudioApp.Controller
             DatesOptions.Conditions(SearchQry);
             DatesOptions2.Conditions(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
+            RecordSource<Treatment> results = await CreateFromAsyncList(sql, SearchQry.Params());
             CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
@@ -89,13 +91,10 @@ namespace DentistStudioApp.Controller
         #endregion
 
         public AbstractTreatmentInvoice() => InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
-        protected override void Open(Treatment? model)
+        protected override void Open(Treatment model)
         {
-            if (model != null)
-            {
-                model.Patient = Patient;
-                model.IsDirty = false;
-            }
+            model.Patient = Patient;
+            model.IsDirty = false;
             TreatmentForm? win = new(model);
             win.ShowDialog();
         }
