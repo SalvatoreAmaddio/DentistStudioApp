@@ -71,7 +71,8 @@ namespace DentistStudioApp.Controller
              .Like("LOWER(Patient.FirstName)", "@name")
              .OR()
              .Like("LOWER(Patient.LastName)", "@name")
-             .CloseBracket();
+             .CloseBracket()
+             .OrderBy().Field("DOI DESC");
         }
     }
 }

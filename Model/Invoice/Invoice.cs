@@ -48,6 +48,7 @@ namespace DentistStudioApp.Model
         public Invoice() 
         {
             AfterUpdate += OnAfterUpdate;
+            SelectQry = this.SelectAll().From().OrderBy().Field("DOI DESC").Statement();
         }
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
