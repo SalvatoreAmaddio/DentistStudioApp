@@ -1,6 +1,7 @@
 ﻿using DentistStudioApp.Controller;
 using DentistStudioApp.Model;
 using FrontEnd.ExtensionMethods;
+using FrontEnd.Utils;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -46,6 +47,21 @@ namespace DentistStudioApp.View
             SubController?.OnOptionFilterClicked(new());
             if (SubController != null)
                 SubController.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
+        }
+
+        private void OpenServices(object sender, RoutedEventArgs e)
+        {
+            Helper.OpenWindowDialog("Services", new ServiceList());
+        }
+
+        private void OpenDentists(object sender, RoutedEventArgs e)
+        {
+            Helper.OpenWindowDialog("Dentists", new DentistList());
+        }
+
+        private void OpenClinics(object sender, RoutedEventArgs e)
+        {
+            Helper.OpenWindowDialog("Clinics", new ClinicList());
         }
     }
 }

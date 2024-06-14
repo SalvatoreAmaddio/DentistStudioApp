@@ -10,84 +10,95 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="Patient Form" Height="510" Width="640">
+        Title="Patient Form" Height="520" Width="640">
 
-    <fr:Form>
-        <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
-            <Label Content="First Name"/>
-            <Label Grid.Row="1" Content="Last Name"/>
-            <Label Grid.Row="2" Content="Date of Birth"/>
-            <Label Grid.Row="3" Content="Gender"/>
-            <Label Grid.Row="4" Content="Job Title"/>
-            <Label Grid.Row="5" Content="Phone Number"/>
-            <Label Grid.Row="6" Content="Email"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <Separator Background="Transparent" Width="20"/>
+            <MenuItem Header="Gender" Click="OpenGenderWindow"/>
+            <MenuItem Header="Job Title" Click="OpenJobTitleWindow"/>
+        </Menu>
+        <fr:Form Grid.Row="1">
+            <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
+                <Label Content="First Name"/>
+                <Label Grid.Row="1" Content="Last Name"/>
+                <Label Grid.Row="2" Content="Date of Birth"/>
+                <Label Grid.Row="3" Content="Gender"/>
+                <Label Grid.Row="4" Content="Job Title"/>
+                <Label Grid.Row="5" Content="Phone Number"/>
+                <Label Grid.Row="6" Content="Email"/>
 
-            <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
-            <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
-            <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOB}"/>
-            <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
-            <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
-            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
-            <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
+                <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
+                <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
+                <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOB}"/>
+                <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
+                <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
+                <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
+                <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
 
-            <fr:PhotoFrame Grid.Column="3" Grid.RowSpan="7" Source="{Binding CurrentRecord.PicturePath}" FilePickedCommand="{Binding FilePickerCMD}"/>
+                <fr:PhotoFrame Grid.Column="3" Grid.RowSpan="7" Source="{Binding CurrentRecord.PicturePath}" FilePickedCommand="{Binding FilePickerCMD}"/>
 
-            <Border Grid.Column="5" Grid.RowSpan="7" VerticalAlignment="Center" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
-                <Grid>
-                    <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
-                    <StackPanel Margin="0,5,0,0">
-                        <StackPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Height" Value="25"/>
-                            </Style>
-                            <Style TargetType="fr:SaveButton">
-                                <Setter Property="Height" Value="25"/>
-                            </Style>
-                            <Style TargetType="fr:DeleteButton">
-                                <Setter Property="Height" Value="25"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <fr:SaveButton/>
-                        <fr:DeleteButton/>
-                        <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
-                        <Button Content="Check up"/>
-                        <Button Content="Teeth Screen"/>
-                        <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
-                        <Button Content="Invoices"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+                <Border Grid.Column="5" Grid.RowSpan="7" VerticalAlignment="Center" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
+                    <Grid>
+                        <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
+                        <StackPanel Margin="0,5,0,0">
+                            <StackPanel.Resources>
+                                <Style TargetType="Button">
+                                    <Setter Property="Height" Value="25"/>
+                                </Style>
+                                <Style TargetType="fr:SaveButton">
+                                    <Setter Property="Height" Value="25"/>
+                                </Style>
+                                <Style TargetType="fr:DeleteButton">
+                                    <Setter Property="Height" Value="25"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <fr:SaveButton/>
+                            <fr:DeleteButton/>
+                            <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
+                            <Button Content="Check up"/>
+                            <Button Content="Teeth Screen"/>
+                            <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
+                            <Button Content="Invoices"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-            <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                <fr:FormList DataContext="{Binding Treatments}">
-                    <fr:FormList.Header>
-                        <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
-                    </fr:FormList.Header>
-                    <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
-                        <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,90,100">
-                                <fr:HeaderFilter Grid.Column="1" ItemsSource="{Binding DatesOptions}" Text="Start Date"/>
-                                <fr:HeaderFilter Grid.Column="2" ItemsSource="{Binding DatesOptions2}" Text="End Date"/>
-                                <Label Grid.Column="3" Content="N. of Services"/>
-                                <Label Grid.Column="4" Content="COMMANDS"/>
-                            </Grid>
-                        </fr:Lista.Header>
-                        <fr:Lista.ItemTemplate>
-                            <DataTemplate>
-                                <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
-                                        <DatePicker SelectedDate="{Binding StartDate}"/>
-                                        <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
-                                        <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                                        <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
-                                        <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
-                                    </Grid>
-                                </fr:FormRow>
-                            </DataTemplate>
-                        </fr:Lista.ItemTemplate>
-                    </fr:Lista>
-                </fr:FormList>        
-            </fr:SubForm>
-        </Grid>
-    </fr:Form>
+                <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+                    <fr:FormList DataContext="{Binding Treatments}">
+                        <fr:FormList.Header>
+                            <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
+                        </fr:FormList.Header>
+                        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                            <fr:Lista.Header>
+                                <Grid fr:Definition.ColumnDefinitions="100,100,90,100">
+                                    <fr:HeaderFilter Grid.Column="1" ItemsSource="{Binding DatesOptions}" Text="Start Date"/>
+                                    <fr:HeaderFilter Grid.Column="2" ItemsSource="{Binding DatesOptions2}" Text="End Date"/>
+                                    <Label Grid.Column="3" Content="N. of Services"/>
+                                    <Label Grid.Column="4" Content="COMMANDS"/>
+                                </Grid>
+                            </fr:Lista.Header>
+                            <fr:Lista.ItemTemplate>
+                                <DataTemplate>
+                                    <fr:FormRow>
+                                        <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
+                                            <DatePicker SelectedDate="{Binding StartDate}"/>
+                                            <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
+                                            <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                            <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
+                                            <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
+                                        </Grid>
+                                    </fr:FormRow>
+                                </DataTemplate>
+                            </fr:Lista.ItemTemplate>
+                        </fr:Lista>
+                    </fr:FormList>
+                </fr:SubForm>
+            </Grid>
+        </fr:Form>
+    </Grid>
 </Window>
