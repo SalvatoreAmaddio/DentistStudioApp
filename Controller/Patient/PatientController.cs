@@ -128,8 +128,10 @@ namespace DentistStudioApp.Controller
             IAbstractDatabase? surveyDataDB = DatabaseManager.Find<SurveyData>();
             Survey = await CreateNewSurveyAsync();
             if (surveyDataDB == null) throw new NullReferenceException();
-            await surveyDataDB.ExecuteQueryAsync($"INSERT INTO SurveyData (SurveyID, SurveyQuestionID) SELECT '{Survey.SurveyID}' As SurveyID, SurveyQuestionID FROM SurveyQuestion;");
-            return surveyDataDB.Retrieve($"SELECT * FROM SurveyData WHERE SurveyID = {Survey.SurveyID}").Cast<SurveyData>();
+            string sql = new SurveyData().Insert().Fields("SurveyID", "SurveyQuestionID").Select().Fields($"'{Survey.SurveyID}' As SurveyID", "SurveyQuestionID").From(new SurveyQuestion()).Statement();
+            await surveyDataDB.ExecuteQueryAsync(sql);
+            sql = new SurveyData().Select().AllFields().From().Where().EqualsTo("SurveyID", $"{Survey.SurveyID}").Statement();
+            return surveyDataDB.Retrieve(sql).Cast<SurveyData>();
         }
 
         public async Task OpenSurvey() 
