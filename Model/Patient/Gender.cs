@@ -9,14 +9,14 @@ namespace DentistStudioApp.Model
     public class Gender : AbstractModel
     {
         long _genderid;
-        string _genderName = string.Empty;
+        string _identity = string.Empty;
 
         [PK]
         public long GenderID { get => _genderid; set => UpdateProperty(ref value, ref _genderid); }
 
         [Field]
-        public string GenderName { get => _genderName; set => UpdateProperty(ref value, ref _genderName); }
-        
+        public string Identity { get => _identity; set => UpdateProperty(ref value, ref _identity); }
+
         public Gender() { }
 
         public Gender(long genderid) => _genderid = genderid; 
@@ -24,7 +24,7 @@ namespace DentistStudioApp.Model
         public Gender(DbDataReader reader) 
         {
             _genderid = reader.GetInt64(0);
-            _genderName = reader.GetString(1);
+            _identity = reader.GetString(1);
         }
 
         public override bool AllowUpdate()
@@ -37,10 +37,10 @@ namespace DentistStudioApp.Model
         public override void SetParameters(List<QueryParameter>? parameters)
         {
             parameters?.Add(new(nameof(GenderID),GenderID));
-            parameters?.Add(new(nameof(GenderName), GenderName));
+            parameters?.Add(new(nameof(Identity), Identity));
         }
 
-        public override string? ToString() => GenderName;
+        public override string? ToString() => Identity;
 
     }
 }

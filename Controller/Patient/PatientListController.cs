@@ -22,7 +22,7 @@ namespace DentistStudioApp.Controller
         public PatientListController() 
         {
             TitleOptions = new(Titles, "Title");
-            GenderOptions = new(Genders, "GenderName");
+            GenderOptions = new(Genders, "Identity");
             AfterUpdate += OnAfterUpdate; 
         }
 

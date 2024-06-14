@@ -74,6 +74,22 @@
                     </Frame.Content>
                 </Frame>
             </TabItem>
+
+            <TabItem Header="Genders">
+                <Frame>
+                    <Frame.Content>
+                        <local:GenderList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
+
+            <TabItem Header="Job Titles">
+                <Frame>
+                    <Frame.Content>
+                        <local:JobTitleList/>
+                    </Frame.Content>
+                </Frame>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

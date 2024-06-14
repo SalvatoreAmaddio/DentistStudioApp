@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="View\JobTitleList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\InvoiceList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

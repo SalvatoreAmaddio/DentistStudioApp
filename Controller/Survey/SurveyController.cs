@@ -12,9 +12,7 @@ namespace DentistStudioApp.Controller
         {
             bool result = base.Delete(model);
             if (result)
-            {
                 Helper.GetActiveWindow()?.Close();
-            }
             return result;
         }
     }
