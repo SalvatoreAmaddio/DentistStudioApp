@@ -10,6 +10,8 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 7;
         public TreatmentController() 
         {
+            AsRecordSource().ReplaceRecords(AsRecordSource().OrderByDescending(s => s.StartDate).ToList());
+            GoFirst();
             AddSubControllers(Appointments);
         }
     }

@@ -32,11 +32,8 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            //string sql = SearchQry.OrderBy().Field("StartDate DESC").Statement();
-            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            
+            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());            
             CountServices(results);
-
             AsRecordSource().ReplaceRange(results);
             GoFirst();
             await Task.WhenAll(serviceCountTasks);
