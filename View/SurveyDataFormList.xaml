@@ -58,7 +58,9 @@
                 <Grid Background="{StaticResource DefaultGrey}" fr:Definition.RowDefinitions="30,30,10,30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Label Content="{Binding CurrentRecord.Patient}" ContentStringFormat="Patient: {0}"/>
                     <Label Content="{Binding CurrentRecord.DOS}" ContentStringFormat="Survey taken on: {0:dd MMMM yyyy}" Grid.Row="1"/>
-                    <fr:DeleteButton Grid.Row="3" HorizontalAlignment="Left"/>
+                    <fr:DeleteButton Grid.Row="3" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0">
+                        <Image Source="{StaticResource bin}"/>
+                    </fr:DeleteButton>
                 </Grid>
             </fr:Form>
         </Border>
