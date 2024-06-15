@@ -20,12 +20,14 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 7;
         public SourceOption DatesOptions { get; private set; }
         public SourceOption DatesOptions2 { get; private set; }
+        public SourceOption ServiceCountOptions { get; private set; }
         #endregion
 
         public TreatmentListController() 
         {
             DatesOptions = new PrimitiveSourceOption(this, "StartDate");
             DatesOptions2 = new PrimitiveSourceOption(this, "EndDate");
+            ServiceCountOptions = new PrimitiveSourceOption(this, "ServiceCount");
         }
 
         public override async void OnSubFormFilter()
@@ -33,29 +35,20 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());            
-            CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
             await Task.WhenAll(serviceCountTasks);
         }
         
-        protected void CountServices(IEnumerable<Treatment> results) 
-        {
-            serviceCountTasks = [];
-            if (results.Count() > 0)
-                foreach (Treatment record in results)
-                    serviceCountTasks.Add(record.CountServices());
-
-        }
 
         public override async void OnOptionFilterClicked(FilterEventArgs e) 
         {
             ReloadSearchQry();
             DatesOptions.Conditions(SearchQry);
             DatesOptions2.Conditions(SearchQry);
+            ServiceCountOptions.HavingConditions(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
             await Task.WhenAll(serviceCountTasks);
@@ -71,7 +64,15 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override AbstractClause InstantiateSearchQry() => new Treatment().Where().EqualsTo("PatientID", "@patientID").OrderBy().Field("StartDate DESC");
+        public override AbstractClause InstantiateSearchQry() =>
+            new Treatment().Select()
+                .AllFields()
+                .Fields("count(Service.ServiceID) AS ServiceCount")
+                .From().LeftJoin(nameof(Appointment), "TreatmentID")
+                .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
+                .Where().EqualsTo("PatientID", "@patientID")
+                .GroupBy().Fields("Treatment.TreatmentID")
+                .OrderBy().Field("StartDate DESC");
     }
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
@@ -142,8 +143,6 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             IEnumerable<Treatment> results = await SearchRecordAsync();
 
-            CountServices(results);
-
             if (results == null) throw new NullReferenceException();
             AsRecordSource().ReplaceRange(results);
 
@@ -156,7 +155,6 @@ namespace DentistStudioApp.Controller
             DatesOptions.Conditions(SearchQry);
             DatesOptions2.Conditions(SearchQry);
             IEnumerable<Treatment> results = await SearchRecordAsync();
-            CountServices(results);
             AsRecordSource().ReplaceRange(results);
             GoFirst();
             await Task.WhenAll(serviceCountTasks);
@@ -174,12 +172,14 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-                new Treatment()
+                new Treatment().Select().AllFields().Fields("count(Service.ServiceID) AS ServiceCount")
                 .From()
                 .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
+                .LeftJoin(nameof(Appointment), "TreatmentID")
+                .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
                 .Where()
                 .EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID")
-                .OrderBy().Field("StartDate DESC");
+                .GroupBy().Fields("Treatment.TreatmentID").OrderBy().Field("StartDate DESC");
     }
 
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
@@ -194,11 +194,13 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-            new Treatment()
+            new Treatment().Select().AllFields().Fields("count(Service.ServiceID) AS ServiceCount")
             .From()
-            .InnerJoin(nameof(InvoicedTreatment), "TreatmentID")
+            .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
+            .LeftJoin(nameof(Appointment), "TreatmentID")
+            .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
             .Where()
             .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID")
-            .OrderBy().Field("StartDate DESC");
+            .GroupBy().Fields("Treatment.TreatmentID").OrderBy().Field("StartDate DESC");
     }
 }

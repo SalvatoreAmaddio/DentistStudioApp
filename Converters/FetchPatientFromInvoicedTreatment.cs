@@ -41,4 +41,23 @@ namespace DentistStudioApp.Converters
         }
     }
 
+    public class FetchPatientFromTreatment : AbstractFetchModel<Treatment, Patient>
+    {
+        protected override string Sql => 
+            new Treatment()
+            .Select("Patient.*")
+            .From()
+            .InnerJoin(new Patient())
+            .Where()
+            .EqualsTo("Treatment.PatientID", "@id").Limit()
+            .Statement();
+
+        public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Record = (Treatment?)value;
+            para.Add(new("id", Record?.Patient?.PatientID));
+            return (Patient?)Db?.Retrieve(Sql, para).FirstOrDefault();
+        }
+    }
+
 }

@@ -39,7 +39,7 @@
                     <RowDefinition Height="240"/>
                 </Grid.RowDefinitions>
                 <Label Content="Patient"/>
-                <Label Grid.Column="1" Content="{Binding CurrentRecord.Patient}"/>
+                <Label Grid.Column="1" Content="{Binding Patient}"/>
                 <Label Grid.Row="1" Content="Start Date"/>
                 <DatePicker Grid.Column="1" Grid.Row="1" SelectedDate="{Binding CurrentRecord.StartDate}"/>
                 <Label Grid.Row="2" Content="End Date"/>

@@ -15,7 +15,7 @@ namespace DentistStudioApp.Model
         private DateTime? _startDate;
         private DateTime? _endDate;
         private Patient? _patient;
-        private int _totalServices;
+        private int _serviceCount;
         private bool _invoiced;
         #endregion
 
@@ -32,19 +32,29 @@ namespace DentistStudioApp.Model
         [Field]
         public bool Invoiced { get => _invoiced; set => UpdateProperty(ref value, ref _invoiced); }
 
-        public int TotalServices { get => _totalServices; private set => UpdateProperty(ref value, ref _totalServices); }
+        public int ServiceCount { get => _serviceCount; private set => UpdateProperty(ref value, ref _serviceCount); }
         #endregion
 
         #region Constructor
-        public Treatment() { }
-        public Treatment(long treatmentid) => _treatmentId = treatmentid;
-        public Treatment(DbDataReader reader) 
+        public Treatment()
+        {
+            SelectQry = this.Select()
+                .AllFields()
+                .Fields("count(Service.ServiceID) AS ServiceCount")
+                .From().LeftJoin(nameof(Appointment), "TreatmentID")
+                .LeftJoin(nameof(Appointment),nameof(Service), "ServiceID")
+                .GroupBy().Fields("Treatment.TreatmentID")
+                .Statement();
+        }
+        public Treatment(long treatmentid) : this() => _treatmentId = treatmentid;
+        public Treatment(DbDataReader reader) : this()
         {
             _treatmentId = reader.GetInt64(0);
             _startDate = reader.TryFetchDate(1);
             _endDate = reader.TryFetchDate(2);
             _patient = new Patient(reader.GetInt64(3));
             _invoiced = reader.GetBoolean(4);
+            _serviceCount = reader.GetInt32(5);
         }
         #endregion
 
@@ -59,7 +69,7 @@ namespace DentistStudioApp.Model
             string sql = new Appointment().CountAll().Where().EqualsTo(nameof(TreatmentID), TreatmentID.ToString()).Statement();
             long? count = await appointmentDB.CountRecordsAsync(sql);
             if (count != null) 
-                _totalServices = (int)count;
+                _serviceCount = (int)count;
         }
 
         //SELECT Treatment.*
@@ -111,10 +121,10 @@ namespace DentistStudioApp.Model
         public void UpdateTotalServiceCount(ArithmeticOperation arithmeticOperation)
         {
             if (arithmeticOperation == ArithmeticOperation.ADD)
-                _totalServices++;
+                _serviceCount++;
             else
-                _totalServices--;
-            RaisePropertyChanged(nameof(TotalServices));
+                _serviceCount--;
+            RaisePropertyChanged(nameof(ServiceCount));
         }
 
     }

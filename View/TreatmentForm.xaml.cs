@@ -21,12 +21,11 @@ namespace DentistStudioApp.View
         public TreatmentForm(Treatment treatment) : this()
         {
             Controller = this.GetController<TreatmentController>();
+            Controller.Patient = treatment.Patient;
 
             if (treatment.IsNewRecord()) 
             {
                 Controller.GoAt(treatment);
-                Controller.CurrentRecord.Patient = treatment.Patient;
-                Controller.CurrentRecord.IsDirty = false;
                 return;
             }
             Controller.GoAt(treatment);
