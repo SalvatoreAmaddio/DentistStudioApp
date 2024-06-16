@@ -48,6 +48,7 @@ namespace DentistStudioApp.Controller
             DatesOptions2.Conditions<WhereClause>(SearchQry);
             ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
+            var sql = SearchQry.Statement();
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
