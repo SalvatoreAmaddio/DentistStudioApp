@@ -32,7 +32,7 @@ namespace DentistStudioApp.Model
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
-            if (e.Is(nameof(_paymentBy)))
+            if (e.Is(nameof(PaymentBy)))
                 _paymentBy = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
         public override ISQLModel Read(DbDataReader reader) => new PaymentType(reader);
