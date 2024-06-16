@@ -62,17 +62,17 @@
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
                                 <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
                                 <fr:HeaderFilter Grid.Column="2" Text="End Date" ItemsSource="{Binding DatesOptions2}"/>
-                                <Label Grid.Column="3" Content="N. of Services"/>
+                                <fr:HeaderFilter Grid.Column="3" Text="N. of Services" ItemsSource="{Binding ServiceCountOptions}"/>
                                 <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50" fr:Definition.RowDefinitions="30">
                                         <Grid.Resources>
                                             <Style TargetType="Label">
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -80,7 +80,7 @@
                                         </Grid.Resources>
                                         <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
                                         <Label Grid.Column="1" Content="{Binding EndDate}"/>
-                                        <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                        <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <Button Grid.Column="3" Content="Add" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}"/>
                                         <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
                                     </Grid>
@@ -98,17 +98,17 @@
                     </fr:FormList.Header>
                     <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                         <fr:Lista.Header>
-                            <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50">
+                            <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
                                 <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
                                 <fr:HeaderFilter Grid.Column="2" Text="End Date" ItemsSource="{Binding DatesOptions2}"/>
-                                <Label Grid.Column="3" Content="N. of Services"/>
+                                <fr:HeaderFilter Grid.Column="3" Text="N. of Services" ItemsSource="{Binding ServiceCountOptions}"/>
                                 <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
                             </Grid>
                         </fr:Lista.Header>
                         <fr:Lista.ItemTemplate>
                             <DataTemplate>
                                 <fr:FormRow>
-                                    <Grid fr:Definition.ColumnDefinitions="100,100,90,50,50" fr:Definition.RowDefinitions="30">
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50" fr:Definition.RowDefinitions="30">
                                         <Grid.Resources>
                                             <Style TargetType="Label">
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -116,7 +116,7 @@
                                         </Grid.Resources>
                                         <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
                                         <Label Grid.Column="1" Content="{Binding EndDate}"/>
-                                        <Label Grid.Column="2" Content="{Binding TotalServices}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                        <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <Button Grid.Column="3" Content="Remove" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}"/>
                                         <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
                                     </Grid>

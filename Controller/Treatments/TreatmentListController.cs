@@ -14,8 +14,6 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
-        protected List<Task> serviceCountTasks = [];
-
         #region Properties
         public override int DatabaseIndex => 7;
         public SourceOption DatesOptions { get; private set; }
@@ -37,7 +35,6 @@ namespace DentistStudioApp.Controller
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());            
             AsRecordSource().ReplaceRange(results);
             GoFirst();
-            await Task.WhenAll(serviceCountTasks);
         }
         
 
@@ -48,11 +45,9 @@ namespace DentistStudioApp.Controller
             DatesOptions2.Conditions<WhereClause>(SearchQry);
             ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            var sql = SearchQry.Statement();
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
-            await Task.WhenAll(serviceCountTasks);
         }
 
         public override Task<IEnumerable<Treatment>> SearchRecordAsync() => throw new NotImplementedException();
@@ -148,17 +143,16 @@ namespace DentistStudioApp.Controller
             AsRecordSource().ReplaceRange(results);
 
             GoFirst();
-            await Task.WhenAll(serviceCountTasks);
         }
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
             DatesOptions.Conditions<WhereClause>(SearchQry);
             DatesOptions2.Conditions<WhereClause>(SearchQry);
+            ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             IEnumerable<Treatment> results = await SearchRecordAsync();
             AsRecordSource().ReplaceRange(results);
             GoFirst();
-            await Task.WhenAll(serviceCountTasks);
         }
     }
 
