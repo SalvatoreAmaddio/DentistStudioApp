@@ -38,9 +38,9 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            PaymentTypesOptions.Conditions(SearchQry);
-            PaidOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
+            PaymentTypesOptions.Conditions<WhereClause>(SearchQry);
+            PaidOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions.Conditions<WhereClause>(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 

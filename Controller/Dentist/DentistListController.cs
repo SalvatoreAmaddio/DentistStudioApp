@@ -31,7 +31,7 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            ClinicOptions.Conditions(SearchQry);
+            ClinicOptions.Conditions<WhereClause>(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 

@@ -44,9 +44,9 @@ namespace DentistStudioApp.Controller
         public override async void OnOptionFilterClicked(FilterEventArgs e) 
         {
             ReloadSearchQry();
-            DatesOptions.Conditions(SearchQry);
-            DatesOptions2.Conditions(SearchQry);
-            ServiceCountOptions.HavingConditions(SearchQry);
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions2.Conditions<WhereClause>(SearchQry);
+            ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
@@ -152,8 +152,8 @@ namespace DentistStudioApp.Controller
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            DatesOptions.Conditions(SearchQry);
-            DatesOptions2.Conditions(SearchQry);
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions2.Conditions<WhereClause>(SearchQry);
             IEnumerable<Treatment> results = await SearchRecordAsync();
             AsRecordSource().ReplaceRange(results);
             GoFirst();

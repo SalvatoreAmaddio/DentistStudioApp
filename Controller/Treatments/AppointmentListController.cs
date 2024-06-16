@@ -81,13 +81,13 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
 
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            ServiceOptions.Conditions(SearchQry);
-            DentistOptions.Conditions(SearchQry);
-            AttendedOptions.Conditions(SearchQry);
-            RoomsOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
-            TimesOptions.Conditions(SearchQry);
-
+            ServiceOptions.Conditions<WhereClause>(SearchQry);
+            DentistOptions.Conditions<WhereClause>(SearchQry);
+            AttendedOptions.Conditions<WhereClause>(SearchQry);
+            RoomsOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            TimesOptions.Conditions<WhereClause>(SearchQry);
+                
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
@@ -138,12 +138,12 @@ namespace DentistStudioApp.Controller
         public override void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
-            ServiceOptions.Conditions(SearchQry);
-            DentistOptions.Conditions(SearchQry);
-            AttendedOptions.Conditions(SearchQry);
-            RoomsOptions.Conditions(SearchQry);
-            DatesOptions.Conditions(SearchQry);
-            TimesOptions.Conditions(SearchQry);
+            ServiceOptions.Conditions<WhereClause>(SearchQry);
+            DentistOptions.Conditions<WhereClause>(SearchQry);
+            AttendedOptions.Conditions<WhereClause>(SearchQry);
+            RoomsOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            TimesOptions.Conditions<WhereClause>(SearchQry);
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
