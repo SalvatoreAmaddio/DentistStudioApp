@@ -26,7 +26,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry()
         {
-            return new Gender().Select().AllFields().From().Where().Like("LOWER(Identity)", "@name");
+            return new Gender().Select().All().From().Where().Like("LOWER(Identity)", "@name");
         }
 
         public override void OnOptionFilterClicked(FilterEventArgs e)

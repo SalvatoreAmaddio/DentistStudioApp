@@ -130,7 +130,7 @@ namespace DentistStudioApp.Controller
             if (surveyDataDB == null) throw new NullReferenceException();
             string sql = new SurveyData().Insert().Fields("SurveyID", "SurveyQuestionID").Select().Fields($"'{Survey.SurveyID}' As SurveyID", "SurveyQuestionID").From(new SurveyQuestion()).Statement();
             await surveyDataDB.ExecuteQueryAsync(sql);
-            sql = new SurveyData().Select().AllFields().From().Where().EqualsTo("SurveyID", $"{Survey.SurveyID}").Statement();
+            sql = new SurveyData().Select().All().From().Where().EqualsTo("SurveyID", $"{Survey.SurveyID}").Statement();
             return surveyDataDB.Retrieve(sql).Cast<SurveyData>();
         }
 

@@ -39,7 +39,7 @@ namespace DentistStudioApp.Model
         public Treatment()
         {
             SelectQry = this.Select()
-                .AllFields()
+                .All()
                 .Fields("count(Service.ServiceID) AS ServiceCount")
                 .From().LeftJoin(nameof(Appointment), "TreatmentID")
                 .LeftJoin(nameof(Appointment),nameof(Service), "ServiceID")

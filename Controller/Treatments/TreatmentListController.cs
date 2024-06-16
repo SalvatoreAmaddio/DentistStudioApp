@@ -66,7 +66,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry() =>
             new Treatment().Select()
-                .AllFields()
+                .All()
                 .Fields("count(Service.ServiceID) AS ServiceCount")
                 .From().LeftJoin(nameof(Appointment), "TreatmentID")
                 .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
@@ -172,7 +172,7 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-                new Treatment().Select().AllFields().Fields("count(Service.ServiceID) AS ServiceCount")
+                new Treatment().Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
                 .From()
                 .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
                 .LeftJoin(nameof(Appointment), "TreatmentID")
@@ -194,7 +194,7 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-            new Treatment().Select().AllFields().Fields("count(Service.ServiceID) AS ServiceCount")
+            new Treatment().Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
             .From()
             .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
             .LeftJoin(nameof(Appointment), "TreatmentID")
