@@ -66,10 +66,10 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructor
-        public Patient() { }
+        public Patient() => AfterUpdate += OnAfterUpdate;
 
-        public Patient(long id) => _patientID = id;
-        public Patient(DbDataReader reader) 
+        public Patient(long id) : this() => _patientID = id;
+        public Patient(DbDataReader reader) : this()
         {
             _patientID = reader.GetInt64(0);
             _firstName = reader.GetString(1);
@@ -80,6 +80,14 @@ namespace DentistStudioApp.Model
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
             _picturePath = reader.TryFetchString(8, _picturePath, _picturePath);
+        }
+
+        private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(FirstName)))
+                _firstName = e.ConvertNewValueTo<string>().FirstLetterCapital();
+            if (e.Is(nameof(LastName)))
+                _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
         #endregion
 

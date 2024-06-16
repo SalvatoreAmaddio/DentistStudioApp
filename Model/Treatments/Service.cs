@@ -1,4 +1,5 @@
-﻿using Backend.Model;
+﻿using Backend.ExtensionMethods;
+using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -23,14 +24,19 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructor
-        public Service() { }
-
-        public Service(long id) => _serviceid = id;
-        public Service(DbDataReader reader)
+        public Service() => AfterUpdate += OnAfterUpdate;
+        public Service(long id) : this() => _serviceid = id;
+        public Service(DbDataReader reader) : this()
         {
             _serviceid = reader.GetInt64(0);
             _serviceName = reader.GetString(1);
             _cost = reader.GetDouble(2);
+            
+        }
+        private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(ServiceName)))
+                _serviceName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
         #endregion
         public override ISQLModel Read(DbDataReader reader) => new Service(reader);

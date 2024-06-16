@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
@@ -17,11 +18,17 @@ namespace DentistStudioApp.Model
         [Field]
         public string Identity { get => _identity; set => UpdateProperty(ref value, ref _identity); }
 
-        public Gender() { }
+        public Gender() => AfterUpdate += OnAfterUpdate;
 
-        public Gender(long genderid) => _genderid = genderid; 
+        private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(Identity)))
+                _identity = e.ConvertNewValueTo<string>().FirstLetterCapital();
+        }
 
-        public Gender(DbDataReader reader) 
+        public Gender(long genderid) : this() => _genderid = genderid; 
+
+        public Gender(DbDataReader reader) : this()
         {
             _genderid = reader.GetInt64(0);
             _identity = reader.GetString(1);

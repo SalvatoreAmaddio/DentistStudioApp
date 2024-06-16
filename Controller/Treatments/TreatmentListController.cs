@@ -21,7 +21,7 @@ namespace DentistStudioApp.Controller
         public SourceOption ServiceCountOptions { get; private set; }
         #endregion
 
-        public TreatmentListController() 
+        public TreatmentListController()
         {
             DatesOptions = new PrimitiveSourceOption(this, "StartDate");
             DatesOptions2 = new PrimitiveSourceOption(this, "EndDate");

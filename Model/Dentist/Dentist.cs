@@ -1,7 +1,9 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
+using System.Security.Principal;
 
 namespace DentistStudioApp.Model
 {
@@ -32,7 +34,9 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructor
-        public Dentist(DbDataReader reader) 
+        public Dentist() => AfterUpdate += OnAfterUpdate;
+
+        public Dentist(DbDataReader reader) : this()
         { 
             _dentistId = reader.GetInt64(0);
             _firstName = reader.GetString(1);
@@ -41,9 +45,15 @@ namespace DentistStudioApp.Model
             _active = reader.GetBoolean(4);
         }
 
-        public Dentist() { }
+        public Dentist(long id) : this() => _dentistId = id;
 
-        public Dentist(long id) => _dentistId = id;
+        private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(FirstName)))
+                _firstName = e.ConvertNewValueTo<string>().FirstLetterCapital();
+            if (e.Is(nameof(LastName)))
+                _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
+        }
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new Dentist(reader);
