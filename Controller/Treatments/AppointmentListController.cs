@@ -56,6 +56,10 @@ namespace DentistStudioApp.Controller
 
     public class AppointmentListController : AbstractAppointmentListController
     {
+        public AppointmentListController()
+        {
+            NewRecordEvent += OnNewRecordEvent;
+        }
         private void OnNewRecordEvent(object? sender, EventArgs e)
         {
             Treatment? treatment = (Treatment?)ParentRecord;
