@@ -10,6 +10,7 @@ using FrontEnd.Forms;
 using System.IO;
 using System.Windows.Input;
 using Backend.Enums;
+using Backend.Model;
 
 namespace DentistStudioApp.Controller
 {
@@ -155,5 +156,6 @@ namespace DentistStudioApp.Controller
             SurveyDataFormList surveyWindow = new(Survey, records);
             surveyWindow.ShowDialog();
         }
+
     }
 }

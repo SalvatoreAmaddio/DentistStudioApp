@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.Model;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
@@ -49,6 +50,11 @@ namespace DentistStudioApp.Controller
             Task t1 = TreatmentsToInvoice.RequeryAsync();
             Task t2 = TreatmentsInvoiced.RequeryAsync();
             await Task.WhenAll(t1, t2);
+        }
+
+        public override AbstractClause InstantiateSearchQry()
+        {
+            throw new NotImplementedException();
         }
     }
 }

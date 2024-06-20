@@ -1,6 +1,10 @@
-﻿using DentistStudioApp.Model;
+﻿using Backend.ExtensionMethods;
+using Backend.Model;
+using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using FrontEnd.Source;
+using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
@@ -10,12 +14,18 @@ namespace DentistStudioApp.Controller
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
         public override int DatabaseIndex => 7;
-        public TreatmentController() 
+        public TreatmentController()
         {
-            AsRecordSource().ReplaceRecords(AsRecordSource().OrderByDescending(s => s.StartDate).ToList());
-            GoFirst();
             AddSubControllers(Appointments);
             NewRecordEvent += TreatmentController_NewRecordEvent;
+        }
+
+        protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            SearchQry.AddParameter("patientID", Patient?.PatientID);
+            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
 
         private void TreatmentController_NewRecordEvent(object? sender, AllowRecordMovementArgs e)
@@ -25,6 +35,11 @@ namespace DentistStudioApp.Controller
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.IsDirty = false;
             }
+        }
+
+        public override AbstractClause InstantiateSearchQry()
+        {
+            return new Treatment().From().Where().EqualsTo("PatientID","@patientID").OrderBy().Field("StartDate DESC");
         }
     }
 }

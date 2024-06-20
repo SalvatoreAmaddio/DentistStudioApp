@@ -54,7 +54,7 @@ namespace DentistStudioApp.Model
             _endDate = reader.TryFetchDate(2);
             _patient = new Patient(reader.GetInt64(3));
             _invoiced = reader.GetBoolean(4);
-            _serviceCount = reader.GetInt32(5);
+            _serviceCount = reader.TryFetchInt32(5);
         }
         #endregion
 

@@ -23,7 +23,7 @@ namespace DentistStudioApp.View
             Controller = this.GetController<TreatmentController>();
             Controller.Patient = treatment.Patient;
 
-            if (treatment.IsNewRecord()) 
+            if (treatment.IsNewRecord())
             {
                 Controller.GoAt(treatment);
                 return;

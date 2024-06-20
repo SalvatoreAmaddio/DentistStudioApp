@@ -60,6 +60,7 @@ namespace DentistStudioApp.Controller
         {
             NewRecordEvent += OnNewRecordEvent;
         }
+
         private void OnNewRecordEvent(object? sender, EventArgs e)
         {
             Treatment? treatment = (Treatment?)ParentRecord;
