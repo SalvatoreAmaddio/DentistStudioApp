@@ -23,7 +23,7 @@ namespace DentistStudioApp.Controller
         protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
-            RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            RecordSource<Treatment> results = await Task.Run(()=>CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
