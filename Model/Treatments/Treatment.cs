@@ -62,43 +62,6 @@ namespace DentistStudioApp.Model
 
         public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
 
-        public async Task CountServices() 
-        {
-            IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>();
-            if (appointmentDB == null) throw new NullReferenceException();
-            string sql = new Appointment().CountAll().Where().EqualsTo(nameof(TreatmentID), TreatmentID.ToString()).Statement();
-            long? count = await appointmentDB.CountRecordsAsync(sql);
-            if (count != null) 
-                _serviceCount = (int)count;
-        }
-
-        //SELECT Treatment.*
-        //FROM Treatment LEFT JOIN InvoicedTreatment ON Treatment.TreatmentID = InvoicedTreatment.TreatmentID
-        //WHERE InvoicedTreatment.InvoiceID IS NULL AND Treatment.PatientID = 1
-        public static async Task<IEnumerable<Treatment>> GetToInvoice(long? patientID)
-        {
-            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
-            Treatment treatment = new();
-            string? sql = treatment.From().LeftJoin(nameof(InvoicedTreatment),"TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID").Statement();
-            List<QueryParameter> para = [];
-            para.Add(new("patientID", patientID));
-            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
-        }
-
-        //SELECT Treatment.*
-        //FROM Treatment INNER JOIN InvoicedTreatment ON Treatment.TreatmentID = InvoicedTreatment.TreatmentID
-        //WHERE InvoicedTreatment.InvoiceID IS NULL AND Treatment.PatientID = 1
-        public static async Task<IEnumerable<Treatment>> GetInvoiced(long? patientID, long? invoiceID)
-        {
-            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
-            Treatment treatment = new();
-            string? sql = treatment.From().InnerJoin(nameof(InvoicedTreatment), "TreatmentID").Where().EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID","@invoiceID").Statement();
-            List<QueryParameter> para = [];
-            para.Add(new("patientID", patientID));
-            para.Add(new("invoiceID", invoiceID));
-            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
-        }
-
         public async Task SetPatientAsync()
         {
             IAbstractDatabase? db = DatabaseManager.Find<Patient>() ?? throw new NullReferenceException();
@@ -116,15 +79,6 @@ namespace DentistStudioApp.Model
             string? sql = new Appointment().Sum("Service.Cost").From().InnerJoin(new Service()).InnerJoin(new Treatment()).Where().EqualsTo("Treatment.TreatmentID", "@id").Statement();
             para.Add(new("id", TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
-        }
-
-        public void UpdateTotalServiceCount(ArithmeticOperation arithmeticOperation)
-        {
-            if (arithmeticOperation == ArithmeticOperation.ADD)
-                _serviceCount++;
-            else
-                _serviceCount--;
-            RaisePropertyChanged(nameof(ServiceCount));
         }
 
     }

@@ -98,25 +98,6 @@ namespace DentistStudioApp.Controller
             GoFirst();
         }
 
-        protected override bool Update(Appointment? model)
-        {
-            bool? IsNewRecord = model?.IsNewRecord();
-            bool result = base.Update(model);
-            if (result)
-                if (IsNewRecord!=null) 
-                    if (IsNewRecord.Value) 
-                        ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.ADD);
-            return result;
-        }
-
-        protected override bool Delete(Appointment? model)
-        {
-            bool result = base.Delete(model);
-            if (result)
-                ((Treatment?)ParentRecord)?.UpdateTotalServiceCount(ArithmeticOperation.SUBTRACT);
-            return result;
-        }
-
         public override AbstractClause InstantiateSearchQry()
         {
             return new Appointment().From().InnerJoin(new Dentist()).InnerJoin(new Service()).Where().EqualsTo("TreatmentID", "@treatmentID");
