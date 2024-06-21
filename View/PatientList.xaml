@@ -38,7 +38,7 @@
                         <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,100,100,100,100,100,100,50,50,50">
                             <fr:Text Text="{Binding FirstName}"/>
                             <fr:Text Text="{Binding LastName}" Grid.Column="1"/>
-                            <fr:TextBoxDate Grid.Column="2" SelectedDate="{Binding DOB}"/>
+                            <fr:TextBoxDate Placeholder="Ciao..." Grid.Column="2" Text="{Binding DOB}"/>
                             <fr:Combo Grid.Column="3" ControllerRecordSource="Genders" SelectedItem="{Binding Gender}"/>
                             <fr:Combo Grid.Column="4" ControllerRecordSource="Titles" SelectedItem="{Binding JobTitle}"/>
                             <fr:Text Text="{Binding Email}" Grid.Column="5"/>
