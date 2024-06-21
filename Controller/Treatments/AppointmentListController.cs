@@ -7,6 +7,7 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
@@ -104,9 +105,9 @@ namespace DentistStudioApp.Controller
         }
     }
 
-    public class AppointListController2 : AbstractAppointmentListController 
+    public class AppointmentListController2 : AbstractAppointmentListController 
     {
-        public AppointListController2()
+        public AppointmentListController2()
         {
             AllowNewRecord = false;
             OpenWindowOnNew = true;
@@ -117,6 +118,11 @@ namespace DentistStudioApp.Controller
         {
             if (!e.Is(nameof(Search))) return;
             await OnSearchPropertyRequeryAsync(sender);
+            if (sender is FilterEventArgs f) 
+            { 
+                if (f.HasMessages) 
+                    GoFirst();
+            }
         }
 
         public void SetTreatment(Treatment? treatment) => ParentRecord = treatment;
@@ -133,10 +139,16 @@ namespace DentistStudioApp.Controller
             OnAfterUpdate(e, new(null, null, nameof(Search)));
         }
 
-        public void TriggerFilter(DateTime? date) 
+        public void TriggerFilter(DateTime? date)
         {
-            DatesOptions.FirstOrDefault(s => s.Value.Equals(date))?.Select();
-            OnOptionFilterClicked(new());
+            DatesOptions.FirstOrDefault(s => _triggerFilter(s, date))?.Select();
+            OnOptionFilterClicked(new() { Messages = ["GoFirst"] });
+        }
+
+        private bool _triggerFilter(IFilterOption? option, DateTime? date)
+        { 
+            if (option == null) return false;
+            return (option.Value == null) ? false : option.Value.Equals(date);
         }
 
         public override async Task<IEnumerable<Appointment>> SearchRecordAsync() 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DentistStudioApp.View"
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
-        d:DataContext="{d:DesignInstance Type=controller:AppointListController2, IsDesignTimeCreatable=False}"
+        d:DataContext="{d:DesignInstance Type=controller:AppointmentListController2, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
