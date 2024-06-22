@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
@@ -54,7 +55,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry()
         {
-            throw new NotImplementedException();
+            return new Invoice().From();
         }
     }
 }

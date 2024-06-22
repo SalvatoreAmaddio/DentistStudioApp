@@ -41,9 +41,9 @@
                 <Label Content="Patient"/>
                 <Label Grid.Column="1" Content="{Binding Patient}"/>
                 <Label Grid.Row="1" Content="Start Date"/>
-                <DatePicker Grid.Column="1" Grid.Row="1" SelectedDate="{Binding CurrentRecord.StartDate}"/>
+                <fr:TextBoxDate Grid.Column="1" Grid.Row="1" Date="{Binding CurrentRecord.StartDate}"/>
                 <Label Grid.Row="2" Content="End Date"/>
-                <DatePicker Grid.Column="1" Grid.Row="2" SelectedDate="{Binding CurrentRecord.EndDate}"/>
+                <fr:TextBoxDate Grid.Column="1" Grid.Row="2" Date="{Binding CurrentRecord.EndDate}"/>
 
                 <fr:CommandPanel Grid.Column="3" Grid.RowSpan="4"/>
 
@@ -54,7 +54,7 @@
                         </fr:FormList.Header>
                         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
-                                <Grid fr:Definition.ColumnDefinitions="100,100,65,100,70,100,80,50,50">
+                                <Grid fr:Definition.ColumnDefinitions="100,100,65,105,70,100,80,50,50">
                                     <fr:HeaderFilter Grid.Column="1" IsWithinList="True" ItemsSource="{Binding ServiceOptions}" Text="Service"/>
                                     <fr:HeaderFilter Grid.Column="2" IsWithinList="True" ItemsSource="{Binding DentistOptions}" Text="Dentist"/>
                                     <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding RoomsOptions}" Text="Room"/>
@@ -68,7 +68,7 @@
                             <fr:Lista.ItemTemplate>
                                 <DataTemplate>
                                     <fr:FormRow>
-                                        <Grid fr:Definition.ColumnDefinitions="100,100,65,100,70,100,80,50,50" fr:Definition.RowDefinitions="30">
+                                        <Grid fr:Definition.ColumnDefinitions="100,100,65,105,70,100,80,50,50" fr:Definition.RowDefinitions="30">
                                             <fr:Combo ControllerRecordSource="Services" SelectedItem="{Binding Service}"/>
 
                                             <fr:Combo Grid.Column="1" ControllerRecordSource="Dentists" SelectedItem="{Binding Dentist}">
@@ -82,7 +82,7 @@
                                                 </fr:Combo.ItemTemplate>
                                             </fr:Combo>
                                             <fr:Text Grid.Column="2" Text="{Binding RoomNumber}"/>
-                                            <DatePicker Grid.Column="3" SelectedDate="{Binding DOA}"/>
+                                            <fr:TextBoxDate Grid.Column="3" Date="{Binding DOA}"/>
                                             <fr:Text Grid.Column="4" Text="{Binding TOA, Converter={StaticResource TimeBox}}"/>
                                             <fr:Text Grid.Column="5" Text="{Binding Notes}"/>
                                             <CheckBox Grid.Column="6" IsChecked="{Binding Attended}" HorizontalAlignment="Center"/>

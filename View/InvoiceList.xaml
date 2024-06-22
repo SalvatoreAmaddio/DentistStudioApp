@@ -31,7 +31,7 @@
         </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="150,85,100,80,90,90,105,50,50,50,50">
+                <Grid fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50">
                     <Label Grid.Column="1" Content="Patient"/>
                     <Label Grid.Column="2" Content="Invoice Num"/>
                     <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date"/>
@@ -46,10 +46,10 @@
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,100,80,90,90,105,50,50,50,50">
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50">
                             <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatientFromInvoicedTreatment}}"/>
                             <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
-                            <DatePicker Grid.Column="2" SelectedDate="{Binding DOI}"/>
+                            <fr:TextBoxDate Grid.Column="2" Date="{Binding DOI}"/>
                             <fr:Text Grid.Column="3" IsReadOnly="True" Text="{Binding Amount, StringFormat={}{0:C2}}"/>
                             <fr:Text Grid.Column="4" Text="{Binding Deposit, StringFormat={}{0:C2}}"/>
                             <fr:Text Grid.Column="5" IsReadOnly="True" Text="{Binding TotalDue, Mode=OneWay, StringFormat={}{0:C2}}"/>

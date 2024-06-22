@@ -23,7 +23,7 @@
         </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="200,100,100,100,65,65,80,200,50,50">
+                <Grid fr:Definition.ColumnDefinitions="200,100,100,105,65,65,80,200,50,50">
                     <Label Content="Patient" Grid.Column="1"/>
                     <fr:HeaderFilter Grid.Column="2" IsWithinList="True" ItemsSource="{Binding ServiceOptions}" Text="Service"/>
                     <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding DentistOptions}" Text="Dentist"/>
@@ -38,7 +38,7 @@
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="200,100,100,100,65,65,80,200,50,50">
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="200,100,100,105,65,65,80,200,50,50">
                             <Label Content="{Binding ., Mode=OneWay, Converter={StaticResource GetPatientFromAppointmentTreatment}}" VerticalContentAlignment="Center" Background="White"/>
                             <fr:Combo Grid.Column="1" ControllerRecordSource="Services" SelectedItem="{Binding Service}"/>
                             <fr:Combo Grid.Column="2" ControllerRecordSource="Dentists" SelectedItem="{Binding Dentist}">
@@ -51,7 +51,7 @@
                                     </DataTemplate>
                                 </fr:Combo.ItemTemplate>
                             </fr:Combo>
-                            <DatePicker Grid.Column="3" SelectedDate="{Binding DOA}"/>
+                            <fr:TextBoxDate Grid.Column="3" Date="{Binding DOA}"/>
                             <fr:Text Grid.Column="4" Text="{Binding TOA, Converter={StaticResource TimeBox}}"/>
                             <fr:Text Grid.Column="5" Text="{Binding RoomNumber}" HorizontalContentAlignment="Center"/>
                             <CheckBox Grid.Column="6" IsChecked="{Binding Attended}" HorizontalAlignment="Center"/>

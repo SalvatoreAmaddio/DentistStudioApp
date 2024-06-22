@@ -75,7 +75,7 @@
                         </fr:FormList.Header>
                         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
-                                <Grid fr:Definition.ColumnDefinitions="100,100,105,100">
+                                <Grid fr:Definition.ColumnDefinitions="105,105,105,100">
                                     <fr:HeaderFilter Grid.Column="1" ItemsSource="{Binding DatesOptions}" Text="Start Date"/>
                                     <fr:HeaderFilter Grid.Column="2" ItemsSource="{Binding DatesOptions2}" Text="End Date"/>
                                     <fr:HeaderFilter Grid.Column="3" ItemsSource="{Binding ServiceCountOptions}" Text="N. of Services"/>
@@ -85,9 +85,9 @@
                             <fr:Lista.ItemTemplate>
                                 <DataTemplate>
                                     <fr:FormRow>
-                                        <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50" fr:Definition.RowDefinitions="30">
-                                            <DatePicker SelectedDate="{Binding StartDate}"/>
-                                            <DatePicker Grid.Column="1" SelectedDate="{Binding EndDate}"/>
+                                        <Grid fr:Definition.ColumnDefinitions="105,105,105,50,50" fr:Definition.RowDefinitions="30">
+                                            <fr:TextBoxDate Date="{Binding StartDate}"/>
+                                            <fr:TextBoxDate Grid.Column="1" Date="{Binding EndDate}"/>
                                             <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                             <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
                                             <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>
