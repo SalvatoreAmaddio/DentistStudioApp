@@ -73,6 +73,7 @@ namespace DentistStudioApp.Controller
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
+        string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Statement();
         public Patient? Patient;
 
         #region Properties
@@ -93,21 +94,19 @@ namespace DentistStudioApp.Controller
         }
         protected virtual async Task InvoiceTreatmentTask()
         {
-            if (InvoicedTreatmentDB == null) throw new NullReferenceException();
-            if (CurrentRecord == null) throw new NullReferenceException();
+            if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
 
             Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
 
-            string? sql = new InvoicedTreatment().Where().EqualsTo("TreatmentID", "@id").Statement();
             List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
 
             InvoicedTreatment? invoicedTreatment = null;
 
-            if (Invoicing) 
+            if (Invoicing)
                 invoicedTreatment = new(CurrentInvoice, CurrentRecord);
-            else 
+            else
             {
-                RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(sql, para).Cast<InvoicedTreatment>());
+                RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(_sql, para).Cast<InvoicedTreatment>());
                 invoicedTreatment = records.FirstOrDefault();
             }
 
@@ -118,11 +117,11 @@ namespace DentistStudioApp.Controller
             if (amount != null)
                 if (Invoicing)
                     CurrentInvoice?.SetAmount((double)amount);
-                else 
+                else
                     CurrentInvoice?.RemoveAmount((double)amount);
 
             InvoicedTreatmentDB.Model = invoicedTreatment;
-            InvoicedTreatmentDB.Crud(Crud);
+            InvoicedTreatmentDB.Crud(Crud); //PERFORM DELETE OR INSERT
 
             CurrentRecord.Invoiced = Invoicing;
             PerformUpdate();
@@ -137,11 +136,8 @@ namespace DentistStudioApp.Controller
         public override async void OnSubFormFilter()
         {
             ReloadSearchQry();
-            IEnumerable<Treatment> results = await SearchRecordAsync();
-
-            if (results == null) throw new NullReferenceException();
+            IEnumerable<Treatment> results = await SearchRecordAsync() ?? throw new NullReferenceException();
             AsRecordSource().ReplaceRange(results);
-
             GoFirst();
         }
         public override async void OnOptionFilterClicked(FilterEventArgs e)

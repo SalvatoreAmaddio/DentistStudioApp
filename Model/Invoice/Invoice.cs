@@ -3,6 +3,7 @@ using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
+using FrontEnd.Events;
 
 namespace DentistStudioApp.Model
 {
@@ -53,7 +54,7 @@ namespace DentistStudioApp.Model
             _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.From().Limit().Statement()).FirstOrDefault();
         }
 
-        private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Amount)) || e.Is(nameof(Deposit)) || e.Is(nameof(Discount))) 
             {
