@@ -79,7 +79,7 @@
                                             </Style>
                                         </Grid.Resources>
                                         <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
-                                        <Label Grid.Column="1" Content="{Binding EndDate}"/>
+                                        <Label Grid.Column="1" Content="{Binding EndDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
                                         <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <Button Grid.Column="3" Content="Add" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}"/>
                                         <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
@@ -115,7 +115,7 @@
                                             </Style>
                                         </Grid.Resources>
                                         <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
-                                        <Label Grid.Column="1" Content="{Binding EndDate}"/>
+                                        <Label Grid.Column="1" Content="{Binding EndDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
                                         <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                         <Button Grid.Column="3" Content="Remove" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}"/>
                                         <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
