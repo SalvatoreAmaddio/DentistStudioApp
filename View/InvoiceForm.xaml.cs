@@ -20,7 +20,7 @@ namespace DentistStudioApp.View
             _Controller = this.GetController<InvoiceController>();
             _Controller?.GoNew();
             _Controller.Patient = patient;
-            _Controller.CurrentRecord.IsDirty = true;
+            _Controller.CurrentRecord?.Dirt();
         }
 
         public InvoiceForm(Invoice? invoice) : this() 
