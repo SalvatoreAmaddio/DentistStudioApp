@@ -16,7 +16,7 @@ namespace DentistStudioApp.Model
         private long _invoiceid;
         private DateTime? _doi = DateTime.Today;
         private double _discount;
-        private PaymentType? _paymentType = new(1);
+        private PaymentType? _paymentType = new();
         private bool _paid;
         #endregion
 
@@ -50,7 +50,7 @@ namespace DentistStudioApp.Model
         {
             AfterUpdate += OnAfterUpdate;
             SelectQry = this.Select().All().From().OrderBy().Field("DOI DESC").Statement();
-            _paymentType = new(1);
+            _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.From().Limit().Statement()).FirstOrDefault();
         }
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
