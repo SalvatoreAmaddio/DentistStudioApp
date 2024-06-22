@@ -12,7 +12,7 @@ namespace DentistStudioApp.Controller
     public class InvoiceController : AbstractFormController<Invoice>
     {
         private Patient? _patient;
-        public Patient? Patient 
+        public Patient? Patient
         { 
             get => _patient;
             set

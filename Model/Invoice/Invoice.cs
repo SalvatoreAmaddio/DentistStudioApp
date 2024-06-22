@@ -1,4 +1,5 @@
-﻿using Backend.ExtensionMethods;
+﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
@@ -49,6 +50,7 @@ namespace DentistStudioApp.Model
         {
             AfterUpdate += OnAfterUpdate;
             SelectQry = this.Select().All().From().OrderBy().Field("DOI DESC").Statement();
+            _paymentType = new(1);
         }
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)

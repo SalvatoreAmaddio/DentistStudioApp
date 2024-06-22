@@ -10,7 +10,6 @@ using FrontEnd.Forms;
 using System.IO;
 using System.Windows.Input;
 using Backend.Enums;
-using Backend.Model;
 
 namespace DentistStudioApp.Controller
 {

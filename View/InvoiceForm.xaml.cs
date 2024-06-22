@@ -8,6 +8,7 @@ namespace DentistStudioApp.View
 {
     public partial class InvoiceForm : Window
     {
+        private InvoiceController? _Controller;
         public InvoiceForm()
         {
             InitializeComponent();
@@ -16,17 +17,18 @@ namespace DentistStudioApp.View
 
         public InvoiceForm(Patient? patient) : this()
         {
-            InvoiceController controller = this.GetController<InvoiceController>();
-            controller.GoNew();
-            controller.Patient = patient;
+            _Controller = this.GetController<InvoiceController>();
+            _Controller?.GoNew();
+            _Controller.Patient = patient;
+            _Controller.CurrentRecord.IsDirty = true;
         }
 
         public InvoiceForm(Invoice? invoice) : this() 
         {
             FetchPatientFromInvoicedTreatment fetchPatient = new ();
-            InvoiceController controller = this.GetController<InvoiceController>();
-            controller.GoAt(invoice);
-            controller.Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
+            _Controller = this.GetController<InvoiceController>();
+            _Controller?.GoAt(invoice);
+            _Controller.Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
         }
     }
 }
