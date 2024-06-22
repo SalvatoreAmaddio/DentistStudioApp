@@ -50,7 +50,7 @@ namespace DentistStudioApp.Model
         public Invoice() 
         {
             AfterUpdate += OnAfterUpdate;
-            SelectQry = this.Select().All().From().OrderBy().Field("DOI DESC").Statement();
+            SelectQry = this.Select().All().From().OrderBy().Field("DOI DESC").Field($"Invoice.{nameof(InvoiceID)} DESC").Statement();
             _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.From().Limit().Statement()).FirstOrDefault();
         }
 

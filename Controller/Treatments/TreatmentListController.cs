@@ -73,7 +73,8 @@ namespace DentistStudioApp.Controller
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
-        string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
+        private bool _buttonEnabled = true;
+        private string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
         public Patient? Patient;
 
         #region Properties
@@ -82,6 +83,8 @@ namespace DentistStudioApp.Controller
         public ICommand InvoiceTreatmentCMD { get; }
         public abstract CRUD Crud { get; }
         private bool Invoicing => Crud == CRUD.INSERT;
+        
+        public bool ButtonEnabled { get => _buttonEnabled; set => UpdateProperty(ref value, ref _buttonEnabled); }
         #endregion
 
         public AbstractTreatmentInvoice() => InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
@@ -95,20 +98,20 @@ namespace DentistStudioApp.Controller
         protected virtual async Task InvoiceTreatmentTask()
         {
             if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
+            ButtonEnabled = false;
             List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
             Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
             Task<RecordSource<InvoicedTreatment>> fetchSourceTask = Task.Run(()=>RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(_sql, para).Cast<InvoicedTreatment>()));
-            InvoicedTreatment? invoicedTreatment = null;
 
-            if (Invoicing)
-                invoicedTreatment = new(CurrentInvoice, CurrentRecord);
-            else
+            if (Invoicing) //add new treatment
+                InvoicedTreatmentDB.Model = new InvoicedTreatment(CurrentInvoice, CurrentRecord);
+            else //fetch the treatment to remove
             {
                 RecordSource<InvoicedTreatment> records = await fetchSourceTask;
-                invoicedTreatment = records.FirstOrDefault();
+                InvoicedTreatmentDB.Model = records.First();
             }
 
-            if (invoicedTreatment == null) return;
+            Task moveTreatments = Task.Run(() => InvoicedTreatmentDB.CrudAsync(Crud)); //PERFORM DELETE OR INSERT TREATMENTS
 
             object? amount = await total;
 
@@ -118,10 +121,8 @@ namespace DentistStudioApp.Controller
                 else
                     CurrentInvoice?.RemoveAmount((double)amount);
 
-            InvoicedTreatmentDB.Model = invoicedTreatment;
-            Task<bool> movingTreatmentsTask = Task.Run(()=>InvoicedTreatmentDB.CrudAsync(Crud)); //PERFORM DELETE OR INSERT
-
             CurrentRecord.Invoiced = Invoicing;
+            await moveTreatments;
             Task<bool> update = PerformUpdateAsync(); //Perform the update which also triggers the NotifyParentController event.
 
             if (ParentController != null && CurrentInvoice != null)
@@ -131,7 +132,8 @@ namespace DentistStudioApp.Controller
                 ParentController.PerformUpdate();
             }
 
-            await Task.WhenAll(movingTreatmentsTask, update);
+            await update;
+            ButtonEnabled = true;
         }
 
         public override async void OnSubFormFilter()
