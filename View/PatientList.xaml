@@ -21,7 +21,7 @@
         </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="100,100,100,100,100,100,100,50,50,50">
+                <Grid fr:Definition.ColumnDefinitions="100,100,105,100,100,100,100,50,50,50">
                     <Label Grid.Column="1" Content="First Name"/>
                     <Label Grid.Column="2" Content="Last Name"/>
                     <Label Grid.Column="3" Content="DOB"/>
@@ -35,10 +35,10 @@
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,100,100,100,100,100,100,50,50,50">
+                        <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,100,105,100,100,100,100,50,50,50">
                             <fr:Text Text="{Binding FirstName}"/>
                             <fr:Text Text="{Binding LastName}" Grid.Column="1"/>
-                            <fr:TextBoxDate Grid.Column="2" Date="{Binding DOB}"/>
+                            <fr:TextBoxDate Grid.Column="2" Placeholder="Date of Birth..." Date="{Binding DOB}"/>
                             <fr:Combo Grid.Column="3" ControllerRecordSource="Genders" SelectedItem="{Binding Gender}"/>
                             <fr:Combo Grid.Column="4" ControllerRecordSource="Titles" SelectedItem="{Binding JobTitle}"/>
                             <fr:Text Text="{Binding Email}" Grid.Column="5"/>
