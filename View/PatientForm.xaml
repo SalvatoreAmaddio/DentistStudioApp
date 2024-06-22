@@ -34,7 +34,7 @@
 
                 <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
                 <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
-                <fr:TextBoxDate Grid.Row="2" Grid.Column="1" SelectedDate="{Binding CurrentRecord.DOB}"/>
+                <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOB}"/>
                 <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
                 <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
                 <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
