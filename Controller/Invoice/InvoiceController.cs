@@ -29,8 +29,8 @@ namespace DentistStudioApp.Controller
 
         public InvoiceController() 
         {
-            TreatmentsToInvoice.NotifyParentEvent += OnNotifyParentEvent;
-            TreatmentsInvoiced.NotifyParentEvent += OnNotifyParentEvent;
+            TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
+            TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
             AddSubControllers(TreatmentsToInvoice);
             AddSubControllers(TreatmentsInvoiced);
             NewRecordEvent += OnNewRecordEvent;

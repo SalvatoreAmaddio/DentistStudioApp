@@ -73,7 +73,7 @@ namespace DentistStudioApp.Controller
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
-        string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Statement();
+        string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
         public Patient? Patient;
 
         #region Properties
@@ -95,18 +95,16 @@ namespace DentistStudioApp.Controller
         protected virtual async Task InvoiceTreatmentTask()
         {
             if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
-
-            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
-
             List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
-
+            Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
+            Task<RecordSource<InvoicedTreatment>> fetchSourceTask = Task.Run(()=>RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(_sql, para).Cast<InvoicedTreatment>()));
             InvoicedTreatment? invoicedTreatment = null;
 
             if (Invoicing)
                 invoicedTreatment = new(CurrentInvoice, CurrentRecord);
             else
             {
-                RecordSource<InvoicedTreatment> records = await RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(_sql, para).Cast<InvoicedTreatment>());
+                RecordSource<InvoicedTreatment> records = await fetchSourceTask;
                 invoicedTreatment = records.FirstOrDefault();
             }
 
@@ -121,18 +119,21 @@ namespace DentistStudioApp.Controller
                     CurrentInvoice?.RemoveAmount((double)amount);
 
             InvoicedTreatmentDB.Model = invoicedTreatment;
-            InvoicedTreatmentDB.Crud(Crud); //PERFORM DELETE OR INSERT
+            Task<bool> movingTreatmentsTask = Task.Run(()=>InvoicedTreatmentDB.CrudAsync(Crud)); //PERFORM DELETE OR INSERT
 
             CurrentRecord.Invoiced = Invoicing;
-            PerformUpdate();
+            Task<bool> update = PerformUpdateAsync(); //Perform the update which also triggers the NotifyParentController event.
 
-            if (ParentController != null) //Requery ChildSources of Invoices
+            if (ParentController != null && CurrentInvoice != null)
             {
-                CurrentInvoice!.IsDirty = true;
+                CurrentInvoice.IsDirty = true;
                 ParentController.CurrentModel = CurrentInvoice;
                 ParentController.PerformUpdate();
             }
+
+            await Task.WhenAll(movingTreatmentsTask, update);
         }
+
         public override async void OnSubFormFilter()
         {
             ReloadSearchQry();
