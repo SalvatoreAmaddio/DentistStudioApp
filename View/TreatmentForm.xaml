@@ -15,9 +15,9 @@
         <fr:Form>
             <fr:Form.Menu>
                 <Menu>
-                    <MenuItem Header="Services" Click="OpenServices"/>
-                    <MenuItem Header="Dentists" Click="OpenDentists"/>
-                    <MenuItem Header="Clinics" Click="OpenClinics"/>
+                    <MenuItem Header="Services" Command="{Binding OpenServicesCMD}"/>
+                    <MenuItem Header="Dentists" Command="{Binding OpenDentistsCMD}"/>
+                    <MenuItem Header="Clinics" Command="{Binding OpenClinicsCMD}"/>
                 </Menu>
             </fr:Form.Menu>
             <Grid Margin="10">

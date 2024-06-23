@@ -1,12 +1,14 @@
 ﻿using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.ExtensionMethods;
 using FrontEnd.Source;
 using FrontEnd.Utils;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
@@ -22,11 +24,18 @@ namespace DentistStudioApp.Controller
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
         public override int DatabaseIndex => 7;
+        public ICommand OpenServicesCMD { get; }
+        public ICommand OpenDentistsCMD { get; }
+        public ICommand OpenClinicsCMD { get; }
         #endregion
 
+        #region Constructor
         internal TreatmentController()
         {
             AddSubControllers(Appointments);
+            OpenServicesCMD = new CMD(OpenServices);
+            OpenDentistsCMD = new CMD(OpenDentists);
+            OpenClinicsCMD = new CMD(OpenClinics);
             RecordMovingEvent += OnRecordMoving;
         }
 
@@ -44,18 +53,32 @@ namespace DentistStudioApp.Controller
             Appointment = appointment;
             Appointments.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
         }
+        #endregion
 
+        #region CommandActions
+        private void OpenServices() => Helper.OpenWindowDialog("Services", new ServiceList());
+        private void OpenDentists() => Helper.OpenWindowDialog("Dentists", new DentistList());
+        private void OpenClinics() => Helper.OpenWindowDialog("Clinics", new ClinicList());
+        #endregion
+
+        #region Events Subscriptions
         protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             RecordSource<Treatment> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
-            if (CurrentRecord != null && CurrentRecord.IsNewRecord()) 
-                GoNew();
-            else
-                GoFirst();
-        }
+            if (CurrentRecord != null)
+            {
+                if (CurrentRecord.IsNewRecord())
+                    GoNew();
+                else
+                    GoFirst();
 
+                CurrentRecord.Patient = Patient;
+                CurrentRecord.Clean();
+            }
+
+        }
         protected override async void OnWindowClosed(object? sender, EventArgs e)
         {
             TreatmentListController? treatmentListController = Helper.GetActiveWindow()?.GetController<PatientController>()?.GetSubController<TreatmentListController>(0);
@@ -63,8 +86,6 @@ namespace DentistStudioApp.Controller
                 await treatmentListController.RequeryAsync();
             DisposeWindow();
         }
-
-        #region Events Subscriptions
         private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
         {
             Appointments.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
@@ -73,7 +94,6 @@ namespace DentistStudioApp.Controller
             Appointments.OnOptionFilterClicked(new());
             Appointments.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
         }
-
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
             if (e.NewRecord)
@@ -81,7 +101,7 @@ namespace DentistStudioApp.Controller
                 if (CurrentRecord != null)
                 {
                     CurrentRecord.Patient = Patient;
-                    CurrentRecord.IsDirty = false;
+                    CurrentRecord.Clean();
                 }
             }
         }
