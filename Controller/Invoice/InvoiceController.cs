@@ -58,7 +58,19 @@ namespace DentistStudioApp.Controller
             GoNew();
             Patient = patient;
             CurrentRecord?.Dirt();
-            RecordMovingEvent += OnRecordMoving;
+            RecordMovingEvent += OnNewRecord; ;
+        }
+
+        private async void OnNewRecord(object? sender, AllowRecordMovementArgs e)
+        {
+            if (!e.NewRecord) return;
+            var sql = new Treatment().CountAll().From().Where().EqualsTo("PatientID", $"{Patient?.PatientID}").AND().EqualsTo("Invoiced","false").Limit().Statement();
+            long? result = await DatabaseManager.Find<Treatment>().CountRecordsAsync(sql);
+            if (result == 0) 
+            {
+                Failure.Allert("There are no more treatments to invoice.");
+                e.Cancel = true;
+            }
         }
 
         public InvoiceController(Invoice invoice) : this() 
@@ -70,7 +82,11 @@ namespace DentistStudioApp.Controller
         }
 
         private void OpenPaymentWindow() => Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
-        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e) => Patient = _fetchPatient.Convert(CurrentRecord);
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e) 
+        {
+            if (CurrentRecord == null || CurrentRecord.IsNewRecord()) return;
+            Patient = _fetchPatient.Convert(CurrentRecord);
+        }
 
         private async void OnNotifyParentEvent(object? sender, EventArgs e)
         {
