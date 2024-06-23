@@ -1,12 +1,14 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
+using DentistStudioApp.Converters;
 using DentistStudioApp.Model;
 using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using FrontEnd.Source;
+using FrontEnd.Utils;
 using System.Windows;
 using System.Windows.Input;
 
@@ -41,15 +43,23 @@ namespace DentistStudioApp.Controller
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
         }
 
+        public InvoiceController(Patient patient) : this()
+        {
+            GoNew();
+            Patient = patient;
+            CurrentRecord?.Dirt();
+        }
+
+        public InvoiceController(Invoice invoice) : this() 
+        {
+           FetchPatientFromInvoicedTreatment fetchPatient = new ();
+           GoAt(invoice);
+           Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
+        }
+
         private void OpenPaymentWindow() 
         {
-            Window window = new()
-            {
-                Content = new PaymentTypeList(),
-                Title = "Payment Methods"
-            };
-
-            window.Show();
+            Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
         }
         private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
         {

@@ -53,7 +53,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Invoice? model)
         {
-            InvoiceForm invoideForm = new(model);
+            InvoiceForm invoideForm = new(new(model));
             invoideForm.ShowDialog();
         }
 

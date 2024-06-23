@@ -49,7 +49,7 @@ namespace DentistStudioApp.Controller
         {
             if (model == null) return;
             await model.SetTreatmentAsync();
-            TreatmentForm treatmentForm = new(model);
+            TreatmentForm treatmentForm = new(new(model));
             treatmentForm.ShowDialog();
         }
     }

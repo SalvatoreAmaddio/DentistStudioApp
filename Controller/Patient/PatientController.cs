@@ -15,7 +15,7 @@ namespace DentistStudioApp.Controller
 {
     public class PatientController : AbstractFormController<Patient>
     {
-        private IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();  
+        private readonly IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();
         public TreatmentListController Treatments { get; } = new();
         private Survey? Survey { get; set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
@@ -28,11 +28,11 @@ namespace DentistStudioApp.Controller
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
             AddInvoiceCMD = new CMDAsync(AddInvoice);
-            FilePickedCMD = new Command<FilePickerCatch>(Prova);
+            FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
             AddSubControllers(Treatments);
         }
 
-        private void Prova(FilePickerCatch? obj) 
+        private void PickPicture(FilePickerCatch? obj)
         {
             if (CurrentRecord == null || obj == null) return;
             if (CurrentRecord.IsDirty) 
@@ -83,7 +83,7 @@ namespace DentistStudioApp.Controller
             if (CurrentRecord.IsDirty) 
                 if (!PerformUpdate()) return;
 
-            InvoiceForm win = new(CurrentRecord);
+            InvoiceForm win = new(new(CurrentRecord));
             win.ShowDialog();
         }
 

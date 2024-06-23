@@ -12,6 +12,8 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentController : AbstractFormController<Treatment>
     {
+        private Appointment? Appointment;
+
         private Patient? _patient;
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
@@ -20,6 +22,32 @@ namespace DentistStudioApp.Controller
         {
             AddSubControllers(Appointments);
             NewRecordEvent += OnNewRecordEvent;
+        }
+
+        public TreatmentController(Treatment treatment) 
+        {
+            Patient = treatment.Patient;
+            if (treatment.IsNewRecord())
+            {
+                GoAt(treatment);
+                return;
+            }
+            GoAt(treatment);
+        }
+
+        public TreatmentController(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
+        {
+            Appointment = appointment;
+            Appointments.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
+        }
+
+        private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
+        {
+            Appointments.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
+            Appointments.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == Appointment?.DOA)?.Select();
+            Appointments.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == Appointment?.TOA)?.Select();
+            Appointments.OnOptionFilterClicked(new());
+            Appointments.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
         }
 
         protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)

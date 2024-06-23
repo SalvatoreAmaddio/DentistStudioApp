@@ -56,8 +56,8 @@ namespace DentistStudioApp.Controller
         {
             model.Patient = (Patient?)ParentRecord;
             model.IsDirty = false;
-            TreatmentForm? win = new(model);
-            win.ShowDialog();
+            TreatmentForm form = new(new(model));
+            form.ShowDialog();
         }
 
         public override AbstractClause InstantiateSearchQry() =>
@@ -92,8 +92,8 @@ namespace DentistStudioApp.Controller
         {
             model.Patient = Patient;
             model.IsDirty = false;
-            TreatmentForm? win = new(model);
-            win.ShowDialog();
+            TreatmentForm form = new(new(model));
+            form.ShowDialog();
         }
         protected virtual async Task InvoiceTreatmentTask()
         {
@@ -197,4 +197,5 @@ namespace DentistStudioApp.Controller
             .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID")
             .GroupBy().Fields("Treatment.TreatmentID").OrderBy().Field("StartDate DESC");
     }
+
 }
