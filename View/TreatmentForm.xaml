@@ -11,18 +11,15 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="Treatment Form" Height="460" Width="810">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Menu>
-            <Separator Background="Transparent" Width="20"/>
-            <MenuItem Header="Services" Click="OpenServices"/>
-            <MenuItem Header="Dentists" Click="OpenDentists"/>
-            <MenuItem Header="Clinics" Click="OpenClinics"/>
-        </Menu>
-        <fr:Form Grid.Row="1">
+    
+        <fr:Form>
+            <fr:Form.Menu>
+                <Menu>
+                    <MenuItem Header="Services" Click="OpenServices"/>
+                    <MenuItem Header="Dentists" Click="OpenDentists"/>
+                    <MenuItem Header="Clinics" Click="OpenClinics"/>
+                </Menu>
+            </fr:Form.Menu>
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="65"/>
@@ -97,5 +94,4 @@
                 </fr:SubForm>
             </Grid>
         </fr:Form>
-    </Grid>
 </Window>

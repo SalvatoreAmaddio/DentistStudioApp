@@ -12,17 +12,13 @@
         WindowStartupLocation="CenterScreen"
         Title="Patient Form" Height="520" Width="640">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Menu>
-            <Separator Background="Transparent" Width="20"/>
-            <MenuItem Header="Gender" Click="OpenGenderWindow"/>
-            <MenuItem Header="Job Title" Click="OpenJobTitleWindow"/>
-        </Menu>
-        <fr:Form Grid.Row="1">
+        <fr:Form>
+            <fr:Form.Menu>
+                <Menu>
+                    <MenuItem Header="Gender" Click="OpenGenderWindow"/>
+                    <MenuItem Header="Job Title" Click="OpenJobTitleWindow"/>
+                </Menu>
+            </fr:Form.Menu>
             <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
                 <Label Content="First Name"/>
                 <Label Grid.Row="1" Content="Last Name"/>
@@ -100,5 +96,4 @@
                 </fr:SubForm>
             </Grid>
         </fr:Form>
-    </Grid>
 </Window>
