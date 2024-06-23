@@ -36,12 +36,10 @@ namespace DentistStudioApp.Controller
             OpenServicesCMD = new CMD(OpenServices);
             OpenDentistsCMD = new CMD(OpenDentists);
             OpenClinicsCMD = new CMD(OpenClinics);
-            RecordMovingEvent += OnRecordMoving;
             WindowLoaded += OnWindowLoaded;
             WindowClosed += OnWindowClosed;
             AfterUpdate += OnAfterUpdate;
         }
-
         public TreatmentController(Treatment treatment, bool readOnly = false) : this()
         {
             Patient = treatment.Patient;
@@ -53,20 +51,19 @@ namespace DentistStudioApp.Controller
                 Lock(true);
             }
         }
-
-        private void Lock(bool value) 
-        {
-            ReadOnly = value;
-            Appointments.ReadOnly = value;
-            Appointments.AllowNewRecord = !value;
-        }
-
         public TreatmentController(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
         {
             Appointment = appointment;
             Appointments.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
         }
         #endregion
+
+        private void Lock(bool value)
+        {
+            ReadOnly = value;
+            Appointments.ReadOnly = value;
+            Appointments.AllowNewRecord = !value;
+        }
 
         #region CommandActions
         private void OpenServices() => Helper.OpenWindowDialog("Services", new ServiceList());
@@ -79,11 +76,12 @@ namespace DentistStudioApp.Controller
         {
             if (e.Is(nameof(CurrentModel))) 
             {
+                CurrentRecord.Patient = Patient;
+                CurrentRecord.Clean();
                 bool invoiced = CurrentRecord != null && CurrentRecord.Invoiced;
                 Lock(invoiced);
             }
         }
-
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
@@ -114,17 +112,6 @@ namespace DentistStudioApp.Controller
             Appointments.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == Appointment?.TOA)?.Select();
             Appointments.OnOptionFilterClicked(new());
             Appointments.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
-        }
-        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
-        {
-            if (e.NewRecord)
-            {
-                if (CurrentRecord != null)
-                {
-                    CurrentRecord.Patient = Patient;
-                    CurrentRecord.Clean();
-                }
-            }
         }
         #endregion
 
