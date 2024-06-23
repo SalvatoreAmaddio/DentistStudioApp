@@ -8,42 +8,22 @@ namespace DentistStudioApp.View
 {
     public partial class TreatmentForm : Window
     {
-        public TreatmentController? Controller;
-        public AppointmentListController? SubController => Controller?.Appointments;
-        private Appointment? appointment;
 
         public TreatmentForm()
         {
             InitializeComponent();
             this.SetController(new TreatmentController());
+            Factory.A(this.GetController<TreatmentController>()!);
         }
 
         public TreatmentForm(Treatment treatment) : this()
         {
-            Controller = this.GetController<TreatmentController>();
-            Controller.Patient = treatment.Patient;
-
-            if (treatment.IsNewRecord())
-            {
-                Controller.GoAt(treatment);
-                return;
-            }
-            Controller.GoAt(treatment);
+            Factory.B(treatment);
         }
 
         public TreatmentForm(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
         {
-            this.appointment = appointment;
-            if (SubController != null)
-                SubController.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
-        }
-
-        private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
-        {
-            SubController?.ServiceOptions.FirstOrDefault(s => s.Record.Equals(appointment?.Service))?.Select();
-            SubController?.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == appointment?.DOA)?.Select();
-            SubController?.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == appointment?.TOA)?.Select();
-            SubController?.OnOptionFilterClicked(new());
+            Factory.C(appointment);
         }
 
         private void OpenServices(object sender, RoutedEventArgs e)
@@ -59,6 +39,41 @@ namespace DentistStudioApp.View
         private void OpenClinics(object sender, RoutedEventArgs e)
         {
             Helper.OpenWindowDialog("Clinics", new ClinicList());
+        }
+    }
+
+    public class Factory 
+    {
+        private static TreatmentController Controller = null!;
+        private static AppointmentListController SubController => Controller.Appointments;
+        private static Appointment? Appointment;
+
+        public static void A(TreatmentController controller) => Controller = controller;
+        public static void B(Treatment treatment) 
+        {
+            Controller.Patient = treatment.Patient;
+
+            if (treatment.IsNewRecord())
+            {
+                Controller.GoAt(treatment);
+                return;
+            }
+            Controller.GoAt(treatment);
+        }
+
+        public static void C(Appointment appointment) 
+        {
+            Appointment = appointment;
+            if (SubController != null)
+                SubController.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
+        }
+
+        private static void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
+        {
+            SubController?.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
+            SubController?.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == Appointment?.DOA)?.Select();
+            SubController?.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == Appointment?.TOA)?.Select();
+            SubController?.OnOptionFilterClicked(new());
         }
     }
 }
