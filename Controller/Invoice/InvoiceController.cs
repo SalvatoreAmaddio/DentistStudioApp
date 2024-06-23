@@ -15,6 +15,8 @@ namespace DentistStudioApp.Controller
 {
     public class InvoiceController : AbstractFormController<Invoice>
     {
+        private FetchPatientFromInvoicedTreatment _fetchPatient = new();
+
         private Patient? _patient;
         public Patient? Patient
         { 
@@ -26,13 +28,13 @@ namespace DentistStudioApp.Controller
                 TreatmentsInvoiced.Patient = value;
             }
         }
+
         public TreatmentToInvoiceListController TreatmentsToInvoice { get; } = new();
         public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
         public override int DatabaseIndex => 12;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
-
         public ICommand OpenPaymentWindowCMD { get; }
-        public InvoiceController() 
+        public InvoiceController()
         {
             TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
             TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
@@ -51,15 +53,11 @@ namespace DentistStudioApp.Controller
 
         public InvoiceController(Invoice invoice) : this() 
         {
-            FetchPatientFromInvoicedTreatment fetchPatient = new();
             GoAt(invoice);
-            Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
+            Patient = _fetchPatient.Convert(invoice);
         }
 
-        private void OpenPaymentWindow() 
-        {
-            Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
-        }
+        private void OpenPaymentWindow() => Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
         private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
         {
             if (TreatmentsToInvoice.Source.Count == 0) 
@@ -77,9 +75,6 @@ namespace DentistStudioApp.Controller
             await Task.WhenAll(t1, t2);
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Invoice().From();
-        }
+        public override AbstractClause InstantiateSearchQry() => new Invoice().Select().From();
     }
 }
