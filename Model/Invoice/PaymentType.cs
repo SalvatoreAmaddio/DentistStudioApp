@@ -9,8 +9,8 @@ namespace DentistStudioApp.Model
     public class PaymentType : AbstractModel
     {
         #region backing fields
-        long _paymentTypeID;
-        string _paymentBy = string.Empty;
+        private long _paymentTypeID;
+        private string _paymentBy = string.Empty;
         #endregion
 
         #region properties
@@ -20,15 +20,15 @@ namespace DentistStudioApp.Model
         public string PaymentBy { get => _paymentBy; set => UpdateProperty(ref value, ref _paymentBy); }
         #endregion
 
+        #region Constructor
         public PaymentType() => AfterUpdate += OnAfterUpdate;
-
         public PaymentType(long id) : this() => _paymentTypeID = id;
-
         public PaymentType(DbDataReader reader) : this()
         {
             _paymentTypeID = reader.GetInt64(0);
             _paymentBy = reader.GetString(1);
         }
+        #endregion
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
@@ -36,8 +36,6 @@ namespace DentistStudioApp.Model
                 _paymentBy = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
         public override ISQLModel Read(DbDataReader reader) => new PaymentType(reader);
-
         public override string? ToString() => $"{PaymentBy}";
-
     }
 }

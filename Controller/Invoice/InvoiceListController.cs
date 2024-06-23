@@ -51,15 +51,14 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        protected override void Open(Invoice? model)
+        protected override void Open(Invoice model)
         {
             InvoiceForm invoideForm = new(new(model));
             invoideForm.ShowDialog();
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new InvoicedTreatment()
+        public override AbstractClause InstantiateSearchQry() =>
+        new InvoicedTreatment()
              .Select("Invoice.*")
              .From()
              .InnerJoin("Treatment", "TreatmentID")
@@ -67,12 +66,11 @@ namespace DentistStudioApp.Controller
              .InnerJoin(nameof(Invoice), nameof(PaymentType), "PaymentTypeID")
              .InnerJoin(nameof(Treatment), nameof(Patient), "PatientID")
              .Where()
-             .OpenBracket()
-             .Like("LOWER(Patient.FirstName)", "@name")
-             .OR()
-             .Like("LOWER(Patient.LastName)", "@name")
-             .CloseBracket()
+                 .OpenBracket()
+                     .Like("LOWER(Patient.FirstName)", "@name")
+                     .OR()
+                     .Like("LOWER(Patient.LastName)", "@name")
+                 .CloseBracket()
              .OrderBy().Field("DOI DESC").Field("Invoice.InvoiceID DESC");
-        }
     }
 }

@@ -56,10 +56,7 @@ namespace DentistStudioApp.Controller
 
     public class AppointmentListController : AbstractAppointmentListController
     {
-        public AppointmentListController()
-        {
-            RecordMovingEvent += OnRecordMoving;
-        }
+        public AppointmentListController() => RecordMovingEvent += OnRecordMoving;
 
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
@@ -101,10 +98,11 @@ namespace DentistStudioApp.Controller
             GoFirst();
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Appointment().From().InnerJoin(new Dentist()).InnerJoin(new Service()).Where().EqualsTo("TreatmentID", "@treatmentID");
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new Appointment()
+            .Select()
+            .From().InnerJoin(new Dentist()).InnerJoin(new Service())
+            .Where().EqualsTo("TreatmentID", "@treatmentID");
     }
 
     public class AppointmentListController2 : AbstractAppointmentListController 
@@ -120,9 +118,9 @@ namespace DentistStudioApp.Controller
         {
             if (!e.Is(nameof(Search))) return;
             await OnSearchPropertyRequeryAsync(sender);
-            if (sender is FilterEventArgs f) 
+            if (sender is FilterEventArgs filterArgs)
             { 
-                if (f.HasMessages) 
+                if (filterArgs.HasMessages) 
                     GoFirst();
             }
         }
@@ -143,12 +141,12 @@ namespace DentistStudioApp.Controller
 
         public void TriggerFilter(DateTime? date)
         {
-            DatesOptions.FirstOrDefault(s => _triggerFilter(s, date))?.Select();
+            DatesOptions.FirstOrDefault(s => PredicateTriggerFilter(s, date))?.Select();
             OnOptionFilterClicked(new() { Messages = ["GoFirst"] });
         }
 
-        private bool _triggerFilter(IFilterOption? option, DateTime? date)
-        { 
+        private static bool PredicateTriggerFilter(IFilterOption? option, DateTime? date)
+        {
             if (option == null) return false;
             return (option.Value == null) ? false : option.Value.Equals(date);
         }
@@ -160,15 +158,18 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Appointment()
-                .From()
+        public override AbstractClause InstantiateSearchQry() =>
+        new Appointment()
+            .Select()
+            .From()
                 .InnerJoin(new Dentist()).InnerJoin(new Service()).InnerJoin(new Treatment())
                 .InnerJoin("Treatment","Patient","PatientID")
-                .Where().OpenBracket().Like("LOWER(Patient.FirstName)", "@name").OR().Like("LOWER(Patient.LastName)", "@name").CloseBracket()
-                .OrderBy().Field("DOA").Field("TOA");
-        }
-
+            .Where()
+                .OpenBracket()
+                    .Like("LOWER(Patient.FirstName)", "@name")
+                    .OR()
+                    .Like("LOWER(Patient.LastName)", "@name")
+                .CloseBracket()
+            .OrderBy().Field("DOA").Field("TOA");
     }
 }

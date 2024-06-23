@@ -10,7 +10,7 @@ namespace DentistStudioApp.Controller
     {
         public override int DatabaseIndex => 13;
 
-        public PaymentTypeListController() 
+        public PaymentTypeListController()
         {
             OpenWindowOnNew = false;
             AfterUpdate += OnAfterUpdate;
@@ -22,9 +22,7 @@ namespace DentistStudioApp.Controller
             await OnSearchPropertyRequeryAsync(sender);
         }
 
-        public override void OnOptionFilterClicked(FilterEventArgs e)
-        {
-        }
+        public override void OnOptionFilterClicked(FilterEventArgs e) { }
 
         public async override Task<IEnumerable<PaymentType>> SearchRecordAsync()
         {
@@ -34,9 +32,10 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(PaymentType? model) { }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new PaymentType().Select().From().Where().Like("LOWER(PaymentBy)", "@name");
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new PaymentType()
+            .Select()
+            .From()
+            .Where().Like("LOWER(PaymentBy)", "@name");
     }
 }

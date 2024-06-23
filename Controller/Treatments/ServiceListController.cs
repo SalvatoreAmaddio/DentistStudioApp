@@ -25,6 +25,7 @@ namespace DentistStudioApp.Controller
         }
 
         public override void OnOptionFilterClicked(FilterEventArgs e) { }
+        protected override void Open(Service? model) { }
 
         public override async Task<IEnumerable<Service>> SearchRecordAsync()
         {
@@ -32,14 +33,10 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        protected override void Open(Service? model)
-        {
-
-        }
-
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Service().From().Where().Like("LOWER(ServiceName)", "@name");
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new Service()
+            .Select()
+            .From()
+            .Where().Like("LOWER(ServiceName)", "@name");
     }
 }

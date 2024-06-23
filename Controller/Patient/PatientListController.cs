@@ -15,8 +15,7 @@ namespace DentistStudioApp.Controller
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
-        public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!); 
-        
+        public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);         
         public override int DatabaseIndex => 0;
 
         public PatientListController() 
@@ -53,13 +52,15 @@ namespace DentistStudioApp.Controller
             win.ShowDialog();
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return 
-                new Patient().From()
-                .InnerJoin(new Gender())
-                .InnerJoin(new JobTitle())
-                .Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new Patient()
+            .Select()
+            .From().InnerJoin(new Gender()).InnerJoin(new JobTitle())
+            .Where()
+                .OpenBracket()
+                    .Like("LOWER(FirstName)", "@name")
+                    .OR()
+                    .Like("LOWER(LastName)", "@name")
+                .CloseBracket();
     }
 }

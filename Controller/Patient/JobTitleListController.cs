@@ -23,25 +23,17 @@ namespace DentistStudioApp.Controller
                 await OnSearchPropertyRequeryAsync(sender);
             }
         }
-
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new JobTitle().Select().All().From().Where().Like("LOWER(Title)", "@name");
-        }
-
-        public override void OnOptionFilterClicked(FilterEventArgs e)
-        {
-        }
-
+        public override void OnOptionFilterClicked(FilterEventArgs e) { }
+        protected override void Open(JobTitle model) { }
         public override async Task<IEnumerable<JobTitle>> SearchRecordAsync()
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
-
-        protected override void Open(JobTitle model)
-        {
-
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new JobTitle()
+            .Select().All()
+            .From()
+            .Where().Like("LOWER(Title)", "@name");
     }
 }

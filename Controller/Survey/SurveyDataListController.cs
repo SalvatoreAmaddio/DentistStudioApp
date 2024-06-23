@@ -47,20 +47,18 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(SurveyData? model) { }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new SurveyData()
-                .From()
-                .OpenBracket()
+        public override AbstractClause InstantiateSearchQry() =>
+        new SurveyData()
+            .From()
+            .OpenBracket()
                 .InnerJoin(nameof(SurveyQuestion), "SurveyQuestionID")
-                .CloseBracket()
-                .InnerJoin(nameof(SurveyQuestion), nameof(SurveyQuestionCategory), "SurveyQuestionCategoryID")
-                .Where()
+            .CloseBracket()
+            .InnerJoin(nameof(SurveyQuestion), nameof(SurveyQuestionCategory), "SurveyQuestionCategoryID")
+            .Where()
                 .EqualsTo("SurveyID", "@id")
-                .AND()
-                .OpenBracket()
-                .Like("Question", "@question")
-                .CloseBracket();
-        }
+                    .AND()
+                    .OpenBracket()
+                        .Like("Question", "@question")
+                    .CloseBracket();
     }
 }

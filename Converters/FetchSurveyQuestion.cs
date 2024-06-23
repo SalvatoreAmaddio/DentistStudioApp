@@ -1,38 +1,49 @@
 ﻿using System.Globalization;
 using DentistStudioApp.Model;
-using System.Windows.Data;
-using Backend.Database;
+using FrontEnd.Converters;
+using FrontEnd.Model;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Converters
 {
-    public abstract class AbstractFetchSurveyQuestion : IValueConverter 
+    public abstract class AbstractFetchSurveyQuestion<M, D> : AbstractFetchModel<M, D> where M : AbstractModel, new() where D : AbstractModel, new()
     {
-        protected SurveyQuestion? SurveyQuestion;
-        public abstract object? Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => SurveyQuestion;
+        public override object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Record;
     }
 
-    public class FetchSurveyQuestion : AbstractFetchSurveyQuestion
+    public class FetchSurveyQuestion : AbstractFetchSurveyQuestion<SurveyQuestion, SurveyQuestion>
     {
-        IAbstractDatabase? db = DatabaseManager.Find<SurveyQuestion>();
+        protected override string Sql =>
+            new SurveyQuestion()
+            .Select()
+            .From()
+            .Where().EqualsTo("SurveyQuestionID", "@id")
+            .Limit()
+            .Statement();
         public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            SurveyQuestion = (SurveyQuestion)value;
-            SurveyQuestion = (SurveyQuestion?)db?.Retrieve($"SELECT * FROM {nameof(SurveyQuestion)} WHERE SurveyQuestionID = {SurveyQuestion.SurveyQuestionID}").FirstOrDefault();
-            return SurveyQuestion?.Question;
+            Record = (SurveyQuestion)value;
+            para.Add(new("id", Record?.SurveyQuestionID));
+            return ((SurveyQuestion?)Db?.Retrieve(Sql,para).FirstOrDefault())?.Question;
         }
 
     }
 
-    public class FetchSurveyQuestionCategory : AbstractFetchSurveyQuestion
+    public class FetchSurveyQuestionCategory : AbstractFetchSurveyQuestion<SurveyQuestion, SurveyQuestionCategory>
     {
-        private IAbstractDatabase? db = DatabaseManager.Find<SurveyQuestionCategory>();
-        SurveyQuestionCategory? category;
+        protected override string Sql => 
+            new SurveyQuestionCategory()
+            .Select()
+            .From().InnerJoin("SurveyQuestion", "SurveyQuestionCategoryID")
+            .Where().EqualsTo("SurveyQuestionID", "@id")
+            .Limit()
+            .Statement();
+
         public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            SurveyQuestion = (SurveyQuestion)value;
-            category = (SurveyQuestionCategory?)db?.Retrieve($"SELECT SurveyQuestionCategory.* FROM SurveyQuestionCategory INNER JOIN SurveyQuestion ON SurveyQuestionCategory.SurveyQuestionCategoryID = SurveyQuestion.SurveyQuestionCategoryID WHERE SurveyQuestionID = {SurveyQuestion?.SurveyQuestionID}").FirstOrDefault();
-            return category?.CategoryName;
+            Record = (SurveyQuestion)value;
+            para.Add(new("id", Record?.SurveyQuestionID));
+            return ((SurveyQuestionCategory?)Db?.Retrieve(Sql, para).FirstOrDefault())?.CategoryName;
         }
     }
 }

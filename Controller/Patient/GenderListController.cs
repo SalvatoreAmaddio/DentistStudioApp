@@ -10,7 +10,7 @@ namespace DentistStudioApp.Controller
     {
         public override int DatabaseIndex => 1;
 
-        public GenderListController() 
+        public GenderListController()
         {
             AfterUpdate += OnAfterUpdate;
             OpenWindowOnNew = false;
@@ -24,14 +24,8 @@ namespace DentistStudioApp.Controller
             }
         }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Gender().Select().All().From().Where().Like("LOWER(Identity)", "@name");
-        }
-
-        public override void OnOptionFilterClicked(FilterEventArgs e)
-        {
-        }
+        public override void OnOptionFilterClicked(FilterEventArgs e) { }
+        protected override void Open(Gender model) { }
 
         public override async Task<IEnumerable<Gender>> SearchRecordAsync()
         {
@@ -39,9 +33,10 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        protected override void Open(Gender model)
-        {
-
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new Gender()
+            .Select().All()
+            .From()
+            .Where().Like("LOWER(Identity)", "@name");
     }
 }

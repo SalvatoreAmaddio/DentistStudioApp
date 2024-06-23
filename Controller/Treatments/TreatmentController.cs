@@ -12,14 +12,19 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentController : AbstractFormController<Treatment>
     {
+        #region Variables
         private readonly Appointment? Appointment;
 
         private Patient? _patient;
+        #endregion
+
+        #region Properties
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
         public override int DatabaseIndex => 7;
+        #endregion
 
-        public TreatmentController()
+        internal TreatmentController()
         {
             AddSubControllers(Appointments);
             RecordMovingEvent += OnRecordMoving;
@@ -38,15 +43,6 @@ namespace DentistStudioApp.Controller
         {
             Appointment = appointment;
             Appointments.AfterSubFormFilter += OnAppointmentsAfterSubFormFilter;
-        }
-
-        private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
-        {
-            Appointments.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
-            Appointments.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == Appointment?.DOA)?.Select();
-            Appointments.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == Appointment?.TOA)?.Select();
-            Appointments.OnOptionFilterClicked(new());
-            Appointments.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
         }
 
         protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
@@ -68,6 +64,16 @@ namespace DentistStudioApp.Controller
             DisposeWindow();
         }
 
+        #region Events Subscriptions
+        private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
+        {
+            Appointments.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
+            Appointments.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == Appointment?.DOA)?.Select();
+            Appointments.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == Appointment?.TOA)?.Select();
+            Appointments.OnOptionFilterClicked(new());
+            Appointments.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
+        }
+
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
             if (e.NewRecord) 
@@ -79,8 +85,14 @@ namespace DentistStudioApp.Controller
                 }
             }
         }
+        #endregion
 
         public override AbstractClause InstantiateSearchQry() =>
-        new Treatment().From().Where().EqualsTo("PatientID","@patientID").OrderBy().Field("StartDate DESC");
+        new Treatment()
+            .Select()
+            .From()
+            .Where()
+                .EqualsTo("PatientID", "@patientID")
+            .OrderBy().Field("StartDate DESC");
     }
 }

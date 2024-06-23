@@ -21,7 +21,7 @@ namespace DentistStudioApp.Controller
         public SourceOption ServiceCountOptions { get; private set; }
         #endregion
 
-        public TreatmentListController()
+        internal TreatmentListController()
         {
             DatesOptions = new PrimitiveSourceOption(this, "StartDate");
             DatesOptions2 = new PrimitiveSourceOption(this, "EndDate");
@@ -36,9 +36,8 @@ namespace DentistStudioApp.Controller
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
-        
 
-        public override async void OnOptionFilterClicked(FilterEventArgs e) 
+        public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
             DatesOptions.Conditions<WhereClause>(SearchQry);
@@ -61,11 +60,12 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-            new Treatment().Select()
-                .All()
-                .Fields("count(Service.ServiceID) AS ServiceCount")
+            new Treatment()
+                .Select()
+                    .All()
+                    .Fields("count(Service.ServiceID) AS ServiceCount")
                 .From().LeftJoin(nameof(Appointment), "TreatmentID")
-                .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
+                       .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
                 .Where().EqualsTo("PatientID", "@patientID")
                 .GroupBy().Fields("Treatment.TreatmentID")
                 .OrderBy().Field("StartDate DESC");
@@ -73,31 +73,29 @@ namespace DentistStudioApp.Controller
 
     public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
+        #region Variables
+        protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
         private bool _buttonEnabled = true;
         private readonly string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
         private Patient? _patient;
         private bool _subscribed = false;
-        #region Properties
-        public Patient? Patient
-        {
-            get => _patient;
-            set => UpdateProperty(ref value, ref _patient);
-        }
+        #endregion
 
-        protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
+        #region Properties
+        public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
         public ICommand InvoiceTreatmentCMD { get; }
         public abstract CRUD Crud { get; }
-        private bool Invoicing => Crud == CRUD.INSERT;
-        
+        private bool Invoicing => Crud == CRUD.INSERT;        
         public bool ButtonEnabled { get => _buttonEnabled; set => UpdateProperty(ref value, ref _buttonEnabled); }
         #endregion
 
-        public AbstractTreatmentInvoice() 
+        internal AbstractTreatmentInvoice()
         {
             AllowNewRecord = false;
             InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
         }
+
         protected override void Open(Treatment model)
         {
             model.Patient = Patient;
@@ -105,6 +103,26 @@ namespace DentistStudioApp.Controller
             TreatmentForm form = new(new(model));
             form.ShowDialog();
         }
+        public override async void OnOptionFilterClicked(FilterEventArgs e)
+        {
+            ReloadSearchQry();
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            DatesOptions2.Conditions<WhereClause>(SearchQry);
+            ServiceCountOptions.Conditions<HavingClause>(SearchQry);
+            IEnumerable<Treatment> results = await SearchRecordAsync();
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
+        }
+        public override async void OnSubFormFilter()
+        {
+            ReloadSearchQry();
+            IEnumerable<Treatment> results = await SearchRecordAsync() ?? throw new NullReferenceException();
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
+            if (!_subscribed)
+                Subscribe();
+        }
+
         protected virtual async Task InvoiceTreatmentTask()
         {
             if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
@@ -145,36 +163,15 @@ namespace DentistStudioApp.Controller
             await update;
             ButtonEnabled = true;
         }
-        public override async void OnSubFormFilter()
-        {
-            ReloadSearchQry();
-            IEnumerable<Treatment> results = await SearchRecordAsync() ?? throw new NullReferenceException();
-            AsRecordSource().ReplaceRange(results);
-            GoFirst();
-            if (!_subscribed)
-                Subscribe();
-        }
 
         private void Subscribe() 
         {
-            AfterUpdate += AbstractTreatmentInvoice_AfterUpdate;
+            AfterUpdate += OnAfterUpdate;
             _subscribed = true;
         }
-
-        private void AbstractTreatmentInvoice_AfterUpdate(object? sender, AfterUpdateArgs e)
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Patient))) OnSubFormFilter();
-        }
-
-        public override async void OnOptionFilterClicked(FilterEventArgs e)
-        {
-            ReloadSearchQry();
-            DatesOptions.Conditions<WhereClause>(SearchQry);
-            DatesOptions2.Conditions<WhereClause>(SearchQry);
-            ServiceCountOptions.Conditions<HavingClause>(SearchQry);
-            IEnumerable<Treatment> results = await SearchRecordAsync();
-            AsRecordSource().ReplaceRange(results);
-            GoFirst();
         }
     }
 
@@ -189,14 +186,18 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-                new Treatment().Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
+            new Treatment()
+                .Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
                 .From()
-                .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
-                .LeftJoin(nameof(Appointment), "TreatmentID")
-                .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
+                    .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
+                    .LeftJoin(nameof(Appointment), "TreatmentID")
+                    .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
                 .Where()
-                .EqualsTo("Treatment.PatientID", "@patientID").AND().IsNull("InvoicedTreatment.InvoiceID")
-                .GroupBy().Fields("Treatment.TreatmentID").OrderBy().Field("StartDate DESC");
+                    .EqualsTo("Treatment.PatientID", "@patientID")
+                    .AND()
+                    .IsNull("InvoicedTreatment.InvoiceID")
+                .GroupBy().Fields("Treatment.TreatmentID")
+                .OrderBy().Field("StartDate DESC");
     }
 
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
@@ -211,14 +212,18 @@ namespace DentistStudioApp.Controller
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-            new Treatment().Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
-            .From()
-            .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
-            .LeftJoin(nameof(Appointment), "TreatmentID")
-            .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
-            .Where()
-            .EqualsTo("Treatment.PatientID", "@patientID").AND().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID")
-            .GroupBy().Fields("Treatment.TreatmentID").OrderBy().Field("StartDate DESC");
+            new Treatment()
+                .Select().All().Fields("count(Service.ServiceID) AS ServiceCount")
+                .From()
+                    .LeftJoin(nameof(InvoicedTreatment), "TreatmentID")
+                    .LeftJoin(nameof(Appointment), "TreatmentID")
+                    .LeftJoin(nameof(Appointment), nameof(Service), "ServiceID")
+                .Where()
+                    .EqualsTo("Treatment.PatientID", "@patientID")
+                    .AND()
+                    .EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID")
+                .GroupBy().Fields("Treatment.TreatmentID")
+                .OrderBy().Field("StartDate DESC");
     }
 
 }

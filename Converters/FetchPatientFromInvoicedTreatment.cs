@@ -10,8 +10,8 @@ namespace DentistStudioApp.Converters
         protected override string Sql => new InvoicedTreatment()
         .Select("Patient.*")
         .From()
-        .InnerJoin(nameof(Treatment), "TreatmentID")
-        .InnerJoin(nameof(Treatment), nameof(Patient),"PatientID")
+            .InnerJoin(nameof(Treatment), "TreatmentID")
+            .InnerJoin(nameof(Treatment), nameof(Patient),"PatientID")
         .Where().EqualsTo("InvoicedTreatment.InvoiceID", "@id")
         .Limit().Statement();
 
@@ -29,7 +29,7 @@ namespace DentistStudioApp.Converters
         protected override string Sql => new Patient()
         .Select("Patient.*")
         .From()
-        .InnerJoin(nameof(Treatment), "PatientID")
+            .InnerJoin(nameof(Treatment), "PatientID")
         .Where().EqualsTo("Treatment.TreatmentID", "@id")
         .Limit().Statement();
 

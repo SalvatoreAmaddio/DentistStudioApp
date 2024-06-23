@@ -9,7 +9,7 @@ namespace DentistStudioApp.Controller
     public class ClinicListController : AbstractFormListController<Clinic>
     {
         public override int DatabaseIndex => 11;
-        
+
         public ClinicListController() 
         {
             AfterUpdate += OnAfterUpdate;
@@ -34,9 +34,7 @@ namespace DentistStudioApp.Controller
 
         protected override void Open(Clinic? model) { }
 
-        public override AbstractClause InstantiateSearchQry()
-        {
-            return new Clinic().Select().From().Where().Like("LOWER(ClinicName)", "@name");
-        }
+        public override AbstractClause InstantiateSearchQry() =>
+        new Clinic().Select().From().Where().Like("LOWER(ClinicName)", "@name");
     }
 }

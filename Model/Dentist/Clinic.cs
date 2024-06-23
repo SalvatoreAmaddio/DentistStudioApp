@@ -2,7 +2,6 @@
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
-using System.Security.Principal;
 
 namespace DentistStudioApp.Model
 {
@@ -23,7 +22,6 @@ namespace DentistStudioApp.Model
 
         #region Constructor
         public Clinic() => AfterUpdate += OnAfterUpdate;
-
         public Clinic(long clinicID) : this() => _clinicId = clinicID;
         public Clinic(DbDataReader reader) : this()
         {
@@ -38,7 +36,6 @@ namespace DentistStudioApp.Model
                 _clinicName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
         public override ISQLModel Read(DbDataReader reader) => new Clinic(reader);
-
         public override string? ToString() => $"{ClinicName}";
 
     }

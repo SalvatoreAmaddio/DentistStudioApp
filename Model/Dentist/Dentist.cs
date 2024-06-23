@@ -1,9 +1,7 @@
-﻿using Backend.Database;
-using Backend.ExtensionMethods;
+﻿using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
-using System.Security.Principal;
 
 namespace DentistStudioApp.Model
 {
@@ -46,7 +44,8 @@ namespace DentistStudioApp.Model
         }
 
         public Dentist(long id) : this() => _dentistId = id;
-
+        #endregion
+        
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
             if (e.Is(nameof(FirstName)))
@@ -54,15 +53,7 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(LastName)))
                 _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-        #endregion
-
         public override ISQLModel Read(DbDataReader reader) => new Dentist(reader);
-
-        public Task FetchClinic()
-        {
-            _clinic = (Clinic?)DatabaseManager.Find<Clinic>()?.MasterSource.FirstOrDefault(s => s.Equals(_clinic));
-            return Task.CompletedTask;
-        }
         public override string? ToString() => $"{FirstName} {LastName}";
 
     }

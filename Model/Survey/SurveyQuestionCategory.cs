@@ -33,8 +33,6 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new SurveyQuestionCategory(reader);
-
         public override string ToString() => CategoryName;
-
     }
 }

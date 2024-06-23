@@ -50,6 +50,5 @@ namespace DentistStudioApp.Model
 
         public override ISQLModel Read(DbDataReader reader) => new SurveyData(reader);
         public override string? ToString() => $"{Survey} {SurveyQuestion}";
-
     }
 }

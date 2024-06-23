@@ -25,10 +25,8 @@ namespace DentistStudioApp.Model
 
         #endregion
 
-        public InvoicedTreatment() 
-        { 
-        
-        }
+        #region Constructors
+        public InvoicedTreatment() { }
 
         public InvoicedTreatment(Invoice? invoice, Treatment? treatment)
         {
@@ -42,8 +40,9 @@ namespace DentistStudioApp.Model
             _invoice = new Invoice(reader.GetInt64(1));
             _treatment = new Treatment(reader.GetInt64(2));
         }
-
+        #endregion
         public override ISQLModel Read(DbDataReader reader) => new InvoicedTreatment(reader);
+        public override string ToString() => $"{InvoicedTreatmentID} - {Invoice} - {Treatment}";
 
     }
 }
