@@ -57,6 +57,7 @@ namespace DentistStudioApp.Controller
             Patient = patient;
             CurrentRecord?.Dirt();
             RecordMovingEvent += OnNewRecord;
+            WindowLoaded += OnWindowLoaded;
         }
 
         public InvoiceController(Invoice invoice) : this()
@@ -69,6 +70,17 @@ namespace DentistStudioApp.Controller
         #endregion
 
         #region Event Subscriptions
+        private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
+        {
+            string? sql = SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment),"InvoiceID")
+                                              .InnerJoin(nameof(InvoicedTreatment),nameof(Treatment),"TreatmentID")
+                                              .Where().EqualsTo("PatientID","@patientID").Statement();
+            
+            SearchQry.AddParameter("patientID", Patient?.PatientID);
+            RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(sql, SearchQry.Params()));
+            AsRecordSource().ReplaceRange(results);
+        }
+
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
             if (e.Is(nameof(Patient))) 

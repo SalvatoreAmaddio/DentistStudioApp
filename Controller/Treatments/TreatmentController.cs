@@ -45,9 +45,6 @@ namespace DentistStudioApp.Controller
         {
             Patient = treatment.Patient;
             CurrentRecord = treatment;
-            if (CurrentRecord.IsNewRecord()) 
-                return;
-            GoAt(treatment);
         }
 
         public TreatmentController(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
@@ -74,7 +71,7 @@ namespace DentistStudioApp.Controller
                 if (CurrentRecord.IsNewRecord())
                     GoNew();
                 else
-                    GoFirst();
+                    GoAt(CurrentRecord);
 
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.Clean();
