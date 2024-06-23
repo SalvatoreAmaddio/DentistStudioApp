@@ -28,10 +28,8 @@ namespace DentistStudioApp.Model
         public DateTime? EndDate { get => _endDate; set => UpdateProperty(ref value, ref _endDate); }
         [FK]
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
-
         [Field]
         public bool Invoiced { get => _invoiced; set => UpdateProperty(ref value, ref _invoiced); }
-
         public int ServiceCount { get => _serviceCount; private set => UpdateProperty(ref value, ref _serviceCount); }
         #endregion
 
@@ -59,9 +57,6 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new Treatment(reader);
-
-        public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
-
         public async Task SetPatientAsync()
         {
             IAbstractDatabase? db = DatabaseManager.Find<Patient>() ?? throw new NullReferenceException();
@@ -71,7 +66,6 @@ namespace DentistStudioApp.Model
             RecordSource<Patient> result = await RecordSource<Patient>.CreateFromAsyncList(db.RetrieveAsync(sql, para).Cast<Patient>());
             this._patient = result.FirstOrDefault();
         }
-
         public async Task<object?> GetTotalCost() 
         {
             IAbstractDatabase? appointmentDB = DatabaseManager.Find<Appointment>() ?? throw new NullReferenceException();
@@ -80,12 +74,6 @@ namespace DentistStudioApp.Model
             para.Add(new("id", TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
         }
-
-    }
-
-    public enum ArithmeticOperation 
-    { 
-        ADD = 0,
-        SUBTRACT = 1,
+        public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
     }
 }

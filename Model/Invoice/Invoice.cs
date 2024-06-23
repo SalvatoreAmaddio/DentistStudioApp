@@ -21,7 +21,7 @@ namespace DentistStudioApp.Model
         private bool _paid;
         #endregion
 
-        #region properties
+        #region Properties
         [PK]
         public long InvoiceID { get => _invoiceid; set => UpdateProperty(ref value, ref _invoiceid); }
         [Field]
@@ -29,24 +29,17 @@ namespace DentistStudioApp.Model
         [Field]
         public double Discount { get => _discount; set => UpdateProperty(ref value, ref _discount); }
         [Field]
-        public bool Paid 
-        { 
-            get => _paid; 
-            set => UpdateProperty(ref value, ref _paid); 
-        }
-
+        public bool Paid { get => _paid; set => UpdateProperty(ref value, ref _paid); }
         [FK]
         public PaymentType? PaymentType { get => _paymentType; set => UpdateProperty(ref value, ref _paymentType); }
-
         [Field]
         public double Amount { get => _amount; set => UpdateProperty(ref value, ref _amount); }
-
         [Field]
         public double Deposit { get => _deposit; set => UpdateProperty(ref value, ref _deposit); }
-
-        public double TotalDue => Amount - Deposit; 
+        public double TotalDue => Amount - Deposit;
         #endregion
 
+        #region Constructors
         public Invoice() 
         {
             _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.From().Limit().Statement()).FirstOrDefault();
@@ -56,15 +49,6 @@ namespace DentistStudioApp.Model
                         .From()
                         .OrderBy().Field("DOI DESC").Field($"Invoice.{nameof(InvoiceID)} DESC").Statement();
         }
-
-        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
-        {
-            if (e.Is(nameof(Amount)) || e.Is(nameof(Deposit)) || e.Is(nameof(Discount))) 
-            {
-                RaisePropertyChanged(nameof(TotalDue));
-            }
-        }
-
         public Invoice(long id) : this() => _invoiceid = id;
         public Invoice(DbDataReader reader) : this()
         {
@@ -75,6 +59,13 @@ namespace DentistStudioApp.Model
             _paid = reader.GetBoolean(4);
             _amount = reader.TryFetchDouble(5);
             _deposit = reader.TryFetchDouble(6);
+        }
+        #endregion
+
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(Amount)) || e.Is(nameof(Deposit)) || e.Is(nameof(Discount)))
+                RaisePropertyChanged(nameof(TotalDue));
         }
 
         public void SetAmount(double amount)

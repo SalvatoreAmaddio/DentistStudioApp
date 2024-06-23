@@ -20,12 +20,11 @@ namespace DentistStudioApp.Model
         private string _phoneNumber = string.Empty;
         private string _email = string.Empty;
         private string _picturePath = "pack://application:,,,/Images/placeholder.jpg";
-        JobTitle? _jobTitle; //JobTitle is a class extending AbstractModel
-        Gender? _gender; //Gender is a class extending AbstractModel
+        private JobTitle? _jobTitle;
+        private Gender? _gender;
         #endregion
 
         #region properties
-
         [PK] //This attribute tells this property represents the Primary Key of the Employee Table.
         public long PatientID { get => _patientID; set => UpdateProperty(ref value, ref _patientID); }
 
@@ -58,16 +57,11 @@ namespace DentistStudioApp.Model
         public string PhoneNumber { get => _phoneNumber; set => UpdateProperty(ref value, ref _phoneNumber); }
 
         [Field] //This attribute tells this property represents a Field of the Employee Table.
-        public string PicturePath 
-        { 
-            get => _picturePath;
-            set => UpdateProperty(ref value, ref _picturePath);
-        }
+        public string PicturePath { get => _picturePath; set => UpdateProperty(ref value, ref _picturePath); }
         #endregion
 
         #region Constructor
         public Patient() => AfterUpdate += OnAfterUpdate;
-
         public Patient(long id) : this() => _patientID = id;
         public Patient(DbDataReader reader) : this()
         {
@@ -81,6 +75,7 @@ namespace DentistStudioApp.Model
             _email = reader.GetString(7);
             _picturePath = reader.TryFetchString(8, _picturePath, _picturePath);
         }
+        #endregion
 
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
@@ -89,7 +84,6 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(LastName)))
                 _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-        #endregion
 
         public async Task<long?> TreatmentCount() 
         {
