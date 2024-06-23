@@ -12,7 +12,7 @@ namespace DentistStudioApp.Controller
 {
     public class TreatmentController : AbstractFormController<Treatment>
     {
-        private Appointment? Appointment;
+        private readonly Appointment? Appointment;
 
         private Patient? _patient;
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
@@ -22,7 +22,7 @@ namespace DentistStudioApp.Controller
         public TreatmentController()
         {
             AddSubControllers(Appointments);
-            NewRecordEvent += OnNewRecordEvent;
+            RecordMovingEvent += OnRecordMoving;
         }
 
         public TreatmentController(Treatment treatment) : this()
@@ -68,12 +68,15 @@ namespace DentistStudioApp.Controller
             DisposeWindow();
         }
 
-        private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
-            if (CurrentRecord != null)
+            if (e.NewRecord) 
             {
-                CurrentRecord.Patient = Patient;
-                CurrentRecord.IsDirty = false;
+                if (CurrentRecord != null)
+                {
+                    CurrentRecord.Patient = Patient;
+                    CurrentRecord.IsDirty = false;
+                }
             }
         }
 

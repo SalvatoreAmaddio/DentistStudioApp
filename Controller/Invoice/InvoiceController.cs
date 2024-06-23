@@ -40,7 +40,7 @@ namespace DentistStudioApp.Controller
             TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
             AddSubControllers(TreatmentsToInvoice);
             AddSubControllers(TreatmentsInvoiced);
-            NewRecordEvent += OnNewRecordEvent;
+            RecordMovingEvent += OnRecordMoving;
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
         }
 
@@ -58,13 +58,16 @@ namespace DentistStudioApp.Controller
         }
 
         private void OpenPaymentWindow() => Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
-        private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
-            if (TreatmentsToInvoice.Source.Count == 0) 
+            if (e.NewRecord) 
             {
-                Failure.Allert("No more treatments to invoice");
-                GoPrevious();
-                e.Cancel = true;
+                if (TreatmentsToInvoice.Source.Count == 0)
+                {
+                    Failure.Allert("No more treatments to invoice");
+                    GoPrevious();
+                    e.Cancel = true;
+                }
             }
         }
 

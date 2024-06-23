@@ -58,16 +58,19 @@ namespace DentistStudioApp.Controller
     {
         public AppointmentListController()
         {
-            NewRecordEvent += OnNewRecordEvent;
+            RecordMovingEvent += OnRecordMoving;
         }
 
-        private void OnNewRecordEvent(object? sender, EventArgs e)
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
-            Treatment? treatment = (Treatment?)ParentRecord;
-            if (CurrentRecord!= null) 
+            if (e.NewRecord) 
             {
-                CurrentRecord.Treatment = treatment;
-                CurrentRecord.IsDirty = false;
+                Treatment? treatment = (Treatment?)ParentRecord;
+                if (CurrentRecord != null)
+                {
+                    CurrentRecord.Treatment = treatment;
+                    CurrentRecord.IsDirty = false;
+                }
             }
         }
 
