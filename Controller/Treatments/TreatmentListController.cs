@@ -95,12 +95,11 @@ namespace DentistStudioApp.Controller
             AllowNewRecord = false;
             InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
         }
-
         protected override void Open(Treatment model)
         {
             model.Patient = Patient;
             model.IsDirty = false;
-            TreatmentForm form = new(new(model));
+            TreatmentForm form = new(new(model, ReadOnly));
             form.ShowDialog();
         }
         public override async void OnOptionFilterClicked(FilterEventArgs e)
@@ -122,7 +121,6 @@ namespace DentistStudioApp.Controller
             if (!_subscribed)
                 Subscribe();
         }
-
         protected virtual async Task InvoiceTreatmentTask()
         {
             if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
@@ -163,7 +161,6 @@ namespace DentistStudioApp.Controller
             await update;
             ButtonEnabled = true;
         }
-
         private void Subscribe() 
         {
             AfterUpdate += OnAfterUpdate;
@@ -203,14 +200,13 @@ namespace DentistStudioApp.Controller
     public class TreatmentInvoicedListController : AbstractTreatmentInvoice
     {
         public override CRUD Crud => CRUD.DELETE;
-
+        internal TreatmentInvoicedListController() => ReadOnly = true;
         public async override Task<IEnumerable<Treatment>> SearchRecordAsync()
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             SearchQry.AddParameter("invoiceID", CurrentInvoice?.InvoiceID);
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
-
         public override AbstractClause InstantiateSearchQry() =>
             new Treatment()
                 .Select().All().Fields("count(Service.ServiceID) AS ServiceCount")

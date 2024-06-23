@@ -32,7 +32,6 @@ namespace DentistStudioApp.Controller
                 TreatmentsInvoiced.Patient = value;
             }
         }
-
         public TreatmentToInvoiceListController TreatmentsToInvoice { get; } = new();
         public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
         public override int DatabaseIndex => 12;

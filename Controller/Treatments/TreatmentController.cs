@@ -39,12 +39,26 @@ namespace DentistStudioApp.Controller
             RecordMovingEvent += OnRecordMoving;
             WindowLoaded += OnWindowLoaded;
             WindowClosed += OnWindowClosed;
+            AfterUpdate += OnAfterUpdate;
         }
 
-        public TreatmentController(Treatment treatment) : this()
+        public TreatmentController(Treatment treatment, bool readOnly = false) : this()
         {
             Patient = treatment.Patient;
             CurrentRecord = treatment;
+
+            if (readOnly)
+            {
+                AllowNewRecord = false;
+                Lock(true);
+            }
+        }
+
+        private void Lock(bool value) 
+        {
+            ReadOnly = value;
+            Appointments.ReadOnly = value;
+            Appointments.AllowNewRecord = !value;
         }
 
         public TreatmentController(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
@@ -61,6 +75,15 @@ namespace DentistStudioApp.Controller
         #endregion
 
         #region Events Subscriptions
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(CurrentModel))) 
+            {
+                bool invoiced = CurrentRecord != null && CurrentRecord.Invoiced;
+                Lock(invoiced);
+            }
+        }
+
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
@@ -82,7 +105,7 @@ namespace DentistStudioApp.Controller
             TreatmentListController? treatmentListController = Helper.GetActiveWindow()?.GetController<PatientController>()?.GetSubController<TreatmentListController>(0);
             if (treatmentListController != null)
                 await treatmentListController.RequeryAsync();
-            DisposeWindow();
+            UnsubscribeWindowClosedEvent();
         }
         private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
         {
