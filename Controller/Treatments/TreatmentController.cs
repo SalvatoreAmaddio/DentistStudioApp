@@ -37,6 +37,8 @@ namespace DentistStudioApp.Controller
             OpenDentistsCMD = new CMD(OpenDentists);
             OpenClinicsCMD = new CMD(OpenClinics);
             RecordMovingEvent += OnRecordMoving;
+            WindowLoaded += OnWindowLoaded;
+            WindowClosed += OnWindowClosed;
         }
 
         public TreatmentController(Treatment treatment) : this()
@@ -62,7 +64,7 @@ namespace DentistStudioApp.Controller
         #endregion
 
         #region Events Subscriptions
-        protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
+        private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             RecordSource<Treatment> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
@@ -77,9 +79,8 @@ namespace DentistStudioApp.Controller
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.Clean();
             }
-
         }
-        protected override async void OnWindowClosed(object? sender, EventArgs e)
+        private async void OnWindowClosed(object? sender, EventArgs e)
         {
             TreatmentListController? treatmentListController = Helper.GetActiveWindow()?.GetController<PatientController>()?.GetSubController<TreatmentListController>(0);
             if (treatmentListController != null)

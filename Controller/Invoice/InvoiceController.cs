@@ -9,6 +9,7 @@ using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using FrontEnd.Source;
 using FrontEnd.Utils;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
@@ -16,9 +17,7 @@ namespace DentistStudioApp.Controller
     public class InvoiceController : AbstractFormController<Invoice>
     {
         #region Variables
-        private readonly IAbstractDatabase? _treatmentDB = DatabaseManager.Find<Treatment>();
         private readonly FetchPatientFromInvoicedTreatment _fetchPatient = new();
-        private readonly string _sql = new Treatment().CountAll().From().Where().EqualsTo("PatientID", "@patientID").AND().EqualsTo("Invoiced", "false").Limit().Statement();
         private Patient? _patient;
         #endregion
 
@@ -81,9 +80,8 @@ namespace DentistStudioApp.Controller
         private async void OnNewRecord(object? sender, AllowRecordMovementArgs e)
         {
             if (!e.NewRecord) return;
-            List<QueryParameter> para = [new("patientID", $"{Patient?.PatientID}")];
-            if (_treatmentDB == null) throw new NullReferenceException();
-            long? result = await _treatmentDB.CountRecordsAsync(_sql,para);
+            if (Patient == null) throw new NullReferenceException();
+            long? result = await Patient.TreatmentCount();
             if (result == 0)
             {
                 Failure.Allert("There are no more treatments to invoice.");

@@ -78,7 +78,7 @@ namespace DentistStudioApp.Controller
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRecords(results);
             GoFirst();
-            RunAfterSubFormFilterEvent();
+            InvokeAfterSubFormFilterEvent();
         }
 
         public override async void OnOptionFilterClicked(FilterEventArgs e)
