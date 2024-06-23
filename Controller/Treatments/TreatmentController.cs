@@ -18,20 +18,19 @@ namespace DentistStudioApp.Controller
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
         public override int DatabaseIndex => 7;
+
         public TreatmentController()
         {
             AddSubControllers(Appointments);
             NewRecordEvent += OnNewRecordEvent;
         }
 
-        public TreatmentController(Treatment treatment) 
+        public TreatmentController(Treatment treatment) : this()
         {
             Patient = treatment.Patient;
-            if (treatment.IsNewRecord())
-            {
-                GoAt(treatment);
+            CurrentRecord = treatment;
+            if (CurrentRecord.IsNewRecord()) 
                 return;
-            }
             GoAt(treatment);
         }
 
@@ -53,9 +52,12 @@ namespace DentistStudioApp.Controller
         protected override async void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
-            RecordSource<Treatment> results = await Task.Run(()=>CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
+            RecordSource<Treatment> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
-            GoFirst();
+            if (CurrentRecord != null && CurrentRecord.IsNewRecord()) 
+                GoNew();
+            else
+                GoFirst();
         }
 
         protected override async void OnWindowClosed(object? sender, EventArgs e)
@@ -68,7 +70,7 @@ namespace DentistStudioApp.Controller
 
         private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
         {
-            if (CurrentRecord!=null) 
+            if (CurrentRecord != null)
             {
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.IsDirty = false;

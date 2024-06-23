@@ -9,7 +9,6 @@ using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using FrontEnd.Source;
 using FrontEnd.Utils;
-using System.Windows;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
