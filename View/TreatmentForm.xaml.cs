@@ -44,8 +44,6 @@ namespace DentistStudioApp.View
             SubController?.DatesOptions.FirstOrDefault(s => ((DateTime?)s.Value) == appointment?.DOA)?.Select();
             SubController?.TimesOptions.FirstOrDefault(s => ((TimeSpan?)s.Value) == appointment?.TOA)?.Select();
             SubController?.OnOptionFilterClicked(new());
-            if (SubController != null)
-                SubController.AfterSubFormFilter -= OnAppointmentsAfterSubFormFilter;
         }
 
         private void OpenServices(object sender, RoutedEventArgs e)

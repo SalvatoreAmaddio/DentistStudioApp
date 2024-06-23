@@ -6,7 +6,6 @@ using FrontEnd.Events;
 using FrontEnd.ExtensionMethods;
 using FrontEnd.Source;
 using FrontEnd.Utils;
-using System.ComponentModel;
 using System.Windows;
 
 namespace DentistStudioApp.Controller

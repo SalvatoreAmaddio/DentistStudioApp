@@ -7,7 +7,6 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using System.Windows;
 
 namespace DentistStudioApp.Controller
 {
