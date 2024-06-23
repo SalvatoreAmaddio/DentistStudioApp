@@ -66,7 +66,7 @@ namespace DentistStudioApp.Controller
             if (!e.NewRecord) return;
             var sql = new Treatment().CountAll().From().Where().EqualsTo("PatientID", $"{Patient?.PatientID}").AND().EqualsTo("Invoiced","false").Limit().Statement();
             long? result = await DatabaseManager.Find<Treatment>().CountRecordsAsync(sql);
-            if (result == 0) 
+            if (result == 0)
             {
                 Failure.Allert("There are no more treatments to invoice.");
                 e.Cancel = true;
