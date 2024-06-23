@@ -74,7 +74,7 @@ namespace DentistStudioApp.Controller
         #region Events Subscriptions
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
-            if (e.Is(nameof(CurrentModel)))
+            if (e.Is(nameof(CurrentRecord)))
             {
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.Clean();
