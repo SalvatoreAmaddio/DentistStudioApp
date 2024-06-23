@@ -18,7 +18,7 @@ namespace DentistStudioApp.Controller
         #region Variables
         private readonly IAbstractDatabase? _treatmentDB = DatabaseManager.Find<Treatment>();
         private readonly FetchPatientFromInvoicedTreatment _fetchPatient = new();
-        private readonly string _sql = new Treatment().CountAll().From().Where().EqualsTo("PatientID", "@patientID}").AND().EqualsTo("Invoiced", "false").Limit().Statement();
+        private readonly string _sql = new Treatment().CountAll().From().Where().EqualsTo("PatientID", "@patientID").AND().EqualsTo("Invoiced", "false").Limit().Statement();
         private Patient? _patient;
         #endregion
 
