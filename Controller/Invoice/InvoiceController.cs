@@ -52,9 +52,9 @@ namespace DentistStudioApp.Controller
 
         public InvoiceController(Invoice invoice) : this() 
         {
-           FetchPatientFromInvoicedTreatment fetchPatient = new ();
-           GoAt(invoice);
-           Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
+            FetchPatientFromInvoicedTreatment fetchPatient = new();
+            GoAt(invoice);
+            Patient = (Patient?)fetchPatient.Convert(invoice, null, null, null);
         }
 
         private void OpenPaymentWindow() 
