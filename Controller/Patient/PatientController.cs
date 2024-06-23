@@ -15,7 +15,9 @@ namespace DentistStudioApp.Controller
 {
     public class PatientController : AbstractFormController<Patient>
     {
-        private readonly IAbstractDatabase? surveyDB = DatabaseManager.Find<Survey>();
+        private readonly IAbstractDatabase? _surveyDB = DatabaseManager.Find<Survey>();
+
+        #region Properties
         public TreatmentListController Treatments { get; } = new();
         private Survey? Survey { get; set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
@@ -24,6 +26,8 @@ namespace DentistStudioApp.Controller
         public ICommand AddSurveyCMD { get; }
         public ICommand AddInvoiceCMD { get; }
         public ICommand FilePickedCMD { get; }
+        #endregion
+
         public PatientController() : base()
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
@@ -94,22 +98,22 @@ namespace DentistStudioApp.Controller
         /// <exception cref="Exception"></exception>
         private Task<Survey> CreateNewSurveyAsync()
         {
-            if (surveyDB == null || CurrentRecord == null) throw new NullReferenceException();
+            if (_surveyDB == null || CurrentRecord == null) throw new NullReferenceException();
 
             Survey survey = new(CurrentRecord);
-            surveyDB.Model = survey;
-            surveyDB.Crud(CRUD.INSERT);
+            _surveyDB.Model = survey;
+            _surveyDB.Crud(CRUD.INSERT);
             survey.IsDirty = false;
             return Task.FromResult(survey);
         }
 
         private Task<Survey?> FetchSurvey() 
         {
-            if (surveyDB == null) throw new NullReferenceException();
+            if (_surveyDB == null) throw new NullReferenceException();
             string sql = new Survey().Select().From().Where().EqualsTo("PatientID", "@id").Limit().Statement();
             List<QueryParameter> param = [];
             param.Add(new("id",CurrentRecord?.PatientID));
-            return Task.FromResult(surveyDB.Retrieve(sql, param).Cast<Survey>().FirstOrDefault());
+            return Task.FromResult(_surveyDB.Retrieve(sql, param).Cast<Survey>().FirstOrDefault());
         }
 
         private Task<IEnumerable<SurveyData>> FetchPatientSurveyData()
@@ -130,7 +134,7 @@ namespace DentistStudioApp.Controller
             return surveyDataDB.Retrieve(sql).Cast<SurveyData>();
         }
 
-        public async Task OpenSurvey() 
+        public async Task OpenSurvey()
         {
             if (CurrentRecord == null) return;
             

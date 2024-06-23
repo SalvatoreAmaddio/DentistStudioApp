@@ -2,10 +2,7 @@
 using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
-using FrontEnd.Source;
-using FrontEnd.Utils;
 using System.Data.Common;
-using System.Windows.Media.Imaging;
 
 namespace DentistStudioApp.Model
 {
@@ -84,31 +81,15 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(LastName)))
                 _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-
-        public async Task<long?> TreatmentCount() 
+        public async Task<long?> TreatmentCount()
         {
-            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
-            if (treatmentDB == null) throw new NullReferenceException();
+            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
             List<QueryParameter> para = [];
             para.Add(new QueryParameter("id", PatientID));
             para.Add(new QueryParameter("invoiced", false));
             return await treatmentDB.CountRecordsAsync($"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @id AND Invoiced = @invoiced", para);
         }
-
-        public async Task<IEnumerable<Treatment>> FetchTreatments()
-        {
-            IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>();
-            if (treatmentDB == null) throw new NullReferenceException();
-            List<QueryParameter> para = [];
-            para.Add(new QueryParameter("id", PatientID));
-            para.Add(new QueryParameter("invoiced", false));
-            string? sql = $"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @id AND Invoiced = @invoiced";
-            return await RecordSource<Treatment>.CreateFromAsyncList(treatmentDB.RetrieveAsync(sql, para).Cast<Treatment>());
-        }
-
-        public override string ToString() => $"{FirstName} {LastName}";
-
         public override ISQLModel Read(DbDataReader reader) => new Patient(reader);
-
+        public override string ToString() => $"{FirstName} {LastName}";
     }
 }

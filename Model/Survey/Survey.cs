@@ -1,6 +1,5 @@
 ﻿using Backend.ExtensionMethods;
 using Backend.Model;
-using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -10,9 +9,9 @@ namespace DentistStudioApp.Model
     public class Survey : AbstractModel
     {
         #region backing fields
-        long _surveyId;
-        DateTime? _dos;
-        Patient? _patient;
+        private long _surveyId;
+        private DateTime? _dos;
+        private Patient? _patient;
         #endregion
 
         #region Properties
@@ -30,15 +29,13 @@ namespace DentistStudioApp.Model
 
         #region Constructor
         public Survey() { }
-
         public Survey(long id) => _surveyId = id;
         public Survey(Patient patient) 
         {
             _patient = patient;
             _dos = DateTime.Now;
         }
-
-        public Survey(DbDataReader reader) 
+        public Survey(DbDataReader reader)
         {
             _surveyId = reader.GetInt64(0);
             _dos = reader.TryFetchDate(1);
@@ -47,8 +44,6 @@ namespace DentistStudioApp.Model
         #endregion
 
         public override ISQLModel Read(DbDataReader reader) => new Survey(reader);
-
         public override string ToString() => $"Survey ID: {SurveyID} - {Patient}";
-
     }
 }
