@@ -76,7 +76,7 @@ namespace DentistStudioApp.Controller
 
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
-            if (e.NewRecord) 
+            if (e.NewRecord)
             {
                 if (CurrentRecord != null)
                 {
