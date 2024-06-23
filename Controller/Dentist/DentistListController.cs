@@ -46,7 +46,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry()
         {
-            return new Dentist().From().InnerJoin(new Clinic()).Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
+            return new Dentist().Select().From().InnerJoin(new Clinic()).Where().OpenBracket().Like("LOWER(FirstName)", "@name").OR().Like("LOWER(LastName)", "@name").CloseBracket();
         }
     }
 }

@@ -34,14 +34,23 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 12;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
         public ICommand OpenPaymentWindowCMD { get; }
-        public InvoiceController()
+        internal InvoiceController()
         {
-            TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
-            TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
+            AfterUpdate += OnAfterUpdate;
             AddSubControllers(TreatmentsToInvoice);
             AddSubControllers(TreatmentsInvoiced);
-            RecordMovingEvent += OnRecordMoving;
+            TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
+            TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
+        }
+
+        private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(Patient))) 
+            {
+                TreatmentsToInvoice.Patient = Patient;
+                TreatmentsInvoiced.Patient = Patient;
+            }
         }
 
         public InvoiceController(Patient patient) : this()
@@ -49,27 +58,19 @@ namespace DentistStudioApp.Controller
             GoNew();
             Patient = patient;
             CurrentRecord?.Dirt();
+            RecordMovingEvent += OnRecordMoving;
         }
 
         public InvoiceController(Invoice invoice) : this() 
         {
             GoAt(invoice);
             Patient = _fetchPatient.Convert(invoice);
+            AllowNewRecord = false;
+            RecordMovingEvent += OnRecordMoving;
         }
 
         private void OpenPaymentWindow() => Helper.OpenWindowDialog("Payment Methods", new PaymentTypeList());
-        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
-        {
-            if (e.NewRecord) 
-            {
-                if (TreatmentsToInvoice.Source.Count == 0)
-                {
-                    Failure.Allert("No more treatments to invoice");
-                    GoPrevious();
-                    e.Cancel = true;
-                }
-            }
-        }
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e) => Patient = _fetchPatient.Convert(CurrentRecord);
 
         private async void OnNotifyParentEvent(object? sender, EventArgs e)
         {

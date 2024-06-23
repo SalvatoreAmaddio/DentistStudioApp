@@ -105,11 +105,11 @@ namespace DentistStudioApp.Controller
 
         private Task<Survey?> FetchSurvey() 
         {
-           if (surveyDB == null) throw new NullReferenceException();
-           string sql = new Survey().Where().EqualsTo("PatientID","@id").Limit().Statement();
-           List<QueryParameter> param = [];
-           param.Add(new("id",CurrentRecord?.PatientID));
-           return Task.FromResult(surveyDB.Retrieve(sql, param).Cast<Survey>().FirstOrDefault());
+            if (surveyDB == null) throw new NullReferenceException();
+            string sql = new Survey().Select().From().Where().EqualsTo("PatientID", "@id").Limit().Statement();
+            List<QueryParameter> param = [];
+            param.Add(new("id",CurrentRecord?.PatientID));
+            return Task.FromResult(surveyDB.Retrieve(sql, param).Cast<Survey>().FirstOrDefault());
         }
 
         private Task<IEnumerable<SurveyData>> FetchPatientSurveyData()

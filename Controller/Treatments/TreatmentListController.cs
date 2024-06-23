@@ -74,10 +74,16 @@ namespace DentistStudioApp.Controller
     public abstract class AbstractTreatmentInvoice : TreatmentListController
     {
         private bool _buttonEnabled = true;
-        private string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
-        public Patient? Patient;
-
+        private readonly string _sql = new InvoicedTreatment().Select().From().Where().EqualsTo("TreatmentID", "@id").Limit().Statement();
+        private Patient? _patient;
+        private bool _subscribed = false;
         #region Properties
+        public Patient? Patient
+        {
+            get => _patient;
+            set => UpdateProperty(ref value, ref _patient);
+        }
+
         protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
         public Invoice? CurrentInvoice => (Invoice?)ParentRecord;
         public ICommand InvoiceTreatmentCMD { get; }
@@ -87,7 +93,11 @@ namespace DentistStudioApp.Controller
         public bool ButtonEnabled { get => _buttonEnabled; set => UpdateProperty(ref value, ref _buttonEnabled); }
         #endregion
 
-        public AbstractTreatmentInvoice() => InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
+        public AbstractTreatmentInvoice() 
+        {
+            AllowNewRecord = false;
+            InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
+        }
         protected override void Open(Treatment model)
         {
             model.Patient = Patient;
@@ -135,14 +145,27 @@ namespace DentistStudioApp.Controller
             await update;
             ButtonEnabled = true;
         }
-
         public override async void OnSubFormFilter()
         {
             ReloadSearchQry();
             IEnumerable<Treatment> results = await SearchRecordAsync() ?? throw new NullReferenceException();
             AsRecordSource().ReplaceRange(results);
             GoFirst();
+            if (!_subscribed)
+                Subscribe();
         }
+
+        private void Subscribe() 
+        {
+            AfterUpdate += AbstractTreatmentInvoice_AfterUpdate;
+            _subscribed = true;
+        }
+
+        private void AbstractTreatmentInvoice_AfterUpdate(object? sender, AfterUpdateArgs e)
+        {
+            if (e.Is(nameof(Patient))) OnSubFormFilter();
+        }
+
         public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
             ReloadSearchQry();
