@@ -2,10 +2,13 @@
 using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using FrontEnd.Source;
+using System.Windows;
+using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
@@ -27,6 +30,7 @@ namespace DentistStudioApp.Controller
         public override int DatabaseIndex => 12;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
 
+        public ICommand OpenPaymentWindowCMD { get; }
         public InvoiceController() 
         {
             TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
@@ -34,8 +38,19 @@ namespace DentistStudioApp.Controller
             AddSubControllers(TreatmentsToInvoice);
             AddSubControllers(TreatmentsInvoiced);
             NewRecordEvent += OnNewRecordEvent;
+            OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
         }
 
+        private void OpenPaymentWindow() 
+        {
+            Window window = new()
+            {
+                Content = new PaymentTypeList(),
+                Title = "Payment Methods"
+            };
+
+            window.Show();
+        }
         private void OnNewRecordEvent(object? sender, AllowRecordMovementArgs e)
         {
             if (TreatmentsToInvoice.Source.Count == 0) 

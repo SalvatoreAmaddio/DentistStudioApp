@@ -36,7 +36,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry()
         {
-            return new PaymentType().Where().Like("LOWER(PaymentBy)", "@name");
+            return new PaymentType().Select().From().Where().Like("LOWER(PaymentBy)", "@name");
         }
     }
 }

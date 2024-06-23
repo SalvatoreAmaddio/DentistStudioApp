@@ -15,7 +15,7 @@
         <fr:Form>
             <fr:Form.Menu>
                 <Menu>
-                    <MenuItem Header="Payment Methods"/>
+                    <MenuItem Header="Payment Methods" Command="{Binding OpenPaymentWindowCMD}"/>
                 </Menu>
             </fr:Form.Menu>
             <Border Padding="10,13,0,0">

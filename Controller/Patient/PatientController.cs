@@ -21,13 +21,9 @@ namespace DentistStudioApp.Controller
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
         public override int DatabaseIndex => 0;
-
         public ICommand AddSurveyCMD { get; }
-
         public ICommand AddInvoiceCMD { get; }
-
         public ICommand FilePickedCMD { get; }
-
         public PatientController() : base()
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
