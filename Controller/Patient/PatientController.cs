@@ -10,6 +10,7 @@ using FrontEnd.Forms;
 using System.IO;
 using System.Windows.Input;
 using Backend.Enums;
+using FrontEnd.Utils;
 
 namespace DentistStudioApp.Controller
 {
@@ -23,19 +24,33 @@ namespace DentistStudioApp.Controller
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
         public override int DatabaseIndex => 0;
-        public ICommand AddSurveyCMD { get; }
-        public ICommand AddInvoiceCMD { get; }
-        public ICommand FilePickedCMD { get; }
         #endregion
 
+        #region Commands
+        public ICommand AddSurveyCMD { get; }
+        public ICommand AddInvoiceCMD { get; }
+        public ICommand OpenInvoicesCMD { get; }
+        public ICommand FilePickedCMD { get; }
+
+        #endregion
         public PatientController() : base()
         {
             AddSurveyCMD = new CMDAsync(OpenSurvey);    
             AddInvoiceCMD = new CMDAsync(AddInvoice);
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
+            OpenInvoicesCMD = new CMD(OpenInvoices);
             AddSubControllers(Treatments);
         }
 
+        private void OpenInvoices()
+        {
+            if (CurrentRecord == null || CurrentRecord.IsNewRecord()) 
+            {
+                Failure.Allert("This record does not exist yet","Action Denied");
+                return;
+            }
+            Helper.OpenWindowDialog("Invoices", new InvoiceList(new(CurrentRecord.PatientID)));
+        }
         private void PickPicture(FilePickerCatch? obj)
         {
             if (CurrentRecord == null || obj == null) return;

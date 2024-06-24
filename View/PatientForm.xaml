@@ -59,7 +59,7 @@
                             <Button Content="Check up"/>
                             <Button Content="Teeth Screen"/>
                             <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
-                            <Button Content="Invoices"/>
+                            <Button Content="Invoices" Command="{Binding OpenInvoicesCMD}"/>
                         </StackPanel>
                     </Grid>
                 </Border>

@@ -11,5 +11,11 @@ namespace DentistStudioApp.View
             InitializeComponent();
             this.SetController(new InvoiceListController());
         }
+
+        public InvoiceList(InvoiceListController controller)
+        {
+            InitializeComponent();
+            this.SetController(controller);
+        }
     }
 }

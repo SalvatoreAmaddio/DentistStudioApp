@@ -12,6 +12,7 @@ namespace DentistStudioApp.Controller
 {
     public class InvoiceListController : AbstractFormListController<Invoice>
     {
+        private readonly long? _patientID = null;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
         public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
@@ -27,9 +28,29 @@ namespace DentistStudioApp.Controller
             AllowNewRecord = false;
         }
 
+        public InvoiceListController(long patientID) : this() 
+        {
+            WindowLoaded += OnWindowLoaded;
+            _patientID = patientID;
+        }
+
+        private async void OnWindowLoaded(object? sender, System.Windows.RoutedEventArgs e)
+        {
+            IEnumerable<Invoice> results = await SearchRecordAsync();
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
+        }
+
+        private void FilterByPatient() 
+        {
+            if (_patientID == null) return;
+            SearchQry?.GetClause<WhereClause>()?.AND().EqualsTo("Patient.PatientID", "@patientID");
+            SearchQry?.AddParameter("patientID", $"{_patientID}");
+        }
+
         private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
-            if (e.Is(nameof(Search))) 
+            if (e.Is(nameof(Search)))
             {
                 await OnSearchPropertyRequeryAsync(sender);
             }
@@ -48,6 +69,7 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("name", Search.ToLower() + "%");
             SearchQry.AddParameter("name", Search.ToLower() + "%");
+            FilterByPatient();
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
