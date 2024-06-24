@@ -74,6 +74,6 @@ namespace DentistStudioApp.Model
             para.Add(new("id", TreatmentID));
             return await appointmentDB.AggregateQueryAsync(sql,para);
         }
-        public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient}";
+        public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient} - {IsDirty}";
     }
 }
