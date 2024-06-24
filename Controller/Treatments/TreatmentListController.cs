@@ -71,7 +71,7 @@ namespace DentistStudioApp.Controller
                 .OrderBy().Field("StartDate DESC");
     }
 
-    public abstract class AbstractTreatmentInvoice : TreatmentListController
+    public abstract class AbstractTreatmentInvoiceController : TreatmentListController
     {
         #region Variables
         protected IAbstractDatabase? InvoicedTreatmentDB = DatabaseManager.Find<InvoicedTreatment>();
@@ -90,7 +90,7 @@ namespace DentistStudioApp.Controller
         public bool ButtonEnabled { get => _buttonEnabled; set => UpdateProperty(ref value, ref _buttonEnabled); }
         #endregion
 
-        internal AbstractTreatmentInvoice()
+        internal AbstractTreatmentInvoiceController()
         {
             AllowNewRecord = false;
             InvoiceTreatmentCMD = new CMDAsync(InvoiceTreatmentTask);
@@ -99,7 +99,8 @@ namespace DentistStudioApp.Controller
         {
             model.Patient = Patient;
             model.IsDirty = false;
-            TreatmentForm form = new(new(model, ReadOnly));
+            long? invoiceID = ((Invoice?)ParentRecord)?.InvoiceID;
+            TreatmentForm form = new(new(model, ReadOnly, invoiceID));
             form.ShowDialog();
         }
         public override async void OnOptionFilterClicked(FilterEventArgs e)
@@ -125,6 +126,7 @@ namespace DentistStudioApp.Controller
         {
             if (InvoicedTreatmentDB == null || CurrentRecord == null) throw new NullReferenceException();
             ButtonEnabled = false;
+            bool readOnly = ReadOnly;
             List<QueryParameter> para = [new("id", CurrentRecord.TreatmentID)];
             Task<object?> total = Task.Run(CurrentRecord.GetTotalCost);
             Task<RecordSource<InvoicedTreatment>> fetchSourceTask = Task.Run(()=>RecordSource<InvoicedTreatment>.CreateFromAsyncList(InvoicedTreatmentDB.RetrieveAsync(_sql, para).Cast<InvoicedTreatment>()));
@@ -133,6 +135,7 @@ namespace DentistStudioApp.Controller
                 InvoicedTreatmentDB.Model = new InvoicedTreatment(CurrentInvoice, CurrentRecord);
             else //fetch the treatment to remove
             {
+                ReadOnly = false;
                 RecordSource<InvoicedTreatment> records = await fetchSourceTask;
                 InvoicedTreatmentDB.Model = records.First();
             }
@@ -160,6 +163,7 @@ namespace DentistStudioApp.Controller
 
             await update;
             ButtonEnabled = true;
+            ReadOnly = readOnly;
         }
         private void Subscribe() 
         {
@@ -172,7 +176,7 @@ namespace DentistStudioApp.Controller
         }
     }
 
-    public class TreatmentToInvoiceListController : AbstractTreatmentInvoice
+    public class TreatmentToInvoiceListController : AbstractTreatmentInvoiceController
     {
         public override CRUD Crud => CRUD.INSERT;
 
@@ -197,7 +201,7 @@ namespace DentistStudioApp.Controller
                 .OrderBy().Field("StartDate DESC");
     }
 
-    public class TreatmentInvoicedListController : AbstractTreatmentInvoice
+    public class TreatmentInvoicedListController : AbstractTreatmentInvoiceController
     {
         public override CRUD Crud => CRUD.DELETE;
         internal TreatmentInvoicedListController() => ReadOnly = true;

@@ -7,7 +7,9 @@ using FrontEnd.Events;
 using FrontEnd.ExtensionMethods;
 using FrontEnd.Source;
 using FrontEnd.Utils;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
@@ -16,7 +18,7 @@ namespace DentistStudioApp.Controller
     {
         #region Variables
         private readonly Appointment? Appointment;
-
+        private readonly long? invoiceID;
         private Patient? _patient;
         #endregion
 
@@ -40,16 +42,18 @@ namespace DentistStudioApp.Controller
             WindowClosed += OnWindowClosed;
             AfterUpdate += OnAfterUpdate;
         }
-        public TreatmentController(Treatment treatment, bool readOnly = false) : this()
+        public TreatmentController(Treatment treatment, bool readOnly = false, long? invoiceID = null) : this()
         {
             Patient = treatment.Patient;
-            CurrentRecord = treatment;
-
+            this.invoiceID = invoiceID;
             if (readOnly)
             {
+                AfterUpdate -= OnAfterUpdate;
                 AllowNewRecord = false;
                 Lock(true);
             }
+
+            CurrentRecord = treatment;
         }
         public TreatmentController(Appointment appointment) : this(appointment.Treatment ?? throw new NullReferenceException())
         {
@@ -74,7 +78,7 @@ namespace DentistStudioApp.Controller
         #region Events Subscriptions
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
         {
-            if (e.Is(nameof(CurrentRecord)))
+            if (e.Is(nameof(CurrentRecord)) && CurrentRecord != null)
             {
                 CurrentRecord.Patient = Patient;
                 CurrentRecord.Clean();
@@ -85,7 +89,15 @@ namespace DentistStudioApp.Controller
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
             SearchQry.AddParameter("patientID", Patient?.PatientID);
-            RecordSource<Treatment> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
+
+            if (ReadOnly && invoiceID != null)
+            {
+                SearchQry?.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "TreatmentID");
+                SearchQry?.GetClause<WhereClause>()?.AND().EqualsTo("InvoiceID", "@invoiceID");
+                SearchQry?.AddParameter("invoiceID", invoiceID);
+            }
+
+            RecordSource<Treatment>? results = await Task.Run(() => CreateFromAsyncList(SearchQry?.Statement(), SearchQry?.Params()));
             AsRecordSource().ReplaceRange(results);
             if (CurrentRecord != null)
             {
@@ -117,10 +129,31 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry() =>
         new Treatment()
-            .Select()
+            .Select().All()
             .From()
             .Where()
                 .EqualsTo("PatientID", "@patientID")
             .OrderBy().Field("StartDate DESC");
+    }
+
+    public class InvoicedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool invoiced) 
+            {
+                return (invoiced) ? "Invoiced" : "";
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string str)
+            {
+                return (str.Equals("Invoiced")) ? true : false;
+            }
+            return value;
+        }
     }
 }
