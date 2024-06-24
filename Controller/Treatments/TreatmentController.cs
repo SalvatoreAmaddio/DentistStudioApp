@@ -96,9 +96,12 @@ namespace DentistStudioApp.Controller
                 SearchQry?.GetClause<WhereClause>()?.AND().EqualsTo("InvoiceID", "@invoiceID");
                 SearchQry?.AddParameter("invoiceID", invoiceID);
             }
+            else if (!ReadOnly && invoiceID != null)
+                SearchQry?.GetClause<WhereClause>()?.AND().EqualsTo("Invoiced", $"{false}");
 
             RecordSource<Treatment>? results = await Task.Run(() => CreateFromAsyncList(SearchQry?.Statement(), SearchQry?.Params()));
             AsRecordSource().ReplaceRange(results);
+
             if (CurrentRecord != null)
             {
                 if (CurrentRecord.IsNewRecord())

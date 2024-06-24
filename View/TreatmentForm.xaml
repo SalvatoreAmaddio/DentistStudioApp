@@ -50,7 +50,7 @@
                 <fr:CommandPanel Grid.Column="3" Grid.RowSpan="4"/>
 
                 <Label Grid.Column="4" FontWeight="Bold" HorizontalAlignment="Right" Content="{Binding CurrentRecord.Invoiced, Converter={StaticResource InvoicedConverter}}"/>
-                <Label Grid.Column="4" Grid.Row="1" FontWeight="Bold" HorizontalAlignment="Right" Content="{Binding ReadOnly, Converter={StaticResource ReadOnlyConverter}}"/>
+                <Label Grid.Column="4" Grid.Row="1" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Right" Content="{Binding ReadOnly, Converter={StaticResource ReadOnlyConverter}}"/>
 
             <fr:SubForm Grid.Row="4" Grid.ColumnSpan="5" Background="{StaticResource HappyBlue}" ParentRecord="{Binding CurrentRecord}">
                     <fr:FormList DataContext="{Binding Appointments}">
