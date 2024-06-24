@@ -59,25 +59,34 @@ namespace DentistStudioApp.Controller
             WindowLoaded += OnWindowLoaded;
         }
 
-        public InvoiceController(Invoice invoice) : this()
+        public InvoiceController(Invoice invoice, long? patientID = null) : this()
         {
             GoAt(invoice);
             Patient = _fetchPatient.Convert(invoice);
             AllowNewRecord = false;
             RecordMovingEvent += OnRecordMoving;
+            if (patientID != null) 
+            {
+                RecordMovingEvent -= OnRecordMoving;
+                RecordMovingEvent += OnNewRecord;
+                WindowLoaded += OnWindowLoaded;
+                AllowNewRecord = true;
+            }
         }
+
         #endregion
 
         #region Event Subscriptions
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
-            string? sql = SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment),"InvoiceID")
-                                              .InnerJoin(nameof(InvoicedTreatment),nameof(Treatment),"TreatmentID")
-                                              .Where().EqualsTo("PatientID","@patientID").Statement();
+            string? sql = SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "InvoiceID")
+                                              .InnerJoin(nameof(InvoicedTreatment), nameof(Treatment), "TreatmentID")
+                                              .Where().EqualsTo("PatientID", "@patientID").Statement();
             
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(sql, SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
 
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
@@ -86,24 +95,32 @@ namespace DentistStudioApp.Controller
             {
                 TreatmentsToInvoice.Patient = Patient;
                 TreatmentsInvoiced.Patient = Patient;
+                return;
+            }
+
+            if (e.Is(nameof(CurrentRecord)) && CurrentRecord != null && CurrentRecord.IsNewRecord()) 
+            {
+                CurrentRecord.Dirt();
             }
         }
+
         private async void OnNewRecord(object? sender, AllowRecordMovementArgs e)
         {
             if (!e.NewRecord) return;
             if (Patient == null) throw new NullReferenceException();
             long? result = await Patient.TreatmentCount();
-            if (result == 0)
+            if (result == 0 || result is null)
             {
                 Failure.Allert("There are no more treatments to invoice.");
-                e.Cancel = true;
             }
         }
+        
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e) 
         {
             if (CurrentRecord == null || CurrentRecord.IsNewRecord()) return;
             Patient = _fetchPatient.Convert(CurrentRecord);
         }
+
         private async void OnNotifyParentEvent(object? sender, EventArgs e)
         {
             Task t1 = TreatmentsToInvoice.RequeryAsync();
