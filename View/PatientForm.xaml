@@ -19,6 +19,7 @@
                     <MenuItem Header="Job Title" Click="OpenJobTitleWindow"/>
                 </Menu>
             </fr:Form.Menu>
+            
             <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
                 <Label Content="First Name"/>
                 <Label Grid.Row="1" Content="Last Name"/>
@@ -44,19 +45,18 @@
                         <StackPanel Margin="0,5,0,0">
                             <StackPanel.Resources>
                                 <Style TargetType="Button">
-                                    <Setter Property="Height" Value="25"/>
+                                    <Setter Property="Height" Value="26"/>
                                 </Style>
                                 <Style TargetType="fr:SaveButton">
-                                    <Setter Property="Height" Value="25"/>
+                                    <Setter Property="Height" Value="26"/>
                                 </Style>
                                 <Style TargetType="fr:DeleteButton">
-                                    <Setter Property="Height" Value="25"/>
+                                    <Setter Property="Height" Value="26"/>
                                 </Style>
                             </StackPanel.Resources>
                             <fr:SaveButton/>
                             <fr:DeleteButton/>
                             <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
-                            <Button Content="Check up"/>
                             <Button Content="Teeth Screen"/>
                             <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
                             <Button Content="Invoices" Command="{Binding OpenInvoicesCMD}"/>
