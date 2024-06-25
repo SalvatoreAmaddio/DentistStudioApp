@@ -67,7 +67,7 @@ namespace DentistStudioApp.Controller
                 if (CurrentRecord != null)
                 {
                     CurrentRecord.Treatment = treatment;
-                    CurrentRecord.IsDirty = false;
+                    CurrentRecord.Clean();
                 }
             }
         }

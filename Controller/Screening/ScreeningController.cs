@@ -1,9 +1,12 @@
-﻿using Backend.Utils;
+﻿using Backend.Model;
+using Backend.Utils;
 using DentistStudioApp.Model;
 using FrontEnd.Controller;
 using FrontEnd.Forms;
+using FrontEnd.Source;
 using System.IO;
 using System.Windows.Input;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Controller
 {
@@ -15,6 +18,20 @@ namespace DentistStudioApp.Controller
         public ScreeningController() 
         {
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
+            AfterRecordNavigation += OnAfterRecordNavigation;
+        }
+
+        private void OnAfterRecordNavigation(object? sender, Backend.Events.AllowRecordMovementArgs e)
+        {
+            if (e.NewRecord)
+            {
+                TeethScreen? teethScreen = (TeethScreen?)ParentRecord;
+                if (CurrentRecord != null)
+                {
+                    CurrentRecord.TeethScreen = teethScreen;
+                    CurrentRecord.Clean();
+                }
+            }
         }
 
         private void PickPicture(FilePickerCatch? filePicked)
@@ -45,9 +62,21 @@ namespace DentistStudioApp.Controller
             CurrentRecord.ScreenPath = fileTransfer.DestinationFilePath;
         }
 
-        public override void OnSubFormFilter()
+        public override async void OnSubFormFilter()
         {
-
+            ReloadSearchQry();
+            SearchQry.AddParameter("teethScreenID", ParentRecord?.GetPrimaryKey()?.GetValue());
+            RecordSource<Screening> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
+
+        public override AbstractClause InstantiateSearchQry() =>
+            new Screening()
+            .Select()
+                .All()
+            .From()
+            .Where().EqualsTo("TeethScreenID", "@teethScreenID")
+            .OrderBy().Field("ScreeningID DESC");
     }
 }
