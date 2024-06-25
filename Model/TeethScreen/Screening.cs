@@ -4,6 +4,7 @@ using System.Data.Common;
 
 namespace DentistStudioApp.Model
 {
+    [Table(nameof(Screening))]
     public class Screening : AbstractModel
     {
         #region Backing Fields
@@ -13,8 +14,11 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Properties
+        [PK]
         public long ScreeningID { get => _screeningId; set => UpdateProperty(ref value, ref _screeningId); }
-        public TeethScreen? TeethScreen { get => _teethScreen; set => UpdateProperty(ref value, ref _teethScreen); }        
+        [FK]
+        public TeethScreen? TeethScreen { get => _teethScreen; set => UpdateProperty(ref value, ref _teethScreen); }
+        [Field]
         public string ScreenPath { get => _screenPath; set => UpdateProperty(ref value, ref _screenPath); }
         #endregion
 

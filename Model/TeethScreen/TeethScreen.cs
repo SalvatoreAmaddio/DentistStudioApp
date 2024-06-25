@@ -5,6 +5,7 @@ using System.Data.Common;
 
 namespace DentistStudioApp.Model
 {
+    [Table(nameof(TeethScreen))]
     public class TeethScreen : AbstractModel
     {
         #region backing fields
@@ -14,8 +15,13 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Properties
+        [PK]
         public long TeethScreenID { get => _teethScreenId; set => UpdateProperty(ref value, ref _teethScreenId); }
+        
+        [Field]
         public DateTime? DOS { get => _dos; set => UpdateProperty(ref value, ref _dos); }
+
+        [FK]
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         #endregion
 
