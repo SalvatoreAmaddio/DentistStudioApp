@@ -51,13 +51,13 @@ namespace DentistStudioApp.Controller
             }
             Helper.OpenWindowDialog("Invoices", new InvoiceList(new(CurrentRecord.PatientID)));
         }
-        private void PickPicture(FilePickerCatch? obj)
+        private void PickPicture(FilePickerCatch? filePicked)
         {
-            if (CurrentRecord == null || obj == null) return;
+            if (CurrentRecord == null || filePicked == null) return;
             if (CurrentRecord.IsDirty) 
                 if (!PerformUpdate()) return;
 
-            if (obj.FileRemoved)
+            if (filePicked.FileRemoved)
             {
                 string temp = CurrentRecord.PicturePath;
                 CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
@@ -65,19 +65,21 @@ namespace DentistStudioApp.Controller
                 return;
             }
 
-            if (string.IsNullOrEmpty(obj.FilePath)) return;
+            if (string.IsNullOrEmpty(filePicked.FilePath)) return;
 
-            FileTransfer fileTransfer = new();
+            FileTransfer fileTransfer = new()
+            {
+                SourceFilePath = filePicked.FilePath,
+                DestinationFolder = Path.Combine(Sys.AppPath(), "PatientImages"),
+                NewFileName = $"{CurrentRecord.PatientID}_{CurrentRecord.FirstName}_{CurrentRecord.LastName}_PROFILE_PICTURE.{filePicked.Extension}"
+            };
 
-            fileTransfer.SourceFilePath = obj.FilePath;
-            fileTransfer.DestinationFolder = Path.Combine(Sys.AppPath(), "PatientImages");
-            fileTransfer.NewFileName = $"{CurrentRecord.PatientID}_{CurrentRecord.FirstName}_{CurrentRecord.LastName}_PROFILE_PICTURE.{obj.Extension}";
             fileTransfer.Copy();
 
             CurrentRecord.PicturePath = fileTransfer.DestinationFilePath;
         }
 
-        private async Task AddInvoice() 
+        private async Task AddInvoice()
         {
             if (CurrentRecord == null) 
             {
