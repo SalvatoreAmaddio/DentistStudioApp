@@ -7,6 +7,7 @@ using FrontEnd.Source;
 using System.IO;
 using System.Windows.Input;
 using Backend.ExtensionMethods;
+using FrontEnd.Utils;
 
 namespace DentistStudioApp.Controller
 {
@@ -36,19 +37,27 @@ namespace DentistStudioApp.Controller
 
         private void PickPicture(FilePickerCatch? filePicked)
         {
-            if (CurrentRecord == null || filePicked == null) return;
-            if (CurrentRecord.IsDirty)
+            if (filePicked == null) return;
+            
+            if (CurrentRecord == null) 
+            {
+                GoNew();
+            }
+
+            if (CurrentRecord!.IsDirty)
                 if (!PerformUpdate()) return;
 
             if (filePicked.FileRemoved)
             {
                 string temp = CurrentRecord.ScreenPath;
-                CurrentRecord.ScreenPath = "pack://application:,,,/Images/placeholder.jpg";
+                CurrentRecord.ScreenPath = Helper.LoadFromStrings("uploadImagePath");
                 Sys.AttemptFileDelete(temp);
                 return;
             }
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
+
+            Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientScreening"));
 
             FileTransfer fileTransfer = new()
             {
@@ -59,7 +68,8 @@ namespace DentistStudioApp.Controller
 
             fileTransfer.Copy();
 
-            CurrentRecord.ScreenPath = fileTransfer.DestinationFilePath;
+            CurrentRecord!.ScreenPath = fileTransfer.DestinationFilePath;
+            PerformUpdate();
         }
 
         public override async void OnSubFormFilter()

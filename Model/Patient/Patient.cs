@@ -16,7 +16,7 @@ namespace DentistStudioApp.Model
         private DateTime? _dob;
         private string _phoneNumber = string.Empty;
         private string _email = string.Empty;
-        private string _picturePath = "pack://application:,,,/Images/placeholder.jpg";
+        private string _picturePath = string.Empty;
         private JobTitle? _jobTitle;
         private Gender? _gender;
         #endregion
@@ -70,7 +70,7 @@ namespace DentistStudioApp.Model
             _jobTitle = new(reader.GetInt64(5));
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
-            _picturePath = reader.TryFetchString(8, _picturePath, _picturePath);
+            _picturePath = reader.GetString(8);
         }
         #endregion
 

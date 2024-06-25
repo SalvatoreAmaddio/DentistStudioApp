@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=controller:TeethScreenController, IsDesignTimeCreatable=False}"
         WindowStartupLocation="CenterScreen"
         x:Name="Window"
-        Title="Screen" Height="450" Width="800">
+        Title="Screening" Height="450" Width="800">
 
     <fr:Form Padding="10" Background="{StaticResource DefaultGrey}">
         <Grid HorizontalAlignment="Stretch">
