@@ -57,7 +57,7 @@
                             <fr:SaveButton/>
                             <fr:DeleteButton/>
                             <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
-                            <Button Content="Teeth Screen"/>
+                            <Button Content="Teeth Screen" Command="{Binding OpenTeethScreeningCMD}"/>
                             <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
                             <Button Content="Invoices" Command="{Binding OpenInvoicesCMD}"/>
                         </StackPanel>
@@ -82,8 +82,14 @@
                                 <DataTemplate>
                                     <fr:FormRow>
                                         <Grid fr:Definition.ColumnDefinitions="105,105,105,50,50" fr:Definition.RowDefinitions="30">
-                                            <fr:TextBoxDate Date="{Binding StartDate}"/>
-                                            <fr:TextBoxDate Grid.Column="1" Date="{Binding EndDate}"/>
+                                        <Grid.Resources>
+                                            <Style TargetType="Label">
+                                                <Setter Property="ContentStringFormat" Value=" {0:dd/MM/yyyy}"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                            <Label Content="{Binding StartDate}"/>
+                                            <Label Grid.Column="1" Content="{Binding EndDate}"/>
                                             <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                             <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
                                             <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>

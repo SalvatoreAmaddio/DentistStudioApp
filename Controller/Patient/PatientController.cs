@@ -31,15 +31,28 @@ namespace DentistStudioApp.Controller
         public ICommand AddInvoiceCMD { get; }
         public ICommand OpenInvoicesCMD { get; }
         public ICommand FilePickedCMD { get; }
-
+        public ICommand OpenTeethScreeningCMD { get; }
         #endregion
         public PatientController() : base()
         {
-            AddSurveyCMD = new CMDAsync(OpenSurvey);    
+            AddSurveyCMD = new CMDAsync(OpenSurvey);
             AddInvoiceCMD = new CMDAsync(AddInvoice);
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
             OpenInvoicesCMD = new CMD(OpenInvoices);
+            OpenTeethScreeningCMD = new CMD(OpenTeethScreening);
             AddSubControllers(Treatments);
+        }
+
+        private void OpenTeethScreening() 
+        {
+            if (CurrentRecord == null) return;
+            if (CurrentRecord.IsNewRecord())
+            { 
+                if (!PerformUpdate()) return;
+            }
+
+            TeethScreenList teethScreening = new(CurrentRecord);
+            teethScreening.ShowDialog();
         }
 
         private void OpenInvoices()
