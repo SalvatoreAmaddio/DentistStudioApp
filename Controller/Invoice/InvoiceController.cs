@@ -81,12 +81,13 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "InvoiceID")
                                               .InnerJoin(nameof(InvoicedTreatment), nameof(Treatment), "TreatmentID")
-                                              .Where().EqualsTo("PatientID", "@patientID");
+                                              .Where().EqualsTo("PatientID", "@patientID")
+                                              .OrderBy().Field("DOI DESC").Field("InvoiceID DESC");
 
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
-            GoFirst();
+            GoAt(CurrentRecord);
         }
 
         private void OnAfterUpdate(object? sender, AfterUpdateArgs e)
@@ -112,10 +113,21 @@ namespace DentistStudioApp.Controller
             if (result == 0 || result is null)
             {
                 Failure.Allert("There are no more treatments to invoice.");
+                e.Cancel = true;
             }
         }
-        
-        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e) 
+
+        public override bool PerformUpdate()
+        {
+            if (TreatmentsInvoiced.Source.Count == 0)
+            {
+                MessageBox.Show("Cannot save an invoice without adding at least one treatment","Action Denied");
+                return false;
+            }
+            return base.PerformUpdate();
+        }
+
+        private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
             if (CurrentRecord == null || CurrentRecord.IsNewRecord()) return;
             Patient = _fetchPatient.Convert(CurrentRecord);
