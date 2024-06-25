@@ -79,12 +79,12 @@ namespace DentistStudioApp.Controller
         #region Event Subscriptions
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
-            string? sql = SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "InvoiceID")
+            SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "InvoiceID")
                                               .InnerJoin(nameof(InvoicedTreatment), nameof(Treatment), "TreatmentID")
-                                              .Where().EqualsTo("PatientID", "@patientID").Statement();
-            
+                                              .Where().EqualsTo("PatientID", "@patientID");
+
             SearchQry.AddParameter("patientID", Patient?.PatientID);
-            RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(sql, SearchQry.Params()));
+            RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
