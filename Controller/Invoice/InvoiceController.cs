@@ -50,6 +50,7 @@ namespace DentistStudioApp.Controller
             TreatmentsInvoiced.NotifyParentController += OnNotifyParentEvent;
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
             WindowClosing += OnWindowClosing;
+            BeforeRecordNavigation += OnBeforeRecordNavigation;
         }
 
         public InvoiceController(Patient patient) : this()
@@ -89,6 +90,16 @@ namespace DentistStudioApp.Controller
         }
 
         #region Event Subscriptions
+        private void OnBeforeRecordNavigation(object? sender, AllowRecordMovementArgs e)
+        {
+            if (CurrentRecord!=null && CurrentRecord.IsNewRecord()) return;
+            if (TreatmentsInvoiced.Source.Count == 0)
+            {
+                Failure.Allert("You must invoice at least one treatment.");
+                e.Cancel = true;
+            }
+        }
+
         private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             if (TreatmentsInvoiced.Source.Count == 0)
