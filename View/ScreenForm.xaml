@@ -43,7 +43,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <fr:PhotoFrame/>
+                            <fr:PhotoFrame Source="{Binding CurrentRecord.ScreenPath}" FilePickedCommand="{Binding FilePickedCMD}"/>
                             </Grid>
                         </fr:Form>
                     </fr:SubForm>

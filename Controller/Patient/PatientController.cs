@@ -32,6 +32,8 @@ namespace DentistStudioApp.Controller
         public ICommand OpenInvoicesCMD { get; }
         public ICommand FilePickedCMD { get; }
         public ICommand OpenTeethScreeningCMD { get; }
+        public ICommand OpenGenderWindowCMD { get; }
+        public ICommand OpenJobTitleWindowCMD { get; }
         #endregion
         public PatientController() : base()
         {
@@ -40,16 +42,18 @@ namespace DentistStudioApp.Controller
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
             OpenInvoicesCMD = new CMD(OpenInvoices);
             OpenTeethScreeningCMD = new CMD(OpenTeethScreening);
+            OpenGenderWindowCMD = new CMD(OpenGenderWindow);
+            OpenJobTitleWindowCMD = new CMD(OpenJobTitleWindow);
             AddSubControllers(Treatments);
         }
 
-        private void OpenTeethScreening() 
+        private void OpenGenderWindow() => Helper.OpenWindowDialog("Genders", new GenderList());
+        private void OpenJobTitleWindow() => Helper.OpenWindowDialog("Job Titles", new JobTitleList());
+        private void OpenTeethScreening()
         {
             if (CurrentRecord == null) return;
             if (CurrentRecord.IsNewRecord())
-            { 
                 if (!PerformUpdate()) return;
-            }
 
             TeethScreenList teethScreening = new(CurrentRecord);
             teethScreening.ShowDialog();
@@ -79,6 +83,8 @@ namespace DentistStudioApp.Controller
             }
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
+
+            Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientImages"));
 
             FileTransfer fileTransfer = new()
             {

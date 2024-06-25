@@ -15,8 +15,8 @@
         <fr:Form>
             <fr:Form.Menu>
                 <Menu>
-                    <MenuItem Header="Gender" Click="OpenGenderWindow"/>
-                    <MenuItem Header="Job Title" Click="OpenJobTitleWindow"/>
+                    <MenuItem Header="Gender" Command="{Binding OpenGenderWindowCMD}"/>
+                    <MenuItem Header="Job Title" Command="{Binding OpenJobTitleWindowCMD}"/>
                 </Menu>
             </fr:Form.Menu>
             
