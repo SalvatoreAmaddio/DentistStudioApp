@@ -7,6 +7,7 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
+using Backend.Events;
 
 namespace DentistStudioApp.Controller
 {
@@ -56,11 +57,11 @@ namespace DentistStudioApp.Controller
 
     public class AppointmentListController : AbstractAppointmentListController
     {
-        public AppointmentListController() => RecordMovingEvent += OnRecordMoving;
+        public AppointmentListController() => AfterRecordNavigation += OnRecordMoving;
 
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)
         {
-            if (e.NewRecord) 
+            if (e.NewRecord)
             {
                 Treatment? treatment = (Treatment?)ParentRecord;
                 if (CurrentRecord != null)

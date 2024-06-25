@@ -1,4 +1,5 @@
 ﻿using Backend.Database;
+using Backend.Events;
 using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Converters;
@@ -45,9 +46,10 @@ namespace DentistStudioApp.Controller
             AfterUpdate += OnAfterUpdate;
             AddSubControllers(TreatmentsToInvoice);
             AddSubControllers(TreatmentsInvoiced);
-            TreatmentsToInvoice.NotifyParentControllerEvent += OnNotifyParentEvent;
-            TreatmentsInvoiced.NotifyParentControllerEvent += OnNotifyParentEvent;
+            TreatmentsToInvoice.NotifyParentController += OnNotifyParentEvent;
+            TreatmentsInvoiced.NotifyParentController += OnNotifyParentEvent;
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
+            WindowClosing += OnWindowClosing;
         }
 
         public InvoiceController(Patient patient) : this()
@@ -55,7 +57,7 @@ namespace DentistStudioApp.Controller
             GoNew();
             Patient = patient;
             CurrentRecord?.Dirt();
-            RecordMovingEvent += OnNewRecord;
+            AfterRecordNavigation += OnNewRecord;
             WindowLoaded += OnWindowLoaded;
         }
 
@@ -64,11 +66,11 @@ namespace DentistStudioApp.Controller
             GoAt(invoice);
             Patient = _fetchPatient.Convert(invoice);
             AllowNewRecord = false;
-            RecordMovingEvent += OnRecordMoving;
+            AfterRecordNavigation += OnRecordMoving;
             if (patientID != null) 
             {
-                RecordMovingEvent -= OnRecordMoving;
-                RecordMovingEvent += OnNewRecord;
+                AfterRecordNavigation -= OnRecordMoving;
+                AfterRecordNavigation += OnNewRecord;
                 WindowLoaded += OnWindowLoaded;
                 AllowNewRecord = true;
             }
@@ -76,7 +78,37 @@ namespace DentistStudioApp.Controller
 
         #endregion
 
+        public override bool PerformUpdate()
+        {
+            if (TreatmentsInvoiced.Source.Count == 0)
+            {
+                MessageBox.Show("Cannot save an invoice without adding at least one treatment", "Action Denied");
+                return false;
+            }
+            return base.PerformUpdate();
+        }
+
         #region Event Subscriptions
+        private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (TreatmentsInvoiced.Source.Count == 0)
+            {
+                DialogResult result = UnsavedDialog.Ask("You must invoice at least one treatment. Alternatively, would like to delete this invoice?");
+                if (result == DialogResult.Yes)
+                {
+                    if (CurrentRecord!=null && CurrentRecord.IsNewRecord()) 
+                    {
+                        CurrentRecord.IsDirty = false;
+                        return;
+                    }
+
+                    Delete(CurrentRecord);
+                    return;
+                }
+                e.Cancel = true;
+            }
+        }
+
         private async void OnWindowLoaded(object? sender, RoutedEventArgs e)
         {
             SearchQry.GetClause<FromClause>()?.InnerJoin(nameof(InvoicedTreatment), "InvoiceID")
@@ -108,6 +140,7 @@ namespace DentistStudioApp.Controller
         private async void OnNewRecord(object? sender, AllowRecordMovementArgs e)
         {
             if (!e.NewRecord) return;
+
             if (Patient == null) throw new NullReferenceException();
             long? result = await Patient.TreatmentCount();
             if (result == 0 || result is null)
@@ -115,16 +148,6 @@ namespace DentistStudioApp.Controller
                 Failure.Allert("There are no more treatments to invoice.");
                 e.Cancel = true;
             }
-        }
-
-        public override bool PerformUpdate()
-        {
-            if (TreatmentsInvoiced.Source.Count == 0)
-            {
-                MessageBox.Show("Cannot save an invoice without adding at least one treatment","Action Denied");
-                return false;
-            }
-            return base.PerformUpdate();
         }
 
         private void OnRecordMoving(object? sender, AllowRecordMovementArgs e)

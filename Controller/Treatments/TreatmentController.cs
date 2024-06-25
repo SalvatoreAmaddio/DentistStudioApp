@@ -118,8 +118,8 @@ namespace DentistStudioApp.Controller
             TreatmentListController? treatmentListController = Helper.GetActiveWindow()?.GetController<PatientController>()?.GetSubController<TreatmentListController>(0);
             if (treatmentListController != null)
                 await treatmentListController.RequeryAsync();
-            UnsubscribeWindowClosedEvent();
         }
+
         private void OnAppointmentsAfterSubFormFilter(object? sender, EventArgs e)
         {
             Appointments.ServiceOptions.FirstOrDefault(s => s.Record.Equals(Appointment?.Service))?.Select();
