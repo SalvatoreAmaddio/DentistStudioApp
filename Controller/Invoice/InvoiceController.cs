@@ -10,6 +10,7 @@ using FrontEnd.Dialogs;
 using FrontEnd.Events;
 using FrontEnd.Source;
 using FrontEnd.Utils;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -76,8 +77,15 @@ namespace DentistStudioApp.Controller
                 AllowNewRecord = true;
             }
         }
-
         #endregion
+
+        protected override bool Update(Invoice? model)
+        {
+            BeforeRecordNavigation -= OnBeforeRecordNavigation;
+            bool result = base.Update(model);
+            BeforeRecordNavigation += OnBeforeRecordNavigation;
+            return result;
+        }
 
         public override bool PerformUpdate()
         {
@@ -100,7 +108,7 @@ namespace DentistStudioApp.Controller
             }
         }
 
-        private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+        private void OnWindowClosing(object? sender, CancelEventArgs e)
         {
             if (TreatmentsInvoiced.Source.Count == 0)
             {
@@ -113,6 +121,7 @@ namespace DentistStudioApp.Controller
                         return;
                     }
 
+                    BeforeRecordNavigation -= OnBeforeRecordNavigation;
                     Delete(CurrentRecord);
                     return;
                 }
