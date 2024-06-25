@@ -1,0 +1,45 @@
+﻿<Window x:Class="DentistStudioApp.View.ScreenForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        mc:Ignorable="d"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        d:DataContext="{d:DesignInstance Type=controller:TeethScreenController, IsDesignTimeCreatable=False}"
+        WindowStartupLocation="CenterScreen"
+        x:Name="Window"
+        Title="Screen" Height="450" Width="800">
+
+    <fr:Form HorizontalAlignment="Stretch" Padding="10" Background="{StaticResource DefaultGrey}">
+            <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding CurrentRecord.Patient}"/>
+                <Label Content="Screening taken on"/>
+                <fr:TextBoxDate Date="{Binding CurrentRecord.DOS}"/>
+                <Separator Width="10" Background="Transparent"/>
+                <fr:SaveButton/>
+                <Separator Width="10" Background="Transparent"/>
+                <fr:DeleteButton/>
+            </StackPanel>
+            
+            <Border Grid.Row="2" Padding="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <fr:SubForm ParentRecord="{Binding CurrentRecord}">
+                        <fr:Form DataContext="{Binding ScreeningController}">
+
+                        </fr:Form>
+                    </fr:SubForm>
+                </Border>
+        </Grid>
+    </fr:Form>
+</Window>

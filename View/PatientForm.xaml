@@ -83,13 +83,13 @@
                                     <fr:FormRow>
                                         <Grid fr:Definition.ColumnDefinitions="105,105,105,50,50" fr:Definition.RowDefinitions="30">
                                         <Grid.Resources>
-                                            <Style TargetType="Label">
+                                            <Style TargetType="Label" x:Key="DateStyle">
                                                 <Setter Property="ContentStringFormat" Value=" {0:dd/MM/yyyy}"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                             </Style>
                                         </Grid.Resources>
-                                            <Label Content="{Binding StartDate}"/>
-                                            <Label Grid.Column="1" Content="{Binding EndDate}"/>
+                                            <Label Content="{Binding StartDate}" Style="{StaticResource DateStyle}"/>
+                                            <Label Grid.Column="1" Content="{Binding EndDate}" Style="{StaticResource DateStyle}"/>
                                             <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
                                             <fr:OpenButton IsWithinList="True" Grid.Column="3"/>
                                             <fr:DeleteButton IsWithinList="True" Grid.Column="4"/>

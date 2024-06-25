@@ -9,14 +9,24 @@
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         d:DataContext="{d:DesignInstance Type=controller:TeethScreenListController, IsDesignTimeCreatable=False}"
         WindowStartupLocation="CenterScreen"
-        Title="Teeth Screen" Height="450" Width="800">
+        Title="Teeth Screen" Height="450" Width="345">
 
     <fr:FormList>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="90,50,50">
+                    <fr:HeaderFilter IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date" Grid.Column="1"/>
+                    <Label Grid.Column="2" Grid.ColumnSpan="2" Content="COMMANDS"/>
+                </Grid>
+            </fr:Lista.Header>
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Label/>
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="90,50,50">
+                            <Label Content="{Binding DOS}" ContentStringFormat=" {0:dd/MM/yyyy}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                            <fr:OpenButton IsWithinList="True" Grid.Column="1"/>
+                            <fr:DeleteButton IsWithinList="True" Grid.Column="2"/>
+                        </Grid>
                     </fr:FormRow>
                 </DataTemplate>
             </fr:Lista.ItemTemplate>            

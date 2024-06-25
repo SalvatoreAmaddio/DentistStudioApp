@@ -10,7 +10,7 @@ namespace DentistStudioApp.Model
     {
         #region backing fields
         private long _teethScreenId;
-        private DateTime? _dos;
+        private DateTime? _dos = DateTime.Today;
         private Patient? _patient;
         #endregion
 

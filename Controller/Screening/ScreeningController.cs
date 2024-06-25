@@ -45,5 +45,9 @@ namespace DentistStudioApp.Controller
             CurrentRecord.ScreenPath = fileTransfer.DestinationFilePath;
         }
 
+        public override void OnSubFormFilter()
+        {
+
+        }
     }
 }

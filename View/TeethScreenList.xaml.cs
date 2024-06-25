@@ -7,14 +7,8 @@ namespace DentistStudioApp.View
 {
     public partial class TeethScreenList : Window
     {
-        public TeethScreenList()
-        {
-            InitializeComponent();
-        }
+        public TeethScreenList() => InitializeComponent();
 
-        public TeethScreenList(Patient patient) : this()
-        {
-            this.SetController(new TeethScreenListController(patient));
-        }
+        public TeethScreenList(Patient patient) : this() => this.SetController(new TeethScreenListController(patient));
     }
 }

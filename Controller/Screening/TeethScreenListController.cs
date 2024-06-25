@@ -1,35 +1,62 @@
-﻿using DentistStudioApp.Model;
+﻿using Backend.Model;
+using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
+using FrontEnd.FilterSource;
+using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Controller
 {
     public class TeethScreenListController : AbstractFormListController<TeethScreen>
     {
-        private Patient? _patient;
+        private readonly Patient? _patient;
         public override int DatabaseIndex => 15;
+
+        public SourceOption DatesOptions { get; private set; }
         public TeethScreenListController(Patient patient) 
         {
             _patient = patient;
+            DatesOptions = new PrimitiveSourceOption(this, "DOS");
             WindowLoaded += OnWindowLoaded;
         }
 
-        private void OnWindowLoaded(object? sender, System.Windows.RoutedEventArgs e)
+        private async void OnWindowLoaded(object? sender, System.Windows.RoutedEventArgs e)
         {
-
+            IEnumerable<TeethScreen> results = await SearchRecordAsync();
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
 
-        public override void OnOptionFilterClicked(FilterEventArgs e)
+        public override async void OnOptionFilterClicked(FilterEventArgs e)
         {
+            ReloadSearchQry();
+            DatesOptions.Conditions<WhereClause>(SearchQry);
+            IEnumerable<TeethScreen> results = await SearchRecordAsync();
+            AsRecordSource().ReplaceRange(results);
+            GoFirst();
         }
 
-        public override Task<IEnumerable<TeethScreen>> SearchRecordAsync()
+        public override async Task<IEnumerable<TeethScreen>> SearchRecordAsync()
         {
-            throw new NotImplementedException();
+            SearchQry.AddParameter("patientID", $"{_patient?.PatientID}");
+            return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
         protected override void Open(TeethScreen model)
         {
+            model.Patient = _patient;
+            if (!model.IsNewRecord())
+                model.Clean();
+            ScreenForm screenForm = new(model);
+            screenForm.ShowDialog();
         }
+
+        public override AbstractClause InstantiateSearchQry() =>
+           new TeethScreen()
+               .Select().All()
+               .From()
+               .Where().EqualsTo("PatientID", "@patientID")
+               .OrderBy().Field("DOS DESC");
     }
 }
