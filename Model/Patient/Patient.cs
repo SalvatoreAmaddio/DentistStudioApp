@@ -1,6 +1,7 @@
 ﻿using Backend.Database;
 using Backend.ExtensionMethods;
 using Backend.Model;
+using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -58,7 +59,12 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructor
-        public Patient() => AfterUpdate += OnAfterUpdate;
+        public Patient() 
+        {
+            AfterUpdate += OnAfterUpdate;
+            BeforeRecordDelete += OnBeforeRecordDelete;
+        }
+
         public Patient(long id) : this() => _patientID = id;
         public Patient(DbDataReader reader) : this()
         {
@@ -74,6 +80,8 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
+        #region Subscription Events
+        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(PicturePath);
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
             if (e.Is(nameof(FirstName)))
@@ -81,6 +89,8 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(LastName)))
                 _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
+        #endregion
+
         public async Task<long?> TreatmentCount()
         {
             IAbstractDatabase? treatmentDB = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();

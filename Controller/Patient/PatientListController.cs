@@ -25,8 +25,6 @@ namespace DentistStudioApp.Controller
             TitleOptions = new(Titles, "Title");
             GenderOptions = new(Genders, "Identity");
             AfterUpdate += OnAfterUpdate;
-            BeforeRecordDelete += OnBeforeRecordDelete;
-            AfterRecordDelete += OnAfterRecordDelete;
         }
 
         #region Event Subscriptions
@@ -35,9 +33,6 @@ namespace DentistStudioApp.Controller
             if (!e.Is(nameof(Search))) return;
             await OnSearchPropertyRequeryAsync(sender);
         }
-
-        private void OnAfterRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(_imgToDelete);
-        private void OnBeforeRecordDelete(object? sender, EventArgs e) => _imgToDelete = CurrentRecord?.PicturePath;
         #endregion
 
         public override void OnOptionFilterClicked(FilterEventArgs e)

@@ -1,5 +1,5 @@
-﻿using Backend.ExtensionMethods;
-using Backend.Model;
+﻿using Backend.Model;
+using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
 
@@ -24,8 +24,12 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructors
-        public Screening() { }
-        public Screening(DbDataReader reader) 
+        public Screening() 
+        {
+            BeforeRecordDelete += OnBeforeRecordDelete;
+        }
+
+        public Screening(DbDataReader reader) : this()
         {
             _screeningId = reader.GetInt64(0);
             _teethScreen = new TeethScreen(reader.GetInt64(1));
@@ -33,9 +37,10 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
+        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(ScreenPath);
+
         public override ISQLModel Read(DbDataReader reader) => new Screening(reader);
 
         public override string ToString() => $"{TeethScreen} - {ScreenPath}";
-
     }
 }

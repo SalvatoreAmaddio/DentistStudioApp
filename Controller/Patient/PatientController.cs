@@ -17,7 +17,6 @@ namespace DentistStudioApp.Controller
     public class PatientController : AbstractFormController<Patient>
     {
         private readonly IAbstractDatabase? _surveyDB = DatabaseManager.Find<Survey>();
-        private string? _imgToDelete = string.Empty;
 
         #region Properties
         public TreatmentListController Treatments { get; } = new();
@@ -38,8 +37,6 @@ namespace DentistStudioApp.Controller
         #endregion
         public PatientController() : base()
         {
-            BeforeRecordDelete += OnBeforeRecordDelete;
-            AfterRecordDelete += OnAfterRecordDelete;
             AddSurveyCMD = new CMDAsync(OpenSurvey);
             AddInvoiceCMD = new CMDAsync(AddInvoice);
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
@@ -194,9 +191,5 @@ namespace DentistStudioApp.Controller
             surveyWindow.ShowDialog();
         }
 
-        #region Event Subscriptions
-        private void OnAfterRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(_imgToDelete);
-        private void OnBeforeRecordDelete(object? sender, EventArgs e) => _imgToDelete = CurrentRecord?.PicturePath;
-        #endregion
     }
 }

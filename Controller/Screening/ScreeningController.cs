@@ -13,7 +13,6 @@ namespace DentistStudioApp.Controller
 {
     public class ScreeningController : AbstractFormController<Screening>
     {
-        private string? _imgToDelete = string.Empty;
         public override int DatabaseIndex => 16;
         public ICommand FilePickedCMD { get; }
 
@@ -21,8 +20,6 @@ namespace DentistStudioApp.Controller
         {
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
             AfterRecordNavigation += OnAfterRecordNavigation;
-            BeforeRecordDelete += OnBeforeRecordDelete;
-            AfterRecordDelete += OnAfterRecordDelete;
         }
 
         #region Event Subscriptions
@@ -38,8 +35,6 @@ namespace DentistStudioApp.Controller
                 }
             }
         }
-        private void OnAfterRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(_imgToDelete);
-        private void OnBeforeRecordDelete(object? sender, EventArgs e) => _imgToDelete = CurrentRecord?.ScreenPath;
         #endregion
 
         private void PickPicture(FilePickerCatch? filePicked)
@@ -94,7 +89,7 @@ namespace DentistStudioApp.Controller
                 .All()
             .From()
             .Where().EqualsTo("TeethScreenID", "@teethScreenID")
-            .OrderBy().Field("ScreeningID DESC");
-    
+            .OrderBy().Field("ScreeningID DESC");    
+
     }
 }
