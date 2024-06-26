@@ -7,13 +7,11 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
-using Backend.Utils;
 
 namespace DentistStudioApp.Controller
 {
     public class PatientListController : AbstractFormListController<Patient>
     {
-        private string? _imgToDelete = string.Empty;
         public SourceOption TitleOptions { get; private set; }
         public SourceOption GenderOptions { get; private set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
