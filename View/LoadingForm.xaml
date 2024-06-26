@@ -11,6 +11,6 @@
             Title="Welcome" Height="450" Width="450">
 
     <fr:LoadingMask MainWindow="MainWindow">
-        <Image Stretch="Fill"/>
+        <Image Stretch="Fill" Source="{StaticResource appLogo}"/>
     </fr:LoadingMask>
 </Window>

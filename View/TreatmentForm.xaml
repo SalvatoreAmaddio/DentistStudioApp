@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        Icon="{StaticResource treatmentIcon}"
         Title="Treatment Form" Height="460" Width="810">
 
     <Window.Resources>
