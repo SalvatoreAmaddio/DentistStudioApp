@@ -33,6 +33,10 @@
                     <MenuItem Header="Clinics"/>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Survey">
+                <MenuItem Header="Questions"/>
+                <MenuItem Header="Categories"/>
+            </MenuItem>
         </Menu>
         <fr:Curtain x:Name="Curtain"/>
         <TabControl x:Name="MainTab" Grid.Row="1">
