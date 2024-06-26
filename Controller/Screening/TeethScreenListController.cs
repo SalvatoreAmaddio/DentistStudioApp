@@ -48,7 +48,7 @@ namespace DentistStudioApp.Controller
             model.Patient = _patient;
             if (!model.IsNewRecord())
                 model.Clean();
-            ScreenForm screenForm = new(model);
+            TeethScreenDataForm screenForm = new(model);
             screenForm.ShowDialog();
         }
 

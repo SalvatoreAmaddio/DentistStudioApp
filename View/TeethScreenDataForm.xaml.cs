@@ -5,14 +5,14 @@ using System.Windows;
 
 namespace DentistStudioApp.View
 {
-    public partial class ScreenForm : Window
+    public partial class TeethScreenDataForm : Window
     {
-        public ScreenForm()
+        public TeethScreenDataForm()
         {
             InitializeComponent();
         }
 
-        public ScreenForm(TeethScreen teethScreen) : this()
+        public TeethScreenDataForm(TeethScreen teethScreen) : this()
         {
             this.SetController(new TeethScreenController(teethScreen));
         }

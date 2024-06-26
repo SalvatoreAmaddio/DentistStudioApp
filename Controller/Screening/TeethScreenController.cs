@@ -10,14 +10,14 @@ namespace DentistStudioApp.Controller
     public class TeethScreenController : AbstractFormController<TeethScreen>
     {
         private readonly Patient? _patient;
-        public TeethScreenDataController ScreeningController { get; } = new();
+        public TeethScreenDataController TeethScreenDataController { get; } = new();
         public override int DatabaseIndex => 15;
 
         public TeethScreenController(TeethScreen teethScreen)
         {
             CurrentRecord = teethScreen;
             _patient = CurrentRecord.Patient;
-            AddSubControllers(ScreeningController);
+            AddSubControllers(TeethScreenDataController);
             WindowLoaded += OnWindowLoaded;
             AfterRecordNavigation += OnAfterRecordNavigation;
         }
