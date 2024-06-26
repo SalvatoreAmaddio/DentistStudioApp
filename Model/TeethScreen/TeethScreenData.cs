@@ -5,8 +5,8 @@ using System.Data.Common;
 
 namespace DentistStudioApp.Model
 {
-    [Table(nameof(Screening))]
-    public class Screening : AbstractModel
+    [Table(nameof(TeethScreenData))]
+    public class TeethScreenData : AbstractModel
     {
         #region Backing Fields
         private long _screeningId;
@@ -24,12 +24,12 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructors
-        public Screening() 
+        public TeethScreenData() 
         {
             BeforeRecordDelete += OnBeforeRecordDelete;
         }
 
-        public Screening(DbDataReader reader) : this()
+        public TeethScreenData(DbDataReader reader) : this()
         {
             _screeningId = reader.GetInt64(0);
             _teethScreen = new TeethScreen(reader.GetInt64(1));
@@ -39,7 +39,7 @@ namespace DentistStudioApp.Model
 
         private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(ScreenPath);
 
-        public override ISQLModel Read(DbDataReader reader) => new Screening(reader);
+        public override ISQLModel Read(DbDataReader reader) => new TeethScreenData(reader);
 
         public override string ToString() => $"{TeethScreen} - {ScreenPath}";
     }

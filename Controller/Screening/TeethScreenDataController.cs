@@ -11,12 +11,12 @@ using FrontEnd.Utils;
 
 namespace DentistStudioApp.Controller
 {
-    public class ScreeningController : AbstractFormController<Screening>
+    public class TeethScreenDataController : AbstractFormController<TeethScreenData>
     {
         public override int DatabaseIndex => 16;
         public ICommand FilePickedCMD { get; }
 
-        public ScreeningController() 
+        public TeethScreenDataController() 
         {
             FilePickedCMD = new Command<FilePickerCatch>(PickPicture);
             AfterRecordNavigation += OnAfterRecordNavigation;
@@ -78,13 +78,13 @@ namespace DentistStudioApp.Controller
         {
             ReloadSearchQry();
             SearchQry.AddParameter("teethScreenID", ParentRecord?.GetPrimaryKey()?.GetValue());
-            RecordSource<Screening> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
+            RecordSource<TeethScreenData> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
             AsRecordSource().ReplaceRange(results);
             GoFirst();
         }
 
         public override AbstractClause InstantiateSearchQry() =>
-            new Screening()
+            new TeethScreenData()
             .Select()
                 .All()
             .From()
