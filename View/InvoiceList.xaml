@@ -26,7 +26,7 @@
         </fr:FormList.Header>
         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50">
+                <Grid fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50,50">
                     <Label Grid.Column="1" Content="Patient"/>
                     <Label Grid.Column="2" Content="Invoice Num"/>
                     <fr:HeaderFilter Grid.Column="3" IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date"/>
@@ -35,13 +35,13 @@
                     <Label Grid.Column="6" Content="Amount Due"/>
                     <fr:HeaderFilter Grid.Column="7" Text="Payment Type" IsWithinList="True" ItemsSource="{Binding PaymentTypesOptions}"/>
                     <fr:HeaderFilter Grid.Column="8" Text="Paid" IsWithinList="True" ItemsSource="{Binding PaidOptions}"/>
-                    <Label Grid.Column="9" Grid.ColumnSpan="3" Content="COMMANDS"/>
+                    <Label Grid.Column="9" Grid.ColumnSpan="4" Content="COMMANDS"/>
                 </Grid>
             </fr:Lista.Header>
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50">
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,85,105,80,90,90,105,50,50,50,50,50">
                             <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatientFromInvoicedTreatment}}"/>
                             <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
                             <fr:TextBoxDate Grid.Column="2" Date="{Binding DOI}"/>
@@ -53,6 +53,9 @@
                             <fr:SaveButton Grid.Column="8" IsWithinList="True"/>
                             <fr:DeleteButton Grid.Column="9" IsWithinList="True"/>
                             <fr:OpenButton Grid.Column="10" IsWithinList="True"/>
+                            <Button Grid.Column="11" fr:Extension.IsWithinList="True">
+                                <Image Source="{StaticResource report}"/>
+                            </Button>
                         </Grid>
                     </fr:FormRow>
                 </DataTemplate>

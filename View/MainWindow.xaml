@@ -15,6 +15,24 @@
         </Grid.RowDefinitions>
         <Menu VerticalAlignment="Top">
             <fr:OpenCurtain Click="OpenCurtain_Click"/>
+            <MenuItem Header="Reports">
+                <MenuItem.Icon>
+                    <Image Source="{StaticResource excel}"/>
+                </MenuItem.Icon>
+                <MenuItem Header="Patients">
+                    <MenuItem Header="Patients Only"/>
+                    <MenuItem Header="Patients and Treatments"/>
+                </MenuItem>
+                <MenuItem Header="Invoices">
+                    <MenuItem Header="Invoices Only"/>
+                    <MenuItem Header="Invoices with Treatments"/>
+                </MenuItem>
+                <MenuItem Header="Others">
+                    <MenuItem Header="Services"/>
+                    <MenuItem Header="Dentists"/>
+                    <MenuItem Header="Clinics"/>
+                </MenuItem>
+            </MenuItem>
         </Menu>
         <fr:Curtain x:Name="Curtain"/>
         <TabControl x:Name="MainTab" Grid.Row="1">
@@ -58,15 +76,7 @@
                     </Frame.Content>
                 </Frame>
             </TabItem>
-            
-            <TabItem Header="Payment Types">
-                <Frame>
-                    <Frame.Content>
-                        <local:PaymentTypeList/>
-                    </Frame.Content>
-                </Frame>
-            </TabItem>
-            
+                        
             <TabItem Header="Calendar">
                 <Frame>
                     <Frame.Content>
@@ -75,21 +85,6 @@
                 </Frame>
             </TabItem>
 
-            <TabItem Header="Genders">
-                <Frame>
-                    <Frame.Content>
-                        <local:GenderList/>
-                    </Frame.Content>
-                </Frame>
-            </TabItem>
-
-            <TabItem Header="Job Titles">
-                <Frame>
-                    <Frame.Content>
-                        <local:JobTitleList/>
-                    </Frame.Content>
-                </Frame>
-            </TabItem>
         </TabControl>
     </Grid>
 </Window>

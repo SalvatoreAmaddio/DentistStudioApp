@@ -9,7 +9,8 @@
         d:DataContext="{d:DesignInstance Type=controller:InvoiceController, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="Invoice Form" Height="500" Width="500">
+        MinWidth="1100"
+        Title="Invoice Form">
 
 
         <fr:Form>
@@ -18,92 +19,117 @@
                     <MenuItem Header="Payment Methods" Command="{Binding OpenPaymentWindowCMD}"/>
                 </Menu>
             </fr:Form.Menu>
-            <Border Padding="10,13,0,0">
-                <Grid fr:Definition.RowDefinitions="30,30,30,30,30,30,30,30,30,10,290" fr:Definition.ColumnDefinitions="100,150,30,120,60,30,460">
-                <Label Grid.Row="0" Content="Patient"/>
-                <Label Grid.Row="1" Content="Invoice ID"/>
-                <Label Grid.Row="2" Content="Date"/>
-                <Label Grid.Row="3" Content="Amount"/>
-                <Label Grid.Row="4" Content="Discount"/>
-                <Label Grid.Row="5" Content="Deposit"/>
-                <Label Grid.Row="6" Content="Total Due"/>
-                <Label Grid.Row="7" Content="Payment"/>
-                <Label Grid.Row="8" Content="Paid"/>
+        <Border Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".4*"/>
+                    <ColumnDefinition Width=".2*"/>
+                    <ColumnDefinition Width=".9*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="1" Content="{Binding Patient}"/>
-                <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
-                <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOI}"/>
-                <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}}"/>
-                <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
-                <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}}"/>
-                <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}}"/>
+                <GroupBox HorizontalAlignment="Left" Padding="15,0,15,0" Grid.RowSpan="2" VerticalAlignment="Top">
+                        <GroupBox.Header>
+                            <TextBlock Text="Invoice's Data" FontWeight="Bold"/>
+                        </GroupBox.Header>
+                        <Grid fr:Definition.ColumnDefinitions="100,110" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,30,30">
+                            <Label Grid.Row="0" Content="Patient"/>
+                            <Label Grid.Row="1" Content="Invoice ID"/>
+                            <Label Grid.Row="2" Content="Date"/>
+                            <Label Grid.Row="3" Content="Amount"/>
+                            <Label Grid.Row="4" Content="Discount"/>
+                            <Label Grid.Row="5" Content="Deposit"/>
+                            <Label Grid.Row="6" Content="Total Due"/>
+                            <Label Grid.Row="7" Content="Payment"/>
+                            <Label Grid.Row="8" Content="Paid"/>
 
-                <fr:Combo Grid.Row="7" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
-                <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
+                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding Patient}"/>
+                            <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
+                            <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOI}"/>
+                            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}}"/>
+                            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
+                            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}}"/>
+                            <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}}"/>
 
-                <Border Grid.Column="3" Grid.RowSpan="7" VerticalAlignment="Top" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
-                    <Grid>
-                        <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
-                        <StackPanel Margin="0,5,0,0">
-                            <StackPanel.Resources>
-                                <Style TargetType="Button">
-                                    <Setter Property="Height" Value="25"/>
-                                </Style>
-                                <Style TargetType="fr:SaveButton">
-                                    <Setter Property="Height" Value="30"/>
-                                </Style>
-                                <Style TargetType="fr:DeleteButton">
-                                    <Setter Property="Height" Value="30"/>
-                                </Style>
-                            </StackPanel.Resources>
-                            <fr:SaveButton/>
-                            <fr:DeleteButton/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                            <fr:Combo Grid.Row="7" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
+                            <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
+                        </Grid>
+                    </GroupBox>
 
-                <fr:SubForm x:Name="ToInvoice" Grid.Row="10" Grid.ColumnSpan="5" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                    <fr:FormList DataContext="{Binding TreatmentsToInvoice}">
-                        <fr:FormList.Header>
-                            <Label Content="Treatment(s) to invoice" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
-                        </fr:FormList.Header>
-                        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
-                            <fr:Lista.Header>
-                                <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
-                                    <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
-                                    <fr:HeaderFilter Grid.Column="2" Text="End Date" ItemsSource="{Binding DatesOptions2}"/>
-                                    <fr:HeaderFilter Grid.Column="3" Text="N. of Services" ItemsSource="{Binding ServiceCountOptions}"/>
-                                    <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
-                                </Grid>
-                            </fr:Lista.Header>
-                            <fr:Lista.ItemTemplate>
-                                <DataTemplate>
-                                    <fr:FormRow>
-                                        <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50" fr:Definition.RowDefinitions="30">
-                                            <Grid.Resources>
-                                                <Style TargetType="Label">
-                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                                </Style>
-                                            </Grid.Resources>
-                                            <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
-                                            <Label Grid.Column="1" Content="{Binding EndDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
-                                            <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
-                                            <Button Grid.Column="3" Content="Add" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}" IsEnabled="{Binding ButtonEnabled}"/>
-                                            <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
-                                        </Grid>
-                                    </fr:FormRow>
-                                </DataTemplate>
-                            </fr:Lista.ItemTemplate>
-                        </fr:Lista>
-                    </fr:FormList>
-                </fr:SubForm>
+                <GroupBox HorizontalAlignment="Left" Grid.Column="1" Padding="5" VerticalAlignment="Top" BorderThickness="1" BorderBrush="Black" Width="100">
+                    <GroupBox.Header>
+                        <TextBlock Text="COMMANDS" FontWeight="Bold" FontStyle="Italic"/>
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="fr:ReportButton">
+                                <Setter Property="Height" Value="30"/>
+                            </Style>
+                            <Style TargetType="fr:SaveButton">
+                                <Setter Property="Height" Value="30"/>
+                            </Style>
+                            <Style TargetType="fr:DeleteButton">
+                                <Setter Property="Height" Value="30"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <fr:ReportButton/>
+                        <fr:SaveButton/>
+                        <fr:DeleteButton/>
+                    </StackPanel>
+                </GroupBox>
 
-                <fr:SubForm  x:Name="Invoiced" Grid.Row="10" Grid.Column="6" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
-                    <fr:FormList DataContext="{Binding TreatmentsInvoiced}">
-                        <fr:FormList.Header>
-                            <Label Content="Invoiced Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
-                        </fr:FormList.Header>
-                        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                <GroupBox Grid.Row="0" Grid.Column="2" Padding="5" BorderThickness="1" BorderBrush="Black">
+                    <GroupBox.Header>
+                        <Grid>
+                            <TextBlock Text="Treatment(s) to invoice" FontWeight="Bold"/>
+                        </Grid>
+                    </GroupBox.Header>
+                    <fr:SubForm x:Name="ToInvoice" ParentRecord="{Binding CurrentRecord}">
+                        <fr:FormList DataContext="{Binding TreatmentsToInvoice}">
+                            <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                                <fr:Lista.Header>
+                                    <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
+                                        <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
+                                        <fr:HeaderFilter Grid.Column="2" Text="End Date" ItemsSource="{Binding DatesOptions2}"/>
+                                        <fr:HeaderFilter Grid.Column="3" Text="N. of Services" ItemsSource="{Binding ServiceCountOptions}"/>
+                                        <Label Grid.Column="4" Grid.ColumnSpan="2" Content="COMMANDS"/>
+                                    </Grid>
+                                </fr:Lista.Header>
+                                <fr:Lista.ItemTemplate>
+                                    <DataTemplate>
+                                        <fr:FormRow>
+                                            <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50" fr:Definition.RowDefinitions="30">
+                                                <Grid.Resources>
+                                                    <Style TargetType="Label">
+                                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Label Content="{Binding StartDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
+                                                <Label Grid.Column="1" Content="{Binding EndDate}" ContentStringFormat="{}{0:dd/MM/yyyy}"/>
+                                                <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
+                                                <Button Grid.Column="3" Content="Add" fr:Extension.IsWithinList="True" Command="{Binding InvoiceTreatmentCMD}" IsEnabled="{Binding ButtonEnabled}"/>
+                                                <fr:OpenButton Grid.Column="4" IsWithinList="True"/>
+                                            </Grid>
+                                        </fr:FormRow>
+                                    </DataTemplate>
+                                </fr:Lista.ItemTemplate>
+                            </fr:Lista>
+                        </fr:FormList>
+                    </fr:SubForm>
+                </GroupBox>
+
+                <GroupBox Grid.Row="1" Grid.Column="2" Padding="5" BorderThickness="1" BorderBrush="Black">
+                    <GroupBox.Header>
+                        <Grid>
+                            <TextBlock Text="Invoiced Treatment(s)" FontWeight="Bold"/>
+                        </Grid>
+                    </GroupBox.Header>
+                    <fr:SubForm x:Name="Invoiced" ParentRecord="{Binding CurrentRecord}">
+                        <fr:FormList DataContext="{Binding TreatmentsInvoiced}">
+                            <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
                                 <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
                                     <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
@@ -133,7 +159,7 @@
                         </fr:Lista>
                     </fr:FormList>
                 </fr:SubForm>
-
+                </GroupBox>
             </Grid>
             </Border>
         </fr:Form>
