@@ -37,6 +37,14 @@ namespace DentistStudioApp
             //Screening
             DatabaseManager.Add(new SQLiteDatabase(new TeethScreen()));//15
             DatabaseManager.Add(new SQLiteDatabase(new Screening()));//16
+
+            Exit += OnExit;
+        }
+
+        private void OnExit(object sender, ExitEventArgs e)
+        {
+            DatabaseManager.Dispose();
+            Exit -= OnExit;
         }
     }
 
