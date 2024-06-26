@@ -37,37 +37,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\JobTitleList.xaml.cs">
+    <Compile Update="View\Patient\JobTitleList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\InvoiceList.xaml.cs">
+    <Compile Update="View\Invoice\InvoiceList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\InvoiceForm.xaml.cs">
+    <Compile Update="View\Invoice\InvoiceForm.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\AppointmentListFormWin.xaml.cs">
+    <Compile Update="View\Treatment\AppointmentListFormWin.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\PaymentTypeList.xaml.cs">
+    <Compile Update="View\Invoice\PaymentTypeList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\DentistList.xaml.cs">
+    <Compile Update="View\Dentist\DentistList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\ClinicList.xaml.cs">
+    <Compile Update="View\Dentist\ClinicList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\ServiceList.xaml.cs">
+    <Compile Update="View\Survey\ServiceList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="View\InvoiceList.xaml">
+    <Page Update="View\Invoice\InvoiceList.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\ServiceList.xaml">
+    <Page Update="View\Survey\ServiceList.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
