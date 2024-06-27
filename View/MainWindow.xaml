@@ -21,7 +21,7 @@
                     <Image Source="{StaticResource excel}"/>
                 </MenuItem.Icon>
                 <MenuItem Header="Patients">
-                    <MenuItem Header="Patients Only"/>
+                    <MenuItem Header="Patients Only" Command="{Binding PatientReportCMD}"/>
                     <MenuItem Header="Patients and Treatments"/>
                 </MenuItem>
                 <MenuItem Header="Invoices">

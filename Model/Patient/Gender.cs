@@ -24,7 +24,7 @@ namespace DentistStudioApp.Model
 
         #region Constructors
         public Gender() => AfterUpdate += OnAfterUpdate;
-        public Gender(long genderid) : this() => _genderid = genderid; 
+        public Gender(long genderid) : this() => _genderid = genderid;
         public Gender(DbDataReader reader) : this()
         {
             _genderid = reader.GetInt64(0);

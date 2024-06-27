@@ -1,7 +1,4 @@
-﻿using Backend.Utils;
-using DentistStudioApp.Controller;
-using FrontEnd.ExtensionMethods;
-using FrontEnd.Utils;
+﻿using DentistStudioApp.Controller;
 using System.Windows;
 
 namespace DentistStudioApp.View
@@ -12,8 +9,6 @@ namespace DentistStudioApp.View
         public MainWindow()
         {
             InitializeComponent();
-            Helper.ManageTabClosing(MainTab);
-            Curtain.SoftwareInfo = new SoftwareInfo("Salvatore Amaddio", "www.salvatoreamaddio.co.uk", "Mister J", "2024");
             _controller = new(this);
         }
 

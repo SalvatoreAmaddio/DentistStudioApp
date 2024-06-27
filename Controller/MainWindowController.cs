@@ -1,4 +1,6 @@
-﻿using Backend.Exceptions;
+﻿using Backend.Database;
+using Backend.Exceptions;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using Backend.Office;
 using Backend.Utils;
@@ -7,7 +9,11 @@ using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Dialogs;
 using FrontEnd.ExtensionMethods;
-using System.Windows;
+using FrontEnd.Forms;
+using FrontEnd.Model;
+using FrontEnd.Source;
+using FrontEnd.Utils;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
@@ -15,24 +21,30 @@ namespace DentistStudioApp.Controller
     public class MainWindowController
     {
         private readonly MainWindow _mainWin;
-        private Excel _excel = null!;
+        private Curtain Curtain => _mainWin.Curtain;
+        private TabControl MainTab => _mainWin.MainTab;
 
         #region Commands
         public ICommand OpenCurtainCMD { get; }
         public ICommand OpenSurveyQuestionsCMD { get; }
         public ICommand OpenSurveyQuestionCategoryCMD { get; }
+        public ICommand PatientReportCMD { get; }
         #endregion
 
         public MainWindowController(MainWindow mainWin)
         {
             _mainWin = mainWin;
             _mainWin.DataContext = this;
+
+            Helper.ManageTabClosing(MainTab);
+            Curtain.SoftwareInfo = new SoftwareInfo("Salvatore Amaddio", "www.salvatoreamaddio.co.uk", "Mister J", "2024");
+
             OpenCurtainCMD = new CMD(OpenCurtain);
             OpenSurveyQuestionsCMD = new CMD(OpenSurveyQuestions);
             OpenSurveyQuestionCategoryCMD = new CMD(OpenSurveyQuestionCategory);
+            PatientReportCMD = new CMDAsync(PatientReport);
         }
-        //            _data = mainTab?.CurrentTabController()?.Source.Cast<ISQLModel>()?.ToList();
-
+     
         private void OpenSurveyQuestionCategory()
         {
             SurveyQuestionCategoryWindow questionWindow = new();
@@ -43,15 +55,32 @@ namespace DentistStudioApp.Controller
             SurveyQuestionWindow questionWindow = new();
             questionWindow.ShowDialog();
         }
-        private void OpenCurtain() => _mainWin.Curtain.Open();
+        private void OpenCurtain() => Curtain.Open();
 
-        public async void x(string sheetName, List<ISQLModel>? data)
+        private static async Task<RecordSource<M>> FetchData<M>(string sql) where M : AbstractModel, new()
         {
-            _mainWin.MainTab.CurrentTabController()?.SetLoading(true);
+            IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
+            return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+        }
 
+        private async Task PatientReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+
+            string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
+            Task<RecordSource<Patient>> dataTask = FetchData<Patient>(sql);
+            Task<Excel> excelTask = InstantiateExcel("Patient");
+
+            RecordSource<Patient> data = await dataTask;
+            Excel excel = await excelTask;
+            await PrintReport("Patient", excel, data.Cast<ISQLModel>().ToList());
+        }
+
+        public async Task PrintReport(string sheetName, Excel excel, List<ISQLModel> data)
+        {
             try
             {
-                await Task.Run(() => WriteExcel(data, sheetName));
+                await Task.Run(() => WriteExcel(data, excel, sheetName));
             }
             catch (WorkbookException ex)
             {
@@ -60,42 +89,40 @@ namespace DentistStudioApp.Controller
             }
             finally
             {
-                _mainWin.MainTab.CurrentTabController()?.SetLoading(false);
+                MainTab.CurrentTabController()?.SetLoading(false);
             }
 
             SuccessDialog.Display("Report Successfully Exported!");
         }
 
-        private void IstantiateExcel(string sheetName)
+        private Task<Excel> InstantiateExcel(string sheetName)
         {
-            _excel = new();
+            Excel _excel = new();
             _excel.Create();
             _excel.Worksheet?.SetName(sheetName);
+            SetHeaders(sheetName, ref _excel);
+            return Task.FromResult(_excel);
         }
 
-        private void SetHeaders(string sheetName)
+        private void SetHeaders(string sheetName, ref Excel excel)
         {
             string[] headers = [];
             switch (sheetName)
             {
                 case nameof(Patient):
-                    headers = ["Employee ID", "First Name", "Last Name", "DOB", "Gender", "Department", "Job Title", "Email"];
+                    headers = ["Patient ID", "First Name", "Last Name", "DOB", "Gender", "Job Title", "Phone Number", "Email"];
                     break;
             }
 
-            _excel.Worksheet?.PrintHeader(headers);
+            excel.Worksheet?.PrintHeader(headers);
         }
 
-        private void WriteData(List<ISQLModel> source) 
-        {
-            _excel.Worksheet?.PrintData(source);
-        }
 
-        private Task SaveAndClose(string sheetName)
+        private static Task SaveAndClose(ref Excel excel, string sheetName)
         {
             try
             {
-                _excel.Save($"{Sys.Desktop}\\{sheetName}.xlsx");
+                excel.Save($"{Sys.Desktop}\\{sheetName}.xlsx");
             }
             catch (WorkbookException ex)
             {
@@ -103,22 +130,15 @@ namespace DentistStudioApp.Controller
             }
             finally
             {
-                _excel.Close();
+                excel.Close();
             }
             return Task.CompletedTask;
         }
 
-        private async Task WriteExcel(List<ISQLModel>? source, string? sheetName)
+        private static async Task WriteExcel(List<ISQLModel> source, Excel excel, string sheetName)
         {
-            if (source == null || string.IsNullOrEmpty(sheetName)) throw new NullReferenceException("Something went wrong here!");
-
-            IstantiateExcel(sheetName);
-
-            SetHeaders(sheetName);
-
-            WriteData(source);
-
-            await SaveAndClose(sheetName);
+            excel.Worksheet?.PrintData(source);
+            await SaveAndClose(ref excel, sheetName);
         }
     }
 }

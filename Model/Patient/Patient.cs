@@ -60,7 +60,7 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Constructor
-        public Patient() 
+        public Patient()
         {
             AfterUpdate += OnAfterUpdate;
             BeforeRecordDelete += OnBeforeRecordDelete;
@@ -77,7 +77,7 @@ namespace DentistStudioApp.Model
             _jobTitle = new(reader.GetInt64(5));
             _phoneNumber = reader.GetString(6);
             _email = reader.GetString(7);
-            _picturePath = reader.GetString(8);
+            _picturePath = reader.TryFetchString(8);
         }
         #endregion
 
