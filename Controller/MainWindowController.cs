@@ -29,6 +29,7 @@ namespace DentistStudioApp.Controller
         public ICommand OpenSurveyQuestionsCMD { get; }
         public ICommand OpenSurveyQuestionCategoryCMD { get; }
         public ICommand PatientReportCMD { get; }
+        public ICommand PatientWithTreatmentReportCMD { get; }
         public ICommand ServiceReportCMD { get; }
         public ICommand DentistReportCMD { get; }
         public ICommand ClinicReportCMD { get; }
@@ -48,6 +49,7 @@ namespace DentistStudioApp.Controller
             PatientReportCMD = new CMDAsync(PatientReport);
             ServiceReportCMD = new CMDAsync(ServiceReport);
             DentistReportCMD = new CMDAsync(DentistReport);
+            PatientWithTreatmentReportCMD = new CMDAsync(PatientWithTreatmentReport);
             ClinicReportCMD = new CMDAsync(ClinicReport);
         }
      
@@ -69,32 +71,62 @@ namespace DentistStudioApp.Controller
             return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
         }
 
+        private static async Task<Backend.Source.RecordSource> FetchData2<M>(string sql) where M : AbstractModel, new()
+        {
+            IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
+            return await Backend.Source.RecordSource.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+        }
+
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
             string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
-            await RunTasks<Patient>(sql, "Patient");
+            await RunTasks<Patient>(sql, nameof(Patient));
+        }
+
+        private async Task PatientWithTreatmentReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+            string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
+            string sql2 = new Treatment().Select().All().From().Statement();
+            string sql3 = new Appointment().Select().All().From().Statement();
+
+            Task<Backend.Source.RecordSource> patientDataTask = FetchData2<Patient>(sql);
+            Task<Backend.Source.RecordSource> treatmentDataTask = FetchData2<Treatment>(sql2);
+            Task<Backend.Source.RecordSource> appointmentDataTask = FetchData2<Appointment>(sql3);
+
+            Task<Excel> excelTask = Task.Run(()=>InstantiateExcel(nameof(Patient)));
+
+            Backend.Source.RecordSource patientData = await patientDataTask;
+            Backend.Source.RecordSource treatmentData = await treatmentDataTask;
+            Backend.Source.RecordSource appointmentData = await appointmentDataTask;
+
+            Excel excel = await excelTask;
+
+            treatmentData.Combine(appointmentData, nameof(Treatment));
+            patientData.Combine(treatmentData, nameof(Patient));
+            await PrintReport(nameof(Patient), excel, patientData.Cast<ISQLModel>().ToList());
         }
 
         private async Task ServiceReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
             string sql = new Service().Select().From().Statement();
-            await RunTasks<Service>(sql, "Service");
+            await RunTasks<Service>(sql, nameof(Service));
         }
 
         private async Task DentistReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
             string sql = new Dentist().Select().From().Statement();
-            await RunTasks<Dentist>(sql, "Dentist");
+            await RunTasks<Dentist>(sql, nameof(Dentist));
         }
 
         private async Task ClinicReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
             string sql = new Clinic().Select().From().Statement();
-            await RunTasks<Clinic>(sql, "Clinic");
+            await RunTasks<Clinic>(sql, nameof(Clinic));
         }
 
         private async Task RunTasks<M>(string sql, string sheetName) where M : AbstractModel, new()
