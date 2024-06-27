@@ -133,7 +133,7 @@ namespace DentistStudioApp.Model
         public string Email { get; set; } = string.Empty;
 
         public PatientReport() { }
-        
+
         public PatientReport(DbDataReader reader) 
         {
             PatientID = reader.GetInt64(0);

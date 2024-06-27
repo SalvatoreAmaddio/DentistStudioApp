@@ -80,23 +80,21 @@ namespace DentistStudioApp.Controller
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
-            IAbstractDatabase db = new SQLiteDatabase(new PatientReport());
-            DatabaseManager.Add(db);
             string sql = new PatientReport().Select().All().From().Statement();
             await RunTasks<PatientReport>(sql, nameof(Patient));
-            DatabaseManager.Remove(db);
         }
 
         private async Task PatientWithTreatmentReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
-            string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
-            string sql2 = new Treatment().Select().All().From().Statement();
-            string sql3 = new Appointment().Select().AllExcept("Atte").From().Statement();
 
-            Task<Backend.Source.RecordSource> patientDataTask = FetchData2<Patient>(sql);
-            Task<Backend.Source.RecordSource> treatmentDataTask = FetchData2<Treatment>(sql2);
-            Task<Backend.Source.RecordSource> appointmentDataTask = FetchData2<Appointment>(sql3);
+            string sql = new PatientReport().Select().All().From().Statement();
+            string sql2 = new TreatmentReport().Select().All().From().Statement();
+            string sql3 = new AppointmentReport().Select().All().From().Statement();
+
+            Task<Backend.Source.RecordSource> patientDataTask = FetchData2<PatientReport>(sql);
+            Task<Backend.Source.RecordSource> treatmentDataTask = FetchData2<TreatmentReport>(sql2);
+            Task<Backend.Source.RecordSource> appointmentDataTask = FetchData2<AppointmentReport>(sql3);
 
             Task<Excel> excelTask = Task.Run(() => InstantiateExcel(nameof(Patient)));
 
@@ -108,6 +106,7 @@ namespace DentistStudioApp.Controller
 
             patientData.Combine(treatmentData, nameof(Patient));
             patientData.Combine(appointmentData, nameof(Treatment));
+
             await PrintReport(nameof(Patient), excel, patientData.Cast<ISQLModel>().ToList());
         }
 
