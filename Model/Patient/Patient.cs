@@ -105,4 +105,48 @@ namespace DentistStudioApp.Model
 
     }
 
+    [Table(nameof(Patient))]
+    public class PatientReport : AbstractModel
+    {
+        [PK]
+        public long PatientID { get; set; }
+
+        [Field]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Field]
+        public string LastName { get; set; } = string.Empty;
+
+        [Field]
+        public DateTime? DOB { get; set; }
+
+        [FK]
+        public Gender? Gender { get; set; }
+
+        [FK]
+        public JobTitle? JobTitle { get; set; }
+
+        [Field]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Field]
+        public string Email { get; set; } = string.Empty;
+
+        public PatientReport() { }
+        
+        public PatientReport(DbDataReader reader) 
+        {
+            PatientID = reader.GetInt64(0);
+            FirstName = reader.GetString(1);
+            LastName = reader.GetString(2);
+            DOB = reader.TryFetchDate(3);
+            Gender = new(reader.GetInt64(4));
+            JobTitle = new(reader.GetInt64(5));
+            PhoneNumber = reader.GetString(6);
+            Email = reader.GetString(7);
+        }
+
+        public override ISQLModel Read(DbDataReader reader) => new PatientReport(reader);
+
+    }
 }

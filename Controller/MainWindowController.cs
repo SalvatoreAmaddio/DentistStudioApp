@@ -80,8 +80,11 @@ namespace DentistStudioApp.Controller
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
-            string sql = new Patient().Select().All().From().Statement();
-            await RunTasks<Patient>(sql, nameof(Patient));
+            IAbstractDatabase db = new SQLiteDatabase(new PatientReport());
+            DatabaseManager.Add(db);
+            string sql = new PatientReport().Select().All().From().Statement();
+            await RunTasks<PatientReport>(sql, nameof(Patient));
+            DatabaseManager.Remove(db);
         }
 
         private async Task PatientWithTreatmentReport()
