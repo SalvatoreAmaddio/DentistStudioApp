@@ -8,6 +8,7 @@
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         d:DataContext="{d:DesignInstance Type=controller:SurveyQuestionCategoryListController, IsDesignTimeCreatable=False}"
+        WindowStartupLocation="CenterScreen"
         Title="Survey's Question Categories" Height="450" Width="800">
 
     <fr:FormList>

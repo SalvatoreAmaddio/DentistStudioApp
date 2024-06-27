@@ -8,9 +8,15 @@
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
         d:DataContext="{d:DesignInstance Type=controller:SurveyQuestionListController, IsDesignTimeCreatable=False}"
+        WindowStartupLocation="CenterScreen"
         Title="Survey's Questions" Height="450" Width="800">
 
     <fr:FormList>
+        <fr:FormList.Menu>
+            <Menu>
+                <MenuItem Header="Categories" Command="{Binding OpenCategoryCMD}"/>
+            </Menu>
+        </fr:FormList.Menu>
         <fr:FormList.Header>
             <Border Padding="5" Background="{StaticResource DefaultWhite}">
                 <fr:Text Placeholder="Search..." Text="{Binding Search}" VerticalAlignment="Center"/>

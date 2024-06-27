@@ -2,10 +2,12 @@
 using Backend.ExtensionMethods;
 using Backend.Model;
 using DentistStudioApp.Model;
+using DentistStudioApp.View;
 using FrontEnd.Controller;
 using FrontEnd.Events;
 using FrontEnd.FilterSource;
 using FrontEnd.Source;
+using System.Windows.Input;
 
 namespace DentistStudioApp.Controller
 {
@@ -14,12 +16,19 @@ namespace DentistStudioApp.Controller
         public RecordSource<SurveyQuestionCategory> Categories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SourceOption CategoryOptions { get; private set; }
         public override int DatabaseIndex => 5;
-
-        public SurveyQuestionListController() 
+        public ICommand OpenCategoryCMD { get; }
+        public SurveyQuestionListController()
         {
             CategoryOptions = new SourceOption(Categories, "CategoryName");
             AfterUpdate += OnAfterUpdate;
             OpenWindowOnNew = false;
+            OpenCategoryCMD = new CMD(OpenCategory);
+        }
+        
+        private void OpenCategory() 
+        {
+            SurveyQuestionCategoryWindow surveyQuestionCategoryWindow = new();
+            surveyQuestionCategoryWindow.ShowDialog();
         }
 
         private async void OnAfterUpdate(object? sender, AfterUpdateArgs e)

@@ -28,7 +28,6 @@ namespace DentistStudioApp.Controller
         public override async Task<IEnumerable<SurveyQuestionCategory>> SearchRecordAsync()
         {
             SearchQry.AddParameter("category", Search.ToLower() + "%");
-            var sql = SearchQry.Statement();
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
@@ -39,6 +38,5 @@ namespace DentistStudioApp.Controller
             .Select().All()
             .From()
             .Where().Like("LOWER(CategoryName)", "@category");
-
     }
 }
