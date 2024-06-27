@@ -11,65 +11,72 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Icon="{StaticResource patientIcon}"
-        Title="Patient Form" Height="520" Width="640">
+        Title="Patient Form" SizeToContent="WidthAndHeight">
 
-        <fr:Form>
+        <fr:Form Padding="5">
             <fr:Form.Menu>
                 <Menu>
                     <MenuItem Header="Gender" Command="{Binding OpenGenderWindowCMD}"/>
                     <MenuItem Header="Job Title" Command="{Binding OpenJobTitleWindowCMD}"/>
                 </Menu>
             </fr:Form.Menu>
-            
-            <Grid Margin="5" fr:Definition.RowDefinitions="30,30,30,30,30,30,30,10,200" fr:Definition.ColumnDefinitions="100,150,10,200,20,110">
-                <Label Content="First Name"/>
-                <Label Grid.Row="1" Content="Last Name"/>
-                <Label Grid.Row="2" Content="Date of Birth"/>
-                <Label Grid.Row="3" Content="Gender"/>
-                <Label Grid.Row="4" Content="Job Title"/>
-                <Label Grid.Row="5" Content="Phone Number"/>
-                <Label Grid.Row="6" Content="Email"/>
 
-                <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
-                <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
-                <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOB}"/>
-                <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
-                <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
-                <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
-                <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="270"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="250"/>
+            </Grid.RowDefinitions>
+            <GroupBox BorderThickness="0">
+                <Grid fr:Definition.ColumnDefinitions="100,150" fr:Definition.RowDefinitions="30,30,30,30,30,30,30">
+                    <Label Content="First Name"/>
+                    <Label Grid.Row="1" Content="Last Name"/>
+                    <Label Grid.Row="2" Content="Date of Birth"/>
+                    <Label Grid.Row="3" Content="Gender"/>
+                    <Label Grid.Row="4" Content="Job Title"/>
+                    <Label Grid.Row="5" Content="Phone Number"/>
+                    <Label Grid.Row="6" Content="Email"/>
 
-                <fr:PhotoFrame Grid.Column="3" Grid.RowSpan="7" DefaultBannerPath="pack://application:,,,/Images/placeholder.jpg" Folder="PatientImages" Source="{Binding CurrentRecord.PicturePath}" FilePickedCommand="{Binding FilePickedCMD}"/>
+                    <fr:Text Grid.Column="1" Text="{Binding CurrentRecord.FirstName}"/>
+                    <fr:Text Grid.Row="1" Grid.Column="1" Text="{Binding CurrentRecord.LastName}"/>
+                    <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOB}"/>
+                    <fr:Combo Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Genders}" SelectedItem="{Binding CurrentRecord.Gender}"/>
+                    <fr:Combo Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Titles}" SelectedItem="{Binding CurrentRecord.JobTitle}"/>
+                    <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.PhoneNumber}"/>
+                    <fr:Text Grid.Row="6" Grid.Column="1" Text="{Binding CurrentRecord.Email}"/>
+                </Grid>
+            </GroupBox>
 
-                <Border Grid.Column="5" Grid.RowSpan="7" VerticalAlignment="Center" BorderBrush="Black" Padding="5" BorderThickness="1" CornerRadius="5">
-                    <Grid>
-                        <Label Content="COMMANDS" Margin="0,-20,0,0" Background="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
-                        <StackPanel Margin="0,5,0,0">
-                            <StackPanel.Resources>
-                                <Style TargetType="Button">
-                                    <Setter Property="Height" Value="26"/>
-                                </Style>
-                                <Style TargetType="fr:SaveButton">
-                                    <Setter Property="Height" Value="26"/>
-                                </Style>
-                                <Style TargetType="fr:DeleteButton">
-                                    <Setter Property="Height" Value="26"/>
-                                </Style>
-                            </StackPanel.Resources>
-                            <fr:SaveButton/>
-                            <fr:DeleteButton/>
-                            <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
-                            <Button Content="Teeth Screen" Command="{Binding OpenTeethScreeningCMD}"/>
-                            <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
-                            <Button Content="Invoices" Command="{Binding OpenInvoicesCMD}"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+            <fr:PhotoFrame Grid.Column="1" HorizontalAlignment="Center" DefaultBannerPath="pack://application:,,,/Images/placeholder.jpg" Folder="PatientImages" Source="{Binding CurrentRecord.PicturePath}" FilePickedCommand="{Binding FilePickedCMD}"/>
 
-                <fr:SubForm Grid.Row="8" Grid.ColumnSpan="7" ParentRecord="{Binding CurrentRecord}" Background="{StaticResource HappyBlue}">
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Width" Value="100"/>
+                            <Setter Property="Height" Value="26"/>
+                        </Style>
+                        <Style TargetType="fr:SaveButton">
+                            <Setter Property="Height" Value="26"/>
+                        </Style>
+                        <Style TargetType="fr:DeleteButton">
+                            <Setter Property="Height" Value="26"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <fr:SaveButton/>
+                    <fr:DeleteButton/>
+                    <Button Content="Survey" Command="{Binding AddSurveyCMD}"/>
+                    <Button Content="Teeth Screen" Command="{Binding OpenTeethScreeningCMD}"/>
+                    <Button Content="Make Invoice" Command="{Binding AddInvoiceCMD}"/>
+                    <Button Content="Invoices" Command="{Binding OpenInvoicesCMD}"/>
+                </StackPanel>
+
+            <GroupBox Margin="0,10,0,0" Grid.Row="1" Header="Treatments" Grid.ColumnSpan="3" Padding="5">
+                <fr:SubForm ParentRecord="{Binding CurrentRecord}">
                     <fr:FormList DataContext="{Binding Treatments}">
-                        <fr:FormList.Header>
-                            <Label Content="Treatment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
-                        </fr:FormList.Header>
                         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
                                 <Grid fr:Definition.ColumnDefinitions="105,105,105,100">
@@ -83,12 +90,12 @@
                                 <DataTemplate>
                                     <fr:FormRow>
                                         <Grid fr:Definition.ColumnDefinitions="105,105,105,50,50" fr:Definition.RowDefinitions="30">
-                                        <Grid.Resources>
-                                            <Style TargetType="Label" x:Key="DateStyle">
-                                                <Setter Property="ContentStringFormat" Value=" {0:dd/MM/yyyy}"/>
-                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                            </Style>
-                                        </Grid.Resources>
+                                            <Grid.Resources>
+                                                <Style TargetType="Label" x:Key="DateStyle">
+                                                    <Setter Property="ContentStringFormat" Value=" {0:dd/MM/yyyy}"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                </Style>
+                                            </Grid.Resources>
                                             <Label Content="{Binding StartDate}" Style="{StaticResource DateStyle}"/>
                                             <Label Grid.Column="1" Content="{Binding EndDate}" Style="{StaticResource DateStyle}"/>
                                             <Label Grid.Column="2" Content="{Binding ServiceCount}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White"/>
@@ -101,6 +108,7 @@
                         </fr:Lista>
                     </fr:FormList>
                 </fr:SubForm>
-            </Grid>
-        </fr:Form>
+            </GroupBox>
+        </Grid>
+    </fr:Form>
 </Window>

@@ -11,13 +11,13 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Icon="{StaticResource treatmentIcon}"
-        Title="Treatment Form" Height="460" Width="810">
+        Title="Treatment Form" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <controller:InvoicedConverter x:Key="InvoicedConverter"/>
     </Window.Resources>
     
-        <fr:Form>
+        <fr:Form Padding="5">
             <fr:Form.Menu>
                 <Menu>
                     <MenuItem Header="Services" Command="{Binding OpenServicesCMD}"/>
@@ -25,39 +25,46 @@
                     <MenuItem Header="Clinics" Command="{Binding OpenClinicsCMD}"/>
                 </Menu>
             </fr:Form.Menu>
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="65"/>
-                    <ColumnDefinition Width="110"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="240"/>
-                </Grid.RowDefinitions>
-                
-                <Label Content="Patient"/>
-                <Label Grid.Column="1" Content="{Binding Patient}"/>
-                <Label Grid.Row="1" Content="Start Date"/>
-                <fr:TextBoxDate Grid.Column="1" Grid.Row="1" Date="{Binding CurrentRecord.StartDate}"/>
-                <Label Grid.Row="2" Content="End Date"/>
-                <fr:TextBoxDate Grid.Column="1" Grid.Row="2" Date="{Binding CurrentRecord.EndDate}"/>
 
-                <fr:CommandPanel Grid.Column="3" Grid.RowSpan="4"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="300"/>
+            </Grid.RowDefinitions>
 
-                <Label Grid.Column="4" FontWeight="Bold" HorizontalAlignment="Right" Content="{Binding CurrentRecord.Invoiced, Converter={StaticResource InvoicedConverter}}"/>
-                <Label Grid.Column="4" Grid.Row="1" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Right" Content="{Binding ReadOnly, Converter={StaticResource ReadOnlyConverter}}"/>
+            <GroupBox BorderThickness="0">
+                <Grid fr:Definition.RowDefinitions="30,30,30" fr:Definition.ColumnDefinitions="65,180">
+                    <Label Content="Patient"/>
+                    <Label Grid.Column="1" Content="{Binding Patient}"/>
+                    <Label Grid.Row="1" Content="Start Date"/>
+                    <fr:TextBoxDate Grid.Column="1" Grid.Row="1" Date="{Binding CurrentRecord.StartDate}" Width="105" HorizontalAlignment="Left"/>
+                    <Label Grid.Row="2" Content="End Date"/>
+                    <fr:TextBoxDate Grid.Column="1" Grid.Row="2" Date="{Binding CurrentRecord.EndDate}" Width="105" HorizontalAlignment="Left"/>
+                </Grid>
+            </GroupBox>
 
-            <fr:SubForm Grid.Row="4" Grid.ColumnSpan="5" Background="{StaticResource HappyBlue}" ParentRecord="{Binding CurrentRecord}">
+            <Border Padding="5" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <StackPanel>
+                    <fr:SaveButton Height="30" Width="100"/>
+                    <fr:DeleteButton Height="30"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2">
+                <StackPanel>
+                    <Label FontWeight="Bold" HorizontalAlignment="Right" Content="{Binding CurrentRecord.Invoiced, Converter={StaticResource InvoicedConverter}}"/>
+                    <Label Grid.Row="1" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Right" Content="{Binding ReadOnly, Converter={StaticResource ReadOnlyConverter}}"/>
+                </StackPanel>
+            </Border>
+
+            <GroupBox Header="Appointments" Grid.Row="1" Grid.ColumnSpan="3" Padding="5">
+                <fr:SubForm ParentRecord="{Binding CurrentRecord}">
                     <fr:FormList DataContext="{Binding Appointments}">
-                        <fr:FormList.Header>
-                            <Label Content="Appointment(s)" VerticalAlignment="Center" Foreground="White" FontWeight="Medium" FontStyle="Italic"/>
-                        </fr:FormList.Header>
                         <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
                                 <Grid fr:Definition.ColumnDefinitions="100,100,65,105,70,100,80,50,50">
@@ -101,6 +108,8 @@
                         </fr:Lista>
                     </fr:FormList>
                 </fr:SubForm>
-            </Grid>
+
+            </GroupBox>
+        </Grid>
         </fr:Form>
 </Window>
