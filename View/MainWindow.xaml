@@ -22,7 +22,7 @@
                 </MenuItem.Icon>
                 <MenuItem Header="Patients">
                     <MenuItem Header="Patients Only" Command="{Binding PatientReportCMD}"/>
-                    <MenuItem Header="Patients and Treatments" Command="{Binding PatientWithTreatmentReportCMD}"/>
+                    <MenuItem Header="Patients with Treatments" Command="{Binding PatientWithTreatmentReportCMD}"/>
                 </MenuItem>
                 <MenuItem Header="Invoices">
                     <MenuItem Header="Invoices Only"/>
