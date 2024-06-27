@@ -8,13 +8,14 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="Dentist Studio App" Height="450" Width="800">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu VerticalAlignment="Top">
-            <fr:OpenCurtain Click="OpenCurtain_Click"/>
+            <fr:OpenCurtain Command="{Binding OpenCurtainCMD}"/>
             <MenuItem Header="Reports">
                 <MenuItem.Icon>
                     <Image Source="{StaticResource excel}"/>
@@ -34,10 +35,11 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Survey">
-                <MenuItem Header="Questions" Click="OpenSurveyQuestions"/>
-                <MenuItem Header="Categories" Click="OpenSurveyQuestionCategory"/>
+                <MenuItem Header="Questions" Command="{Binding OpenSurveyQuestionsCMD}"/>
+                <MenuItem Header="Categories" Command="{Binding OpenSurveyQuestionCategoryCMD}"/>
             </MenuItem>
         </Menu>
+        
         <fr:Curtain x:Name="Curtain"/>
         <TabControl x:Name="MainTab" Grid.Row="1">
 
