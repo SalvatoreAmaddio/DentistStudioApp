@@ -94,7 +94,7 @@ namespace DentistStudioApp.Controller
 
             fileTransfer.Copy();
 
-            CurrentRecord.PicturePath = fileTransfer.DestinationFilePath;
+            CurrentRecord.PicturePath = fileTransfer.NewFileName;
         }
 
         private async Task AddInvoice()

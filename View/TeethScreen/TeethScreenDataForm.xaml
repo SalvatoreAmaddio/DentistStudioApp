@@ -43,7 +43,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <fr:PhotoFrame Source="{Binding CurrentRecord.ScreenPath}" FilePickedCommand="{Binding FilePickedCMD}"/>
+                                <fr:PhotoFrame Folder="PatientScreening" Source="{Binding CurrentRecord.ScreenPath}" FilePickedCommand="{Binding FilePickedCMD}"/>
                                 <fr:DeleteButton IsWithinList="True" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="0,0,10,0"/>
                             </Grid>
                         </fr:Form>

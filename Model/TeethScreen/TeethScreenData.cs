@@ -9,14 +9,14 @@ namespace DentistStudioApp.Model
     public class TeethScreenData : AbstractModel
     {
         #region Backing Fields
-        private long _screeningId;
+        private long _teethScreenDataId;
         private TeethScreen? _teethScreen;
         private string _screenPath = string.Empty;
         #endregion
 
         #region Properties
         [PK]
-        public long ScreeningID { get => _screeningId; set => UpdateProperty(ref value, ref _screeningId); }
+        public long TeethScreenDataID { get => _teethScreenDataId; set => UpdateProperty(ref value, ref _teethScreenDataId); }
         [FK]
         public TeethScreen? TeethScreen { get => _teethScreen; set => UpdateProperty(ref value, ref _teethScreen); }
         [Field]
@@ -31,7 +31,7 @@ namespace DentistStudioApp.Model
 
         public TeethScreenData(DbDataReader reader) : this()
         {
-            _screeningId = reader.GetInt64(0);
+            _teethScreenDataId = reader.GetInt64(0);
             _teethScreen = new TeethScreen(reader.GetInt64(1));
             _screenPath = reader.GetString(2);
         }

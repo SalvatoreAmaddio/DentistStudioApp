@@ -46,18 +46,18 @@ namespace DentistStudioApp.Controller
                 GoNew();
             }
 
-            if (CurrentRecord!.IsDirty)
-                if (!PerformUpdate()) return;
-
             if (filePicked.FileRemoved)
             {
-                string temp = CurrentRecord.ScreenPath;
-                CurrentRecord.ScreenPath = Helper.LoadFromStrings("uploadImagePath");
+                string? temp = CurrentRecord?.ScreenPath;
+                CurrentRecord!.ScreenPath = Helper.LoadFromStrings("uploadImagePath");
                 Sys.AttemptFileDelete(temp);
+                PerformUpdate();
                 return;
             }
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
+
+            CurrentRecord?.Dirt();
 
             Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientScreening"));
 
@@ -65,12 +65,12 @@ namespace DentistStudioApp.Controller
             {
                 SourceFilePath = filePicked.FilePath,
                 DestinationFolder = Path.Combine(Sys.AppPath(), "PatientScreening"),
-                NewFileName = $"{CurrentRecord.TeethScreen?.Patient?.PatientID}_{CurrentRecord?.TeethScreen?.Patient?.FirstName}_{CurrentRecord?.TeethScreen?.Patient?.LastName}_TEETH_SCREEN.{filePicked.Extension}"
+                NewFileName = $"{CurrentRecord?.TeethScreen?.Patient?.PatientID}_{CurrentRecord?.TeethScreen?.Patient?.FirstName}_{CurrentRecord?.TeethScreen?.Patient?.LastName}_TEETH_SCREEN_ON_{CurrentRecord?.TeethScreen?.DOS}.{filePicked.Extension}"
             };
 
             fileTransfer.Copy();
 
-            CurrentRecord!.ScreenPath = fileTransfer.DestinationFilePath;
+            CurrentRecord!.ScreenPath = fileTransfer.NewFileName;
             PerformUpdate();
         }
 
@@ -89,7 +89,7 @@ namespace DentistStudioApp.Controller
                 .All()
             .From()
             .Where().EqualsTo("TeethScreenID", "@teethScreenID")
-            .OrderBy().Field("ScreeningID DESC");    
+            .OrderBy().Field("TeethScreenDataID DESC");
 
     }
 }
