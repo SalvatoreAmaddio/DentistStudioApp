@@ -82,15 +82,15 @@ namespace DentistStudioApp.Controller
         {
             MainTab.CurrentTabController()?.SetLoading(true);
 
-            Task<RecordSource<PatientWithTreatmentReport>> patientDataTask = FetchData<PatientWithTreatmentReport>(new PatientWithTreatmentReport().SelectQry);
+            Task<RecordSource<PatientWithTreatment>> patientDataTask = FetchData<PatientWithTreatment>(new PatientWithTreatment().SelectQry);
 
-            Task<Excel> excelTask = Task.Run(() => InstantiateExcel("PatientWithTreatment"));
+            Task<Excel> excelTask = Task.Run(() => InstantiateExcel(nameof(PatientWithTreatment)));
 
-            RecordSource<PatientWithTreatmentReport> patientData = await patientDataTask;
+            RecordSource<PatientWithTreatment> patientData = await patientDataTask;
 
             Excel excel = await excelTask;
 
-            await PrintReport("PatientWithTreatment", excel, patientData.Cast<ISQLModel>().ToList());
+            await PrintReport(nameof(PatientWithTreatment), excel, patientData.Cast<ISQLModel>().ToList());
         }
 
         private async Task ServiceReport()
@@ -154,13 +154,13 @@ namespace DentistStudioApp.Controller
 
         private void SetHeaders(string sheetName, ref Excel excel)
         {
-            string[] headers = [];
+            string[] headers = null!;
             switch (sheetName)
             {
                 case nameof(Patient):
                     headers = ["Patient ID", "First Name", "Last Name", "DOB", "Gender", "Job Title", "Phone Number", "Email"];
                     break;
-                case "PatientWithTreatment":
+                case nameof(PatientWithTreatment):
                     headers = ["Patient ID", "First Name", "Last Name", "Start Date", "End Date", "Date of Appointment", "Time of Appointment", "Service", "Dentist", "Clinic", "Room Number", "Attended"];
                     break;
                 case nameof(Service):

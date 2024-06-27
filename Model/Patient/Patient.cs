@@ -150,7 +150,7 @@ namespace DentistStudioApp.Model
 
     }
 
-    public class PatientWithTreatmentReport : AbstractModel
+    public class PatientWithTreatment : AbstractModel
     {
         [PK]
         public long PatientID { get; }
@@ -179,12 +179,12 @@ namespace DentistStudioApp.Model
         [Field]
         public string Attended { get; } = string.Empty;
 
-        public PatientWithTreatmentReport()
+        public PatientWithTreatment()
         {
             SelectQry = "SELECT Patient.PatientiD, Patient.FirstName, Patient.LastName, Treatment.StartDate, Treatment.EndDate, Appointment.DOA, Appointment.TOA, Appointment.ServiceID, Appointment.DentistID, Clinic.ClinicName, Appointment.RoomNumber, Appointment.Attended FROM Patient INNER JOIN Treatment on Patient.PatientiD = Treatment.PatientID INNER JOIN Appointment on Treatment.TreatmentID = Appointment.TreatmentID INNER JOIN Dentist ON Appointment.DentistID = Dentist.DentistID INNER JOIN Clinic ON Dentist.ClinicID = Clinic.ClinicID";
         }
 
-        public PatientWithTreatmentReport(DbDataReader reader) : this()
+        public PatientWithTreatment(DbDataReader reader) : this()
         {
             PatientID = reader.GetInt64(0);
             FirstName = reader.GetString(1);
@@ -199,7 +199,7 @@ namespace DentistStudioApp.Model
             RoomNumber = reader.GetInt32(10);
             Attended = (reader.GetBoolean(11)) ? "YES" : "NO";
         }
-        public override ISQLModel Read(DbDataReader reader) => new PatientWithTreatmentReport(reader);
+        public override ISQLModel Read(DbDataReader reader) => new PatientWithTreatment(reader);
 
     }
 }

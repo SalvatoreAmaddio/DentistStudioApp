@@ -40,7 +40,7 @@ namespace DentistStudioApp
 
 
             DatabaseManager.Add(new SQLiteDatabase(new PatientReport()));
-            DatabaseManager.Add(new SQLiteDatabase(new PatientWithTreatmentReport()));
+            DatabaseManager.Add(new SQLiteDatabase(new PatientWithTreatment()));
 
             Exit += OnExit;
         }
