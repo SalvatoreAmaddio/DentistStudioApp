@@ -77,36 +77,4 @@ namespace DentistStudioApp.Model
         public override string? ToString() => $"TreatmentID: {TreatmentID} - {Patient} - {IsDirty}";
     }
 
-    [Table(nameof(Treatment))]
-    public class TreatmentReport : AbstractModel
-    {
-        #region Properties
-        [PK]
-        public long TreatmentID { get; set; }
-
-        [Field]
-        public DateTime? StartDate { get; set; }
-
-        [Field]
-        public DateTime? EndDate { get; set; }
-
-        [Field]
-        public bool Invoiced { get; set; }
-
-        public Patient? Patient { get; set; }
-        #endregion
-        
-        public TreatmentReport() { }
-
-        public TreatmentReport(DbDataReader reader)
-        {
-            TreatmentID = reader.GetInt64(0);
-            StartDate = reader.TryFetchDate(1);
-            EndDate = reader.TryFetchDate(2);
-            Patient = new Patient(reader.GetInt64(3));
-            Invoiced = reader.GetBoolean(4);
-        }
-
-        public override ISQLModel Read(DbDataReader reader) => new TreatmentReport(reader);
-    }
 }

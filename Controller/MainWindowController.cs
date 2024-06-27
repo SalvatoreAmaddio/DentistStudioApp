@@ -71,12 +71,6 @@ namespace DentistStudioApp.Controller
             return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
         }
 
-        private static async Task<Backend.Source.RecordSource> FetchData2<M>(string sql) where M : AbstractModel, new()
-        {
-            IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
-            return await Backend.Source.RecordSource.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
-        }
-
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
@@ -88,26 +82,15 @@ namespace DentistStudioApp.Controller
         {
             MainTab.CurrentTabController()?.SetLoading(true);
 
-            string sql = new PatientReport().Select().All().From().Statement();
-            string sql2 = new TreatmentReport().Select().All().From().Statement();
-            string sql3 = new AppointmentReport().Select().All().From().Statement();
+            Task<RecordSource<PatientWithTreatmentReport>> patientDataTask = FetchData<PatientWithTreatmentReport>(new PatientWithTreatmentReport().SelectQry);
 
-            Task<Backend.Source.RecordSource> patientDataTask = FetchData2<PatientReport>(sql);
-            Task<Backend.Source.RecordSource> treatmentDataTask = FetchData2<TreatmentReport>(sql2);
-            Task<Backend.Source.RecordSource> appointmentDataTask = FetchData2<AppointmentReport>(sql3);
+            Task<Excel> excelTask = Task.Run(() => InstantiateExcel("PatientWithTreatment"));
 
-            Task<Excel> excelTask = Task.Run(() => InstantiateExcel(nameof(Patient)));
-
-            Backend.Source.RecordSource patientData = await patientDataTask;
-            Backend.Source.RecordSource treatmentData = await treatmentDataTask;
-            Backend.Source.RecordSource appointmentData = await appointmentDataTask;
+            RecordSource<PatientWithTreatmentReport> patientData = await patientDataTask;
 
             Excel excel = await excelTask;
 
-            patientData.Combine(treatmentData, nameof(Patient));
-            patientData.Combine(appointmentData, nameof(Treatment));
-
-            await PrintReport(nameof(Patient), excel, patientData.Cast<ISQLModel>().ToList());
+            await PrintReport("PatientWithTreatment", excel, patientData.Cast<ISQLModel>().ToList());
         }
 
         private async Task ServiceReport()
@@ -176,6 +159,9 @@ namespace DentistStudioApp.Controller
             {
                 case nameof(Patient):
                     headers = ["Patient ID", "First Name", "Last Name", "DOB", "Gender", "Job Title", "Phone Number", "Email"];
+                    break;
+                case "PatientWithTreatment":
+                    headers = ["Patient ID", "First Name", "Last Name", "Start Date", "End Date", "Date of Appointment", "Time of Appointment", "Service", "Dentist", "Clinic", "Room Number", "Attended"];
                     break;
                 case nameof(Service):
                     headers = ["Service ID", "Service Name", "Cost"];

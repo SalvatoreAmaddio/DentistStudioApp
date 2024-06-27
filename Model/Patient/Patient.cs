@@ -149,4 +149,57 @@ namespace DentistStudioApp.Model
         public override ISQLModel Read(DbDataReader reader) => new PatientReport(reader);
 
     }
+
+    public class PatientWithTreatmentReport : AbstractModel
+    {
+        [PK]
+        public long PatientID { get; }
+        [Field]
+        public string FirstName { get; } = string.Empty;
+        [Field]
+        public string LastName { get; } = string.Empty;
+        [Field]
+        public DateTime? StartDate { get; }
+        [Field]
+        public DateTime? EndDate { get; }
+        [Field]
+        public DateTime? DOA { get; }
+        [Field]
+        public TimeSpan? TOA { get; }
+        [FK]
+        public Service? Service { get; }
+        [FK]
+        public Dentist? Dentist { get; }
+
+        [Field]
+        public string ClinicName { get; } = string.Empty;
+
+        [Field]
+        public int RoomNumber { get; }
+        [Field]
+        public string Attended { get; } = string.Empty;
+
+        public PatientWithTreatmentReport()
+        {
+            SelectQry = "SELECT Patient.PatientiD, Patient.FirstName, Patient.LastName, Treatment.StartDate, Treatment.EndDate, Appointment.DOA, Appointment.TOA, Appointment.ServiceID, Appointment.DentistID, Clinic.ClinicName, Appointment.RoomNumber, Appointment.Attended FROM Patient INNER JOIN Treatment on Patient.PatientiD = Treatment.PatientID INNER JOIN Appointment on Treatment.TreatmentID = Appointment.TreatmentID INNER JOIN Dentist ON Appointment.DentistID = Dentist.DentistID INNER JOIN Clinic ON Dentist.ClinicID = Clinic.ClinicID";
+        }
+
+        public PatientWithTreatmentReport(DbDataReader reader) : this()
+        {
+            PatientID = reader.GetInt64(0);
+            FirstName = reader.GetString(1);
+            LastName = reader.GetString(2);
+            StartDate = reader.TryFetchDate(3);
+            EndDate = reader.TryFetchDate(4);
+            DOA = reader.TryFetchDate(5);
+            TOA = reader.TryFetchTime(6);
+            Service = new(reader.GetInt64(7));
+            Dentist = new(reader.GetInt64(8));
+            ClinicName = reader.GetString(9);
+            RoomNumber = reader.GetInt32(10);
+            Attended = (reader.GetBoolean(11)) ? "YES" : "NO";
+        }
+        public override ISQLModel Read(DbDataReader reader) => new PatientWithTreatmentReport(reader);
+
+    }
 }

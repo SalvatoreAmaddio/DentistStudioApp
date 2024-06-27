@@ -41,7 +41,7 @@ namespace DentistStudioApp.Model
         [Field]
         public int RoomNumber { get => _roomNumber; set => UpdateProperty(ref value, ref _roomNumber); }
 
-        [FK]        
+        [FK]
         public Dentist? Dentist { get => _dentist; set => UpdateProperty(ref value, ref _dentist); }
 
         [FK]
@@ -54,7 +54,7 @@ namespace DentistStudioApp.Model
         #region Constructor
         public Appointment() { }
 
-        public Appointment(DbDataReader reader) 
+        public Appointment(DbDataReader reader)
         {
             _appointmentID = reader.GetInt64(0);
             _doa = reader.TryFetchDate(1);
@@ -85,49 +85,4 @@ namespace DentistStudioApp.Model
         public override string ToString() => $"Date: {DOA} - Time: {TOA} - Service: {Service} - Dentist: {Dentist} - Room Number: {RoomNumber} Attended: {Attended}";
     }
 
-    [Table(nameof(Appointment))]
-    public class AppointmentReport : AbstractModel
-    {
-        #region Properties
-        [PK]
-        public long AppointmentID { get; set; }
-
-        [Field]
-        public DateTime? DOA { get; set; }
-
-        [Field]
-        public TimeSpan? TOA { get; set; }
-
-        [Field]
-        public bool Attended { get; set; }
-
-        [Field]
-        public int RoomNumber { get; set; }
-
-        [FK]
-        public Dentist? Dentist { get; set; }
-
-        [FK]
-        public Service? Service { get; set; }
-
-        public Treatment? Treatment { get; set; }
-        #endregion
-
-        public AppointmentReport() { }
-        public AppointmentReport(DbDataReader reader)
-        {
-            AppointmentID = reader.GetInt64(0);
-            DOA = reader.TryFetchDate(1);
-            TOA = reader.TryFetchTime(2);
-//            _notes = reader.GetString(3);
-            Attended = reader.GetBoolean(4);
-            RoomNumber = reader.GetInt32(5);
-            Dentist = new Dentist(reader.GetInt64(6));
-            Service = new Service(reader.GetInt64(7));
-            Treatment = new Treatment(reader.GetInt64(8));
-        }
-
-        public override ISQLModel Read(DbDataReader reader) => new AppointmentReport(reader);
-
-    }
 }
