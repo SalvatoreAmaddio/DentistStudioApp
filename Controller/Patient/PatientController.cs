@@ -78,12 +78,13 @@ namespace DentistStudioApp.Controller
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
 
-            Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientImages"));
+            string folderPath = Path.Combine(Sys.AppPath(), "PatientImages");
+            Sys.CreateFolder(folderPath);
 
             FileTransfer fileTransfer = new()
             {
                 SourceFilePath = filePicked.FilePath,
-                DestinationFolder = Path.Combine(Sys.AppPath(), "PatientImages"),
+                DestinationFolder = folderPath,
                 NewFileName = $"{CurrentRecord.PatientID}_{CurrentRecord.FirstName}_{CurrentRecord.LastName}_PROFILE_PICTURE.{filePicked.Extension}"
             };
 

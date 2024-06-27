@@ -7,7 +7,6 @@ using FrontEnd.Source;
 using System.IO;
 using System.Windows.Input;
 using Backend.ExtensionMethods;
-using FrontEnd.Utils;
 
 namespace DentistStudioApp.Controller
 {
@@ -55,13 +54,13 @@ namespace DentistStudioApp.Controller
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
 
-
-            Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientScreening"));
+            string folderPath = Path.Combine(Sys.AppPath(), "PatientScreening");
+            Sys.CreateFolder(folderPath);
 
             FileTransfer fileTransfer = new()
             {
                 SourceFilePath = filePicked.FilePath,
-                DestinationFolder = Path.Combine(Sys.AppPath(), "PatientScreening"),
+                DestinationFolder = folderPath,
                 NewFileName = $"{CurrentRecord?.TeethScreen?.Patient?.PatientID}_{CurrentRecord?.TeethScreen?.Patient?.FirstName}_{CurrentRecord?.TeethScreen?.Patient?.LastName}_TEETH_SCREEN_ON_{CurrentRecord?.TeethScreen?.DOS?.Day}_{CurrentRecord?.TeethScreen?.DOS?.Month}_{CurrentRecord?.TeethScreen?.DOS?.Year}.{filePicked.Extension}"
             };
 
