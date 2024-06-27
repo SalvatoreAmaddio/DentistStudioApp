@@ -44,20 +44,17 @@ namespace DentistStudioApp.Controller
             if (CurrentRecord == null) 
             {
                 GoNew();
+                CurrentRecord?.Dirt();
             }
 
             if (filePicked.FileRemoved)
             {
-                string? temp = CurrentRecord?.ScreenPath;
-                CurrentRecord!.ScreenPath = Helper.LoadFromStrings("uploadImagePath");
-                Sys.AttemptFileDelete(temp);
                 PerformUpdate();
                 return;
             }
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
 
-            CurrentRecord?.Dirt();
 
             Sys.CreateFolder(Path.Combine(Sys.AppPath(), "PatientScreening"));
 
@@ -65,7 +62,7 @@ namespace DentistStudioApp.Controller
             {
                 SourceFilePath = filePicked.FilePath,
                 DestinationFolder = Path.Combine(Sys.AppPath(), "PatientScreening"),
-                NewFileName = $"{CurrentRecord?.TeethScreen?.Patient?.PatientID}_{CurrentRecord?.TeethScreen?.Patient?.FirstName}_{CurrentRecord?.TeethScreen?.Patient?.LastName}_TEETH_SCREEN_ON_{CurrentRecord?.TeethScreen?.DOS}.{filePicked.Extension}"
+                NewFileName = $"{CurrentRecord?.TeethScreen?.Patient?.PatientID}_{CurrentRecord?.TeethScreen?.Patient?.FirstName}_{CurrentRecord?.TeethScreen?.Patient?.LastName}_TEETH_SCREEN_ON_{CurrentRecord?.TeethScreen?.DOS?.Day}_{CurrentRecord?.TeethScreen?.DOS?.Month}_{CurrentRecord?.TeethScreen?.DOS?.Year}.{filePicked.Extension}"
             };
 
             fileTransfer.Copy();

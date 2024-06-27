@@ -70,16 +70,11 @@ namespace DentistStudioApp.Controller
         private void PickPicture(FilePickerCatch? filePicked)
         {
             if (CurrentRecord == null || filePicked == null) return;
-            if (CurrentRecord.IsDirty) 
+            if (CurrentRecord.IsDirty)
                 if (!PerformUpdate()) return;
 
             if (filePicked.FileRemoved)
-            {
-                string temp = CurrentRecord.PicturePath;
-                CurrentRecord.PicturePath = "pack://application:,,,/Images/placeholder.jpg";
-                Sys.AttemptFileDelete(temp);
                 return;
-            }
 
             if (string.IsNullOrEmpty(filePicked.FilePath)) return;
 
