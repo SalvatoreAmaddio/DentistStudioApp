@@ -2,6 +2,7 @@
 using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
+using System.IO;
 
 namespace DentistStudioApp.Model
 {
@@ -37,7 +38,7 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
-        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(ScreenPath);
+        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(Path.Combine(Sys.AppPath(), "PatientScreening", ScreenPath));
 
         public override ISQLModel Read(DbDataReader reader) => new TeethScreenData(reader);
 

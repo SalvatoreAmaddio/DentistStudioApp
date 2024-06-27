@@ -4,6 +4,7 @@ using Backend.Model;
 using Backend.Utils;
 using FrontEnd.Model;
 using System.Data.Common;
+using System.IO;
 
 namespace DentistStudioApp.Model
 {
@@ -81,7 +82,7 @@ namespace DentistStudioApp.Model
         #endregion
 
         #region Subscription Events
-        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(PicturePath);
+        private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(Path.Combine(Sys.AppPath(), "PatientScreening", PicturePath));
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
             if (e.Is(nameof(FirstName)))
