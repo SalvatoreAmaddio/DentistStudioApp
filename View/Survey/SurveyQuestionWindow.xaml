@@ -1,0 +1,42 @@
+﻿<Window x:Class="DentistStudioApp.View.SurveyQuestionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        mc:Ignorable="d"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        d:DataContext="{d:DesignInstance Type=controller:SurveyQuestionListController, IsDesignTimeCreatable=False}"
+        Title="Survey's Questions" Height="450" Width="800">
+
+    <fr:FormList>
+        <fr:FormList.Header>
+            <Border Padding="5" Background="{StaticResource DefaultWhite}">
+                <fr:Text Placeholder="Search..." Text="{Binding Search}" VerticalAlignment="Center"/>
+            </Border>
+        </fr:FormList.Header>
+
+        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="200,150,50,50">
+                    <Label Grid.Column="1" Content="QUESTION"/>
+                    <fr:HeaderFilter Grid.Column="2" Text="CATEGORY" IsWithinList="True" ItemsSource="{Binding CategoryOptions}"/>
+                    <Label Content="COMMANDS" Grid.Column="3" Grid.ColumnSpan="2"/>
+                </Grid>
+            </fr:Lista.Header>
+            <fr:Lista.ItemTemplate>
+                <DataTemplate>
+                    <fr:FormRow>
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="200,150,50,50">
+                            <fr:Text Text="{Binding Question}"/>
+                            <fr:Combo Grid.Column="1" SelectedItem="{Binding Category}" ControllerRecordSource="Categories"/>
+                            <fr:SaveButton Grid.Column="2" IsWithinList="True"/>
+                            <fr:DeleteButton Grid.Column="3" IsWithinList="True"/>
+                        </Grid>
+                    </fr:FormRow>
+                </DataTemplate>
+            </fr:Lista.ItemTemplate>
+        </fr:Lista>
+    </fr:FormList>
+</Window>

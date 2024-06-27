@@ -17,5 +17,11 @@ namespace DentistStudioApp.View
         {
             Curtain.Open();
         }
+
+        private void OpenSurveyQuestions(object sender, RoutedEventArgs e)
+        {
+            SurveyQuestionWindow questionWindow = new();
+            questionWindow.ShowDialog();
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace DentistStudioApp.Model
         public SurveyQuestionCategory() { }
         public SurveyQuestionCategory(long id) => _surveyQuestionCategoryID = id;
 
-        public SurveyQuestionCategory(DbDataReader reader) 
+        public SurveyQuestionCategory(DbDataReader reader)
         {
             _surveyQuestionCategoryID = reader.GetInt64(0);
             _categoryName = reader.GetString(1);

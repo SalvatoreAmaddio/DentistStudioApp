@@ -34,7 +34,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Survey">
-                <MenuItem Header="Questions"/>
+                <MenuItem Header="Questions" Click="OpenSurveyQuestions"/>
                 <MenuItem Header="Categories"/>
             </MenuItem>
         </Menu>

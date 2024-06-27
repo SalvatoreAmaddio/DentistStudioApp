@@ -58,7 +58,7 @@
     <Compile Update="View\Dentist\ClinicList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Survey\ServiceList.xaml.cs">
+    <Compile Update="View\Treatment\ServiceList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -76,7 +76,7 @@
     <Page Update="View\Invoice\InvoiceList.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Survey\ServiceList.xaml">
+    <Page Update="View\Treatment\ServiceList.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
