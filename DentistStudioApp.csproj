@@ -46,6 +46,9 @@
     <Compile Update="View\Invoice\InvoiceForm.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Survey\SurveyQuestionCategoryWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Treatment\AppointmentListFormWin.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

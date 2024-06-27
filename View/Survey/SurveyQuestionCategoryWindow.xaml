@@ -1,0 +1,40 @@
+﻿<Window x:Class="DentistStudioApp.View.SurveyQuestionCategoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DentistStudioApp.View"
+        mc:Ignorable="d"
+        xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
+        xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        d:DataContext="{d:DesignInstance Type=controller:SurveyQuestionCategoryListController, IsDesignTimeCreatable=False}"
+        Title="Survey's Question Categories" Height="450" Width="800">
+
+    <fr:FormList>
+        <fr:FormList.Header>
+            <Border Padding="5" Background="{StaticResource DefaultWhite}">
+                <fr:Text Placeholder="Search..." Text="{Binding Search}" VerticalAlignment="Center"/>
+            </Border>
+        </fr:FormList.Header>
+
+        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+            <fr:Lista.Header>
+                <Grid fr:Definition.ColumnDefinitions="150,50,50">
+                    <Label Grid.Column="1" Content="CATEGORY"/>
+                    <Label Content="COMMANDS" Grid.Column="2" Grid.ColumnSpan="2"/>
+                </Grid>
+            </fr:Lista.Header>
+            <fr:Lista.ItemTemplate>
+                <DataTemplate>
+                    <fr:FormRow>
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="150,50,50">
+                            <fr:Text Text="{Binding CategoryName}"/>
+                            <fr:SaveButton Grid.Column="1" IsWithinList="True"/>
+                            <fr:DeleteButton Grid.Column="2" IsWithinList="True"/>
+                        </Grid>
+                    </fr:FormRow>
+                </DataTemplate>
+            </fr:Lista.ItemTemplate>
+        </fr:Lista>
+    </fr:FormList>
+</Window>

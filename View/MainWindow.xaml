@@ -35,7 +35,7 @@
             </MenuItem>
             <MenuItem Header="Survey">
                 <MenuItem Header="Questions" Click="OpenSurveyQuestions"/>
-                <MenuItem Header="Categories"/>
+                <MenuItem Header="Categories" Click="OpenSurveyQuestionCategory"/>
             </MenuItem>
         </Menu>
         <fr:Curtain x:Name="Curtain"/>

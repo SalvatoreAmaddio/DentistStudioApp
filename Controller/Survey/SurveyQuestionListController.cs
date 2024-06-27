@@ -41,9 +41,7 @@ namespace DentistStudioApp.Controller
             return await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
         }
 
-        protected override void Open(SurveyQuestion model)
-        {
-        }
+        protected override void Open(SurveyQuestion model) { }
 
         public override AbstractClause InstantiateSearchQry() =>
         new SurveyQuestion()
