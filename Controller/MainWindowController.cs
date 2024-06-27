@@ -29,6 +29,9 @@ namespace DentistStudioApp.Controller
         public ICommand OpenSurveyQuestionsCMD { get; }
         public ICommand OpenSurveyQuestionCategoryCMD { get; }
         public ICommand PatientReportCMD { get; }
+        public ICommand ServiceReportCMD { get; }
+        public ICommand DentistReportCMD { get; }
+        public ICommand ClinicReportCMD { get; }
         #endregion
 
         public MainWindowController(MainWindow mainWin)
@@ -43,6 +46,9 @@ namespace DentistStudioApp.Controller
             OpenSurveyQuestionsCMD = new CMD(OpenSurveyQuestions);
             OpenSurveyQuestionCategoryCMD = new CMD(OpenSurveyQuestionCategory);
             PatientReportCMD = new CMDAsync(PatientReport);
+            ServiceReportCMD = new CMDAsync(ServiceReport);
+            DentistReportCMD = new CMDAsync(DentistReport);
+            ClinicReportCMD = new CMDAsync(ClinicReport);
         }
      
         private void OpenSurveyQuestionCategory()
@@ -66,14 +72,39 @@ namespace DentistStudioApp.Controller
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
-
             string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
-            Task<RecordSource<Patient>> dataTask = FetchData<Patient>(sql);
-            Task<Excel> excelTask = InstantiateExcel("Patient");
+            await RunTasks<Patient>(sql, "Patient");
+        }
 
-            RecordSource<Patient> data = await dataTask;
+        private async Task ServiceReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+            string sql = new Service().Select().From().Statement();
+            await RunTasks<Service>(sql, "Service");
+        }
+
+        private async Task DentistReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+            string sql = new Dentist().Select().From().Statement();
+            await RunTasks<Dentist>(sql, "Dentist");
+        }
+
+        private async Task ClinicReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+            string sql = new Clinic().Select().From().Statement();
+            await RunTasks<Clinic>(sql, "Clinic");
+        }
+
+        private async Task RunTasks<M>(string sql, string sheetName) where M : AbstractModel, new()
+        {
+            Task<RecordSource<M>> dataTask = FetchData<M>(sql);
+            Task<Excel> excelTask = InstantiateExcel(sheetName);
+
+            RecordSource<M> data = await dataTask;
             Excel excel = await excelTask;
-            await PrintReport("Patient", excel, data.Cast<ISQLModel>().ToList());
+            await PrintReport(sheetName, excel, data.Cast<ISQLModel>().ToList());
         }
 
         public async Task PrintReport(string sheetName, Excel excel, List<ISQLModel> data)
@@ -111,6 +142,15 @@ namespace DentistStudioApp.Controller
             {
                 case nameof(Patient):
                     headers = ["Patient ID", "First Name", "Last Name", "DOB", "Gender", "Job Title", "Phone Number", "Email"];
+                    break;
+                case nameof(Service):
+                    headers = ["Service ID", "Service Name", "Cost"];
+                    break;
+                case nameof(Dentist):
+                    headers = ["Dentist ID", "First Name", "Last Name", "Clinic"];
+                    break;
+                case nameof(Clinic):
+                    headers = ["Clinic ID", "Clinic Name"];
                     break;
             }
 

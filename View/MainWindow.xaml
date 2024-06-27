@@ -29,9 +29,9 @@
                     <MenuItem Header="Invoices with Treatments"/>
                 </MenuItem>
                 <MenuItem Header="Others">
-                    <MenuItem Header="Services"/>
-                    <MenuItem Header="Dentists"/>
-                    <MenuItem Header="Clinics"/>
+                    <MenuItem Header="Services" Command="{Binding ServiceReportCMD}"/>
+                    <MenuItem Header="Dentists" Command="{Binding DentistReportCMD}"/>
+                    <MenuItem Header="Clinics" Command="{Binding ClinicReportCMD}"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Survey">
