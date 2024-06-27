@@ -102,5 +102,7 @@ namespace DentistStudioApp.Model
         }
         public override ISQLModel Read(DbDataReader reader) => new Patient(reader);
         public override string ToString() => $"{FirstName} {LastName}";
+
     }
+
 }

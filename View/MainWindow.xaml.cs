@@ -11,6 +11,5 @@ namespace DentistStudioApp.View
             InitializeComponent();
             _controller = new(this);
         }
-
     }
 }

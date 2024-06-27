@@ -80,7 +80,7 @@ namespace DentistStudioApp.Controller
         private async Task PatientReport()
         {
             MainTab.CurrentTabController()?.SetLoading(true);
-            string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
+            string sql = new Patient().Select().All().From().Statement();
             await RunTasks<Patient>(sql, nameof(Patient));
         }
 
@@ -89,13 +89,13 @@ namespace DentistStudioApp.Controller
             MainTab.CurrentTabController()?.SetLoading(true);
             string sql = new Patient().Select().AllExcept("PicturePath").From().Statement();
             string sql2 = new Treatment().Select().All().From().Statement();
-            string sql3 = new Appointment().Select().All().From().Statement();
+            string sql3 = new Appointment().Select().AllExcept("Atte").From().Statement();
 
             Task<Backend.Source.RecordSource> patientDataTask = FetchData2<Patient>(sql);
             Task<Backend.Source.RecordSource> treatmentDataTask = FetchData2<Treatment>(sql2);
             Task<Backend.Source.RecordSource> appointmentDataTask = FetchData2<Appointment>(sql3);
 
-            Task<Excel> excelTask = Task.Run(()=>InstantiateExcel(nameof(Patient)));
+            Task<Excel> excelTask = Task.Run(() => InstantiateExcel(nameof(Patient)));
 
             Backend.Source.RecordSource patientData = await patientDataTask;
             Backend.Source.RecordSource treatmentData = await treatmentDataTask;
@@ -103,8 +103,8 @@ namespace DentistStudioApp.Controller
 
             Excel excel = await excelTask;
 
-            treatmentData.Combine(appointmentData, nameof(Treatment));
             patientData.Combine(treatmentData, nameof(Patient));
+            patientData.Combine(appointmentData, nameof(Treatment));
             await PrintReport(nameof(Patient), excel, patientData.Cast<ISQLModel>().ToList());
         }
 
