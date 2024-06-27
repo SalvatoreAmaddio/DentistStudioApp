@@ -64,6 +64,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="PatientImages\1_Salvatore_Amaddio R._PROFILE_PICTURE.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PatientScreening\1_Salvatore_Amaddio R._TEETH_SCREEN_ON_27_6_2024.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="View\Invoice\InvoiceList.xaml">
       <SubType>Designer</SubType>
     </Page>
