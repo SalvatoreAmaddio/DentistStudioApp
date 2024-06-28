@@ -5,7 +5,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(SurveyData))]
-    public class SurveyData : AbstractModel
+    public class SurveyData : AbstractModel<SurveyData>
     {
         #region backing fields
         private long _surveyDataID;
@@ -48,7 +48,6 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
-        public override ISQLModel Read(DbDataReader reader) => new SurveyData(reader);
         public override string? ToString() => $"{Survey} {SurveyQuestion}";
     }
 }

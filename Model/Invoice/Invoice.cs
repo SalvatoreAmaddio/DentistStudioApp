@@ -9,7 +9,7 @@ namespace DentistStudioApp.Model
 {
 
     [Table(nameof(Invoice))]
-    public class Invoice : AbstractModel
+    public class Invoice : AbstractModel<Invoice>
     {
         #region backing fields
         private double _amount;
@@ -81,8 +81,6 @@ namespace DentistStudioApp.Model
             RaisePropertyChanged(nameof(Amount));
             RaisePropertyChanged(nameof(TotalDue));
         }
-
-        public override ISQLModel Read(DbDataReader reader) => new Invoice(reader);
 
         public override string ToString() => $"{InvoiceID} - Date: {DOI} - Amount: {Amount} - Deposit {Deposit} - Paid: {Paid} - PaymentType: {PaymentType}";
 

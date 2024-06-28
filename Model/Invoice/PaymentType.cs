@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(PaymentType))]
-    public class PaymentType : AbstractModel
+    public class PaymentType : AbstractModel<PaymentType>
     {
         #region backing fields
         private long _paymentTypeID;
@@ -35,7 +35,6 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(PaymentBy)))
                 _paymentBy = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-        public override ISQLModel Read(DbDataReader reader) => new PaymentType(reader);
         public override string? ToString() => $"{PaymentBy}";
     }
 }

@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(Gender))]
-    public class Gender : AbstractModel
+    public class Gender : AbstractModel<Gender>
     {
         #region Backing Fields
         private long _genderid;
@@ -36,7 +36,6 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(Identity)))
                 _identity = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-        public override ISQLModel Read(DbDataReader reader) => new Gender(reader);
         public override string? ToString() => Identity;
     }
 }

@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(TeethScreen))]
-    public class TeethScreen : AbstractModel
+    public class TeethScreen : AbstractModel<TeethScreen>
     {
         #region backing fields
         private long _teethScreenId;
@@ -37,9 +37,6 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
-        public override ISQLModel Read(DbDataReader reader) => new TeethScreen(reader);
-
         public override string ToString() => $"Teeth Screen on {DOS} for {Patient}";
-
     }
 }

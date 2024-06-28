@@ -8,7 +8,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(Appointment))]
-    public class Appointment : AbstractModel
+    public class Appointment : AbstractModel<Appointment>
     {
         #region backing fields
         private long _appointmentID;
@@ -67,8 +67,6 @@ namespace DentistStudioApp.Model
             _treatment = new Treatment(reader.GetInt64(8));
         }
         #endregion
-
-        public override ISQLModel Read(DbDataReader reader) => new Appointment(reader);
 
         public async Task SetTreatmentAsync()
         {

@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(SurveyQuestion))]
-    public class SurveyQuestion : AbstractModel
+    public class SurveyQuestion : AbstractModel<SurveyQuestion>
     {
         #region backing fields
         private long _surveyQuestionID;
@@ -43,8 +43,6 @@ namespace DentistStudioApp.Model
             _category = (SurveyQuestionCategory?)DatabaseManager.Find<SurveyQuestionCategory>()?.MasterSource.FirstOrDefault(s => s.Equals(_category));
             return Task.CompletedTask;
         }
-
-        public override ISQLModel Read(DbDataReader reader) => new SurveyQuestion(reader);
 
         public override string ToString() => $"{Question} - {Category}";
 

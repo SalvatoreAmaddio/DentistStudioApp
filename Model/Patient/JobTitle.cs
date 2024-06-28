@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(JobTitle))]
-    public class JobTitle : AbstractModel
+    public class JobTitle : AbstractModel<JobTitle>
     {
         #region Backing Fields
         private long _jobtitleid;
@@ -38,7 +38,6 @@ namespace DentistStudioApp.Model
                 _title = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
 
-        public override ISQLModel Read(DbDataReader reader) => new JobTitle(reader);
         public override string? ToString() => Title;
     }
 }

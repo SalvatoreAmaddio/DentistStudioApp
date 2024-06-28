@@ -8,7 +8,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(Treatment))]
-    public class Treatment : AbstractModel
+    public class Treatment : AbstractModel<Treatment>
     {
         #region backing fields
         private long _treatmentId;
@@ -56,7 +56,6 @@ namespace DentistStudioApp.Model
         }
         #endregion
 
-        public override ISQLModel Read(DbDataReader reader) => new Treatment(reader);
         public async Task SetPatientAsync()
         {
             IAbstractDatabase? db = DatabaseManager.Find<Patient>() ?? throw new NullReferenceException();

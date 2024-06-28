@@ -5,7 +5,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(InvoicedTreatment))]
-    public class InvoicedTreatment : AbstractModel
+    public class InvoicedTreatment : AbstractModel<InvoicedTreatment>
     {
         #region backing fields
         private long _invoicedTreatmentId;
@@ -41,7 +41,6 @@ namespace DentistStudioApp.Model
             _treatment = new Treatment(reader.GetInt64(2));
         }
         #endregion
-        public override ISQLModel Read(DbDataReader reader) => new InvoicedTreatment(reader);
         public override string ToString() => $"{InvoicedTreatmentID} - {Invoice} - {Treatment}";
 
     }

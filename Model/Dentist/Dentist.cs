@@ -6,7 +6,7 @@ using System.Data.Common;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(Dentist))]
-    public class Dentist : AbstractModel
+    public class Dentist : AbstractModel<Dentist>
     {
         #region backing fields
         private long _dentistId;
@@ -53,7 +53,6 @@ namespace DentistStudioApp.Model
             if (e.Is(nameof(LastName)))
                 _lastName = e.ConvertNewValueTo<string>().FirstLetterCapital();
         }
-        public override ISQLModel Read(DbDataReader reader) => new Dentist(reader);
         public override string? ToString() => $"{FirstName} {LastName}";
 
     }

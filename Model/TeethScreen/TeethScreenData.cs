@@ -7,7 +7,7 @@ using System.IO;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(TeethScreenData))]
-    public class TeethScreenData : AbstractModel
+    public class TeethScreenData : AbstractModel<TeethScreenData>
     {
         #region Backing Fields
         private long _teethScreenDataId;
@@ -39,8 +39,6 @@ namespace DentistStudioApp.Model
         #endregion
 
         private void OnBeforeRecordDelete(object? sender, EventArgs e) => Sys.AttemptFileDelete(Path.Combine(Sys.AppPath(), "PatientScreening", ScreenPath));
-
-        public override ISQLModel Read(DbDataReader reader) => new TeethScreenData(reader);
 
         public override string ToString() => $"{TeethScreen} - {ScreenPath}";
     }
