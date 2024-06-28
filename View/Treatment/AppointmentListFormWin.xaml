@@ -21,7 +21,7 @@
                 </Grid>
             </Border>
         </fr:FormList.Header>
-        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+        <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
                 <Grid fr:Definition.ColumnDefinitions="200,100,100,105,65,65,80,200,50,50">
                     <Label Content="Patient" Grid.Column="1"/>

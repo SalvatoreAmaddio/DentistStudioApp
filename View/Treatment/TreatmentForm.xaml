@@ -65,7 +65,7 @@
             <GroupBox Header="Appointments" Grid.Row="1" Grid.ColumnSpan="3" Padding="5">
                 <fr:SubForm ParentRecord="{Binding CurrentRecord}">
                     <fr:FormList DataContext="{Binding Appointments}">
-                        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                        <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
                                 <Grid fr:Definition.ColumnDefinitions="100,100,65,105,70,100,80,50,50">
                                     <fr:HeaderFilter Grid.Column="1" IsWithinList="True" ItemsSource="{Binding ServiceOptions}" Text="Service"/>

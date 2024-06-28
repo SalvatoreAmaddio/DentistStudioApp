@@ -89,7 +89,7 @@
                     </GroupBox.Header>
                     <fr:SubForm x:Name="ToInvoice" ParentRecord="{Binding CurrentRecord}">
                         <fr:FormList DataContext="{Binding TreatmentsToInvoice}">
-                            <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                            <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
                                 <fr:Lista.Header>
                                     <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
                                         <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>
@@ -129,7 +129,7 @@
                     </GroupBox.Header>
                     <fr:SubForm x:Name="Invoiced" ParentRecord="{Binding CurrentRecord}">
                         <fr:FormList DataContext="{Binding TreatmentsInvoiced}">
-                            <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+                            <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
                             <fr:Lista.Header>
                                 <Grid fr:Definition.ColumnDefinitions="100,100,105,50,50">
                                     <fr:HeaderFilter Grid.Column="1" Text="Start Date" ItemsSource="{Binding DatesOptions}"/>

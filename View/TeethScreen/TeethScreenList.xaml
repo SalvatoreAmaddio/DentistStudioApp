@@ -12,7 +12,7 @@
         Title="Teeth Screen" Height="450" Width="345">
 
     <fr:FormList>
-        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+        <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
                 <Grid fr:Definition.ColumnDefinitions="90,50,50">
                     <fr:HeaderFilter IsWithinList="True" ItemsSource="{Binding DatesOptions}" Text="Date" Grid.Column="1"/>
