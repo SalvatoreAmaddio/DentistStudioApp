@@ -6,7 +6,7 @@ using Backend.ExtensionMethods;
 
 namespace DentistStudioApp.Converters
 {
-    public abstract class AbstractFetchSurveyQuestion<M, D> : AbstractFetchModel<M, D> where M : AbstractModel, new() where D : AbstractModel, new()
+    public abstract class AbstractFetchSurveyQuestion<M, D> : AbstractFetchModel<M, D> where M : IAbstractModel, new() where D : IAbstractModel, new()
     {
         public override object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Record;
     }

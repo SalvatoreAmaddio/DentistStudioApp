@@ -65,7 +65,7 @@ namespace DentistStudioApp.Controller
         }
         private void OpenCurtain() => Curtain.Open();
 
-        private static async Task<RecordSource<M>> FetchData<M>(string sql) where M : AbstractModel, new()
+        private static async Task<RecordSource<M>> FetchData<M>(string sql) where M : IAbstractModel, new()
         {
             IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
             return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
@@ -114,7 +114,7 @@ namespace DentistStudioApp.Controller
             await RunTasks<Clinic>(sql, nameof(Clinic));
         }
 
-        private async Task RunTasks<M>(string sql, string sheetName) where M : AbstractModel, new()
+        private async Task RunTasks<M>(string sql, string sheetName) where M : IAbstractModel, new()
         {
             Task<RecordSource<M>> dataTask = FetchData<M>(sql);
             Task<Excel> excelTask = InstantiateExcel(sheetName);
