@@ -10,37 +10,37 @@ namespace DentistStudioApp
         public App()
         {
             Sys.LoadAllEmbeddedDll(); 
-            DatabaseManager.Add(new SQLiteDatabase(new Patient())); //0
-            DatabaseManager.Add(new SQLiteDatabase(new Gender())); //1
-            DatabaseManager.Add(new SQLiteDatabase(new JobTitle())); //2
+            DatabaseManager.Add(new SQLiteDatabase<Patient>()); //0
+            DatabaseManager.Add(new SQLiteDatabase<Gender>()); //1
+            DatabaseManager.Add(new SQLiteDatabase<JobTitle>()); //2
 
             //survey tables
-            DatabaseManager.Add(new SQLiteDatabase(new Survey())); //3
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyData()));//4 
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestion()));//5
-            DatabaseManager.Add(new SQLiteDatabase(new SurveyQuestionCategory()));//6
+            DatabaseManager.Add(new SQLiteDatabase<Survey>()); //3
+            DatabaseManager.Add(new SQLiteDatabase<SurveyData>());//4 
+            DatabaseManager.Add(new SQLiteDatabase<SurveyQuestion>());//5
+            DatabaseManager.Add(new SQLiteDatabase<SurveyQuestionCategory>());//6
 
             //Treatment And Services
-            DatabaseManager.Add(new SQLiteDatabase(new Treatment()));//7
-            DatabaseManager.Add(new SQLiteDatabase(new Service()));//8
-            DatabaseManager.Add(new SQLiteDatabase(new Appointment()));//9
+            DatabaseManager.Add(new SQLiteDatabase<Treatment>());//7
+            DatabaseManager.Add(new SQLiteDatabase<Service>());//8
+            DatabaseManager.Add(new SQLiteDatabase<Appointment>());//9
 
             //Dentist and Clinics
-            DatabaseManager.Add(new SQLiteDatabase(new Dentist()));//10
-            DatabaseManager.Add(new SQLiteDatabase(new Clinic()));//11
+            DatabaseManager.Add(new SQLiteDatabase<Dentist>());//10
+            DatabaseManager.Add(new SQLiteDatabase<Clinic>());//11
 
             //Invoice
-            DatabaseManager.Add(new SQLiteDatabase(new Invoice()));//12
-            DatabaseManager.Add(new SQLiteDatabase(new PaymentType()));//13
-            DatabaseManager.Add(new SQLiteDatabase(new InvoicedTreatment()));//14
+            DatabaseManager.Add(new SQLiteDatabase<Invoice>());//12
+            DatabaseManager.Add(new SQLiteDatabase<PaymentType>());//13
+            DatabaseManager.Add(new SQLiteDatabase<InvoicedTreatment>());//14
 
             //Screening
-            DatabaseManager.Add(new SQLiteDatabase(new TeethScreen()));//15
-            DatabaseManager.Add(new SQLiteDatabase(new TeethScreenData()));//16
+            DatabaseManager.Add(new SQLiteDatabase<TeethScreen>());//15
+            DatabaseManager.Add(new SQLiteDatabase<TeethScreenData>());//16
 
 
-            DatabaseManager.Add(new SQLiteDatabase(new PatientReport()));
-            DatabaseManager.Add(new SQLiteDatabase(new PatientWithTreatment()));
+            DatabaseManager.Add(new SQLiteDatabase<PatientReport>());
+            DatabaseManager.Add(new SQLiteDatabase<PatientWithTreatment>());
 
             Exit += OnExit;
         }

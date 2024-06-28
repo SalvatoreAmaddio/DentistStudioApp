@@ -9,7 +9,7 @@ using System.IO;
 namespace DentistStudioApp.Model
 {
     [Table(nameof(Patient))]
-    public class Patient : AbstractModel
+    public class Patient : AbstractModel<Patient>
     {
         #region backing fields
         private long _patientID;
@@ -100,13 +100,11 @@ namespace DentistStudioApp.Model
             para.Add(new QueryParameter("invoiced", false));
             return await treatmentDB.CountRecordsAsync($"SELECT * FROM {nameof(Treatment)} WHERE PatientID = @id AND Invoiced = @invoiced", para);
         }
-        public override ISQLModel Read(DbDataReader reader) => new Patient(reader);
         public override string ToString() => $"{FirstName} {LastName}";
-
     }
 
     [Table(nameof(Patient))]
-    public class PatientReport : AbstractModel
+    public class PatientReport : AbstractModel<PatientReport>
     {
         [PK]
         public long PatientID { get; set; }
@@ -146,11 +144,10 @@ namespace DentistStudioApp.Model
             Email = reader.GetString(7);
         }
 
-        public override ISQLModel Read(DbDataReader reader) => new PatientReport(reader);
 
     }
 
-    public class PatientWithTreatment : AbstractModel
+    public class PatientWithTreatment : AbstractModel<PatientWithTreatment>
     {
         [PK]
         public long PatientID { get; }
@@ -199,7 +196,6 @@ namespace DentistStudioApp.Model
             RoomNumber = reader.GetInt32(10);
             Attended = (reader.GetBoolean(11)) ? "YES" : "NO";
         }
-        public override ISQLModel Read(DbDataReader reader) => new PatientWithTreatment(reader);
 
     }
 }
