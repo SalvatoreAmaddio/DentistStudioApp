@@ -36,7 +36,6 @@ namespace DentistStudioApp.Controller
         }
         public TreatmentToInvoiceListController TreatmentsToInvoice { get; } = new();
         public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
-        public override int DatabaseIndex => 12;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
         public ICommand OpenPaymentWindowCMD { get; }
         #endregion

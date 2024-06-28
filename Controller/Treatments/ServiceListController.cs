@@ -8,8 +8,6 @@ namespace DentistStudioApp.Controller
 {
     public class ServiceListController : AbstractFormListController<Service>
     {
-        public override int DatabaseIndex => 8;
-
         public ServiceListController() 
         {
             AfterUpdate += OnAfterUpdate;

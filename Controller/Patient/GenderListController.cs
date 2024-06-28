@@ -8,8 +8,6 @@ namespace DentistStudioApp.Controller
 {
     public class GenderListController : AbstractFormListController<Gender>
     {
-        public override int DatabaseIndex => 1;
-
         public GenderListController()
         {
             AfterUpdate += OnAfterUpdate;

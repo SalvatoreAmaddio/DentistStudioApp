@@ -15,7 +15,6 @@ namespace DentistStudioApp.Controller
     public class TreatmentListController : AbstractFormListController<Treatment>
     {
         #region Properties
-        public override int DatabaseIndex => 7;
         public SourceOption DatesOptions { get; private set; }
         public SourceOption DatesOptions2 { get; private set; }
         public SourceOption ServiceCountOptions { get; private set; }

@@ -13,7 +13,6 @@ namespace DentistStudioApp.Controller
     {
         public SourceOption ClinicOptions { get; private set; }
         public RecordSource<Clinic> Clinics { get; private set; } = new(DatabaseManager.Find<Clinic>()!);
-        public override int DatabaseIndex => 10;
 
         public DentistListController() 
         {

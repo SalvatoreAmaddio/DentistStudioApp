@@ -16,7 +16,6 @@ namespace DentistStudioApp.Controller
         public SourceOption GenderOptions { get; private set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);         
-        public override int DatabaseIndex => 0;
 
         public PatientListController() 
         {

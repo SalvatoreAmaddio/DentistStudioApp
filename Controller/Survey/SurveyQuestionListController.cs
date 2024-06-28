@@ -15,7 +15,6 @@ namespace DentistStudioApp.Controller
     {
         public RecordSource<SurveyQuestionCategory> Categories { get; private set; } = new(DatabaseManager.Find<SurveyQuestionCategory>()!);
         public SourceOption CategoryOptions { get; private set; }
-        public override int DatabaseIndex => 5;
         public ICommand OpenCategoryCMD { get; }
         public SurveyQuestionListController()
         {

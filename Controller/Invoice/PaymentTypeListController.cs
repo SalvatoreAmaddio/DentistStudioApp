@@ -8,8 +8,6 @@ namespace DentistStudioApp.Controller
 {
     public class PaymentTypeListController : AbstractFormListController<PaymentType>
     {
-        public override int DatabaseIndex => 13;
-
         public PaymentTypeListController()
         {
             OpenWindowOnNew = false;

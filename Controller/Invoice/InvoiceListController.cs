@@ -14,7 +14,6 @@ namespace DentistStudioApp.Controller
     {
         private readonly long? _patientID = null;
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
-        public override int DatabaseIndex => 12;
         public SourceOption PaymentTypesOptions { get; private set; }
         public SourceOption PaidOptions { get; private set; }
         public SourceOption DatesOptions { get; private set; }

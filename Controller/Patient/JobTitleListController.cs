@@ -8,8 +8,6 @@ namespace DentistStudioApp.Controller
 {
     public class JobTitleListController : AbstractFormListController<JobTitle>
     {
-        public override int DatabaseIndex => 2;
-
         public JobTitleListController()
         {
             AfterUpdate += OnAfterUpdate;

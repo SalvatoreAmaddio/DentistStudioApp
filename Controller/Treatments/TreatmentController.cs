@@ -25,7 +25,6 @@ namespace DentistStudioApp.Controller
         #region Properties
         public Patient? Patient { get => _patient; set => UpdateProperty(ref value, ref _patient); }
         public AppointmentListController Appointments { get; } = new();
-        public override int DatabaseIndex => 7;
         public ICommand OpenServicesCMD { get; }
         public ICommand OpenDentistsCMD { get; }
         public ICommand OpenClinicsCMD { get; }

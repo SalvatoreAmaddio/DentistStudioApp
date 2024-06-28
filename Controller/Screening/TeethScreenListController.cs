@@ -11,8 +11,6 @@ namespace DentistStudioApp.Controller
     public class TeethScreenListController : AbstractFormListController<TeethScreen>
     {
         private readonly Patient? _patient;
-        public override int DatabaseIndex => 15;
-
         public SourceOption DatesOptions { get; private set; }
         public TeethScreenListController(Patient patient) 
         {

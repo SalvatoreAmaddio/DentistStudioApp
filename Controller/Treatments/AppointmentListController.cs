@@ -13,6 +13,7 @@ namespace DentistStudioApp.Controller
 {
     public abstract class AbstractAppointmentListController : AbstractFormListController<Appointment>
     {
+        #region Properties
         public SourceOption ServiceOptions { get; private set; }
         public SourceOption DentistOptions { get; private set; }
         public SourceOption AttendedOptions { get; private set; }
@@ -21,7 +22,7 @@ namespace DentistStudioApp.Controller
         public SourceOption RoomsOptions { get; private set; }
         public RecordSource<Service> Services { get; private set; } = new(DatabaseManager.Find<Service>()!);
         public RecordSource<Dentist> Dentists { get; private set; } = new(DatabaseManager.Find<Dentist>()!);
-        public override int DatabaseIndex => 9;
+        #endregion
 
         public AbstractAppointmentListController()
         {

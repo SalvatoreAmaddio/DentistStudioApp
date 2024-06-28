@@ -12,7 +12,6 @@ namespace DentistStudioApp.Controller
 {
     public class TeethScreenDataController : AbstractFormController<TeethScreenData>
     {
-        public override int DatabaseIndex => 16;
         public ICommand FilePickedCMD { get; }
 
         public TeethScreenDataController() 

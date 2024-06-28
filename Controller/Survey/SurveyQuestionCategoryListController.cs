@@ -8,9 +8,7 @@ namespace DentistStudioApp.Controller
 {
     public class SurveyQuestionCategoryListController : AbstractFormListController<SurveyQuestionCategory>
     {
-        public override int DatabaseIndex => 6;
-        
-        public SurveyQuestionCategoryListController() 
+        public SurveyQuestionCategoryListController()
         {
             OpenWindowOnNew = false;
             AfterUpdate += OnAfterUpdate;

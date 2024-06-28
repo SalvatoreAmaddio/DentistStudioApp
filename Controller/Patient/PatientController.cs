@@ -23,7 +23,6 @@ namespace DentistStudioApp.Controller
         private Survey? Survey { get; set; }
         public RecordSource<Gender> Genders { get; private set; } = new(DatabaseManager.Find<Gender>()!);
         public RecordSource<JobTitle> Titles { get; private set; } = new(DatabaseManager.Find<JobTitle>()!);
-        public override int DatabaseIndex => 0;
         #endregion
 
         #region Commands

@@ -11,7 +11,6 @@ namespace DentistStudioApp.Controller
     {
         private readonly Patient? _patient;
         public TeethScreenDataController TeethScreenDataController { get; } = new();
-        public override int DatabaseIndex => 15;
 
         public TeethScreenController(TeethScreen teethScreen)
         {
