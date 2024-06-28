@@ -17,7 +17,7 @@ namespace DentistStudioApp.View
 
         public AppointmentListFormWin(DateTime? date) : this()
         {
-            Appointment? appointment = Controller?.AsRecordSource().FirstOrDefault(s => s.DOA.Equals(date));
+            Appointment? appointment = Controller?.RecordSource.FirstOrDefault(s => s.DOA.Equals(date));
             Controller?.SetTreatment(appointment?.Treatment);
             Controller?.ReloadFilters();
             Controller?.TriggerFilter(date);

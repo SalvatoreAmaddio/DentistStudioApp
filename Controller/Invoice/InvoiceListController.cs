@@ -37,7 +37,7 @@ namespace DentistStudioApp.Controller
         private async void OnWindowLoaded(object? sender, System.Windows.RoutedEventArgs e)
         {
             IEnumerable<Invoice> results = await SearchRecordAsync();
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 

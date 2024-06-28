@@ -24,7 +24,7 @@ namespace DentistStudioApp.Controller
         private async void OnWindowLoaded(object? sender, System.Windows.RoutedEventArgs e)
         {
             IEnumerable<TeethScreen> results = await SearchRecordAsync();
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 
@@ -33,7 +33,7 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             DatesOptions.Conditions<WhereClause>(SearchQry);
             IEnumerable<TeethScreen> results = await SearchRecordAsync();
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 

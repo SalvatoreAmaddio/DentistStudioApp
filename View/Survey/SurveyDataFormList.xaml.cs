@@ -15,9 +15,9 @@ namespace DentistStudioApp.View
 
         public SurveyDataFormList(Survey survey, IEnumerable<SurveyData> data) : this()
         {
-            SurveyDataListController controller = this.GetController<SurveyDataListController>();
+            SurveyDataListController? controller = this.GetController<SurveyDataListController>();
             controller.SurveyController.GoAt(survey);
-            controller.AsRecordSource().ReplaceRecords(data);
+            controller.RecordSource.ReplaceRecords(data);
             controller.GoFirst();
         }
     }

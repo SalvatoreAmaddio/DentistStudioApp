@@ -41,7 +41,7 @@ namespace DentistStudioApp.Controller
         {
             SearchQry.AddParameter("patientID", $"{CurrentRecord?.Patient?.PatientID}");
             IEnumerable<TeethScreen> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoAt(CurrentRecord);
         }
         #endregion

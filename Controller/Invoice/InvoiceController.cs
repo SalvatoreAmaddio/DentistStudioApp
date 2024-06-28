@@ -138,7 +138,7 @@ namespace DentistStudioApp.Controller
 
             SearchQry.AddParameter("patientID", Patient?.PatientID);
             RecordSource<Invoice> results = await Task.Run(() => CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params()));
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoAt(CurrentRecord);
         }
 

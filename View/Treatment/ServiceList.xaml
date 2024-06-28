@@ -19,7 +19,7 @@
                 </StackPanel>
             </Grid>
         </fr:FormList.Header>
-        <fr:Lista ItemsSource="{Binding Source}" SelectedItem="{Binding CurrentRecord}">
+        <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
                 <Grid fr:Definition.ColumnDefinitions="100,70,50,50">
                     <Label Grid.Column="1" Content="Service"/>

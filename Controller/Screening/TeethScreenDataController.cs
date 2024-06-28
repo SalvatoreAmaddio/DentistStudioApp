@@ -75,7 +75,7 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             SearchQry.AddParameter("teethScreenID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<TeethScreenData> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 

@@ -77,7 +77,7 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             SearchQry.AddParameter("treatmentID", ParentRecord?.GetPrimaryKey()?.GetValue());
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRecords(results);
+            RecordSource.ReplaceRecords(results);
             GoFirst();
             InvokeAfterSubFormFilterEvent();
         }
@@ -93,9 +93,9 @@ namespace DentistStudioApp.Controller
             RoomsOptions.Conditions<WhereClause>(SearchQry);
             DatesOptions.Conditions<WhereClause>(SearchQry);
             TimesOptions.Conditions<WhereClause>(SearchQry);
-                
+
             var results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 

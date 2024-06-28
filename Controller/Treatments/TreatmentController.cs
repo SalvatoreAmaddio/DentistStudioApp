@@ -100,7 +100,7 @@ namespace DentistStudioApp.Controller
                 SearchQry?.GetClause<WhereClause>()?.AND().EqualsTo("Invoiced", $"{false}");
 
             RecordSource<Treatment>? results = await Task.Run(() => CreateFromAsyncList(SearchQry?.Statement(), SearchQry?.Params()));
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
 
             if (CurrentRecord != null)
             {

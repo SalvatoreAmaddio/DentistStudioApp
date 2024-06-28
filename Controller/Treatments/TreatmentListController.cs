@@ -33,7 +33,7 @@ namespace DentistStudioApp.Controller
             ReloadSearchQry();
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());            
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 
@@ -45,7 +45,7 @@ namespace DentistStudioApp.Controller
             ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             SearchQry.AddParameter("patientID", ParentRecord?.GetPrimaryKey()?.GetValue());
             RecordSource<Treatment> results = await CreateFromAsyncList(SearchQry.Statement(), SearchQry.Params());
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
 
@@ -110,14 +110,14 @@ namespace DentistStudioApp.Controller
             DatesOptions2.Conditions<WhereClause>(SearchQry);
             ServiceCountOptions.Conditions<HavingClause>(SearchQry);
             IEnumerable<Treatment> results = await SearchRecordAsync();
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
         }
         public override async void OnSubFormFilter()
         {
             ReloadSearchQry();
             IEnumerable<Treatment> results = await SearchRecordAsync() ?? throw new NullReferenceException();
-            AsRecordSource().ReplaceRange(results);
+            RecordSource.ReplaceRange(results);
             GoFirst();
             if (!_subscribed)
                 Subscribe();
