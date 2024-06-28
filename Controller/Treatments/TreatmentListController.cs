@@ -156,7 +156,7 @@ namespace DentistStudioApp.Controller
             if (ParentController != null && CurrentInvoice != null)
             {
                 CurrentInvoice.IsDirty = true;
-                ParentController.CurrentModel = CurrentInvoice;
+                ParentController.SetCurrentRecord(CurrentInvoice);
                 ParentController.PerformUpdate();
             }
 
