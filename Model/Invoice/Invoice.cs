@@ -42,7 +42,7 @@ namespace DentistStudioApp.Model
         #region Constructors
         public Invoice() 
         {
-            _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.From().Limit().Statement()).FirstOrDefault();
+            _paymentType = (PaymentType?)DatabaseManager.Find<PaymentType>()?.Retrieve(_paymentType.Select().All().From().Limit().Statement()).FirstOrDefault();
             AfterUpdate += OnAfterUpdate;
             SelectQry = this.Select()
                         .All()

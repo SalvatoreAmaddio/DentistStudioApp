@@ -48,6 +48,7 @@ namespace DentistStudioApp.Controller
 
         public override AbstractClause InstantiateSearchQry() =>
         new SurveyData()
+            .Select().All()
             .From()
             .OpenBracket()
                 .InnerJoin(nameof(SurveyQuestion), "SurveyQuestionID")

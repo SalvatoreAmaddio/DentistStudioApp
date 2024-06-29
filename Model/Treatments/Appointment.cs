@@ -71,7 +71,7 @@ namespace DentistStudioApp.Model
         public async Task SetTreatmentAsync()
         {
             IAbstractDatabase? db = DatabaseManager.Find<Treatment>() ?? throw new NullReferenceException();
-            string? sql = new Treatment().From().Where().EqualsTo("TreatmentID", "@treatmentID").Limit().Statement();
+            string? sql = new Treatment().Select().All().From().Where().EqualsTo("TreatmentID", "@treatmentID").Limit().Statement();
             List<QueryParameter> para = [];
             para.Add(new("treatmentID", this.Treatment?.TreatmentID));
             RecordSource<Treatment> result = await RecordSource<Treatment>.CreateFromAsyncList(db.RetrieveAsync(sql, para).Cast<Treatment>());
