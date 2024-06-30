@@ -25,7 +25,7 @@
 
         <fr:Lista ItemsSource="{Binding RecordSource}" SelectedItem="{Binding CurrentRecord}">
             <fr:Lista.Header>
-                <Grid fr:Definition.ColumnDefinitions="200,150,50,50">
+                <Grid fr:Definition.ColumnDefinitions="300,150,50,50">
                     <Label Grid.Column="1" Content="QUESTION"/>
                     <fr:HeaderFilter Grid.Column="2" Text="CATEGORY" IsWithinList="True" ItemsSource="{Binding CategoryOptions}"/>
                     <Label Content="COMMANDS" Grid.Column="3" Grid.ColumnSpan="2"/>
@@ -34,7 +34,7 @@
             <fr:Lista.ItemTemplate>
                 <DataTemplate>
                     <fr:FormRow>
-                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="200,150,50,50">
+                        <Grid fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="300,150,50,50">
                             <fr:Text Text="{Binding Question}"/>
                             <fr:Combo Grid.Column="1" SelectedItem="{Binding Category}" ControllerRecordSource="Categories"/>
                             <fr:SaveButton Grid.Column="2" IsWithinList="True"/>
