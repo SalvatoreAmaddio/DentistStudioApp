@@ -66,7 +66,7 @@ namespace DentistStudioApp.Controller
 
             ReportViewerWindow win = new()
             {
-                FileName = $"{patient.FirstName}_{patient.LastName}_Invoice_{invoice.DOI.Value.Month}_{invoice.DOI.Value.Year}",
+                FileName = $"{patient.FirstName}_{patient.LastName}_Invoice_num_{invoice.InvoiceID}_on_{invoice.DOI.Value.Month}_{invoice.DOI.Value.Year}",
             };
 
             IEnumerable<AppointmentServices> services = await servicesTask;
