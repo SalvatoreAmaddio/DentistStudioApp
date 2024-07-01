@@ -8,13 +8,12 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>tooth.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Title>Dental Studio App</Title>
+	<Authors>Salvatore Amaddio</Authors>
+	<Copyright>Salvatore Amaddio</Copyright>
+	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+	<SignAssembly>False</SignAssembly>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Images\dentistStudio.png" />
-    <None Remove="Images\patient.png" />
-    <None Remove="Images\treatment.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\mydb.db">
