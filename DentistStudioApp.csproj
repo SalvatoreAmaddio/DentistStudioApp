@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DesktopBusinessAppSharpBuilder\FrontEnd.csproj" />
+    <Folder Include="PatientImages\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PatientImages\" />
+    <PackageReference Include="DesktopBusinessAppSharpBuilder" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

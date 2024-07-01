@@ -1,6 +1,6 @@
 # DentalStudioApp
 
-DentalStudioApp is a robust desktop application designed specifically for dental practices. Built with C# and WPF, it offers a seamless user experience and is supported by a reliable SQLite database to ensure efficient and secure management of patient records and dental services.
+DentalStudioApp is a robust desktop application designed specifically for dental practices. Built with C# and WPF, it offers a seamless user experience and is supported by a reliable SQLite database to ensure efficient and secure management of patient records and dental services. This project was built using the **DesktopBusinessAppSharpBuilder** framework, which provides a solid foundation for developing business applications.
 
 ## Key Features and Functionalities
 
