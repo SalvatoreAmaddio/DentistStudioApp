@@ -143,8 +143,6 @@ namespace DentistStudioApp.Model
             PhoneNumber = reader.GetString(6);
             Email = reader.GetString(7);
         }
-
-
     }
 
     public class PatientWithTreatment : AbstractModel<PatientWithTreatment>

@@ -24,10 +24,7 @@
                     <MenuItem Header="Patients Only" Command="{Binding PatientReportCMD}"/>
                     <MenuItem Header="Patients with Treatments" Command="{Binding PatientWithTreatmentReportCMD}"/>
                 </MenuItem>
-                <MenuItem Header="Invoices">
-                    <MenuItem Header="Invoices Only"/>
-                    <MenuItem Header="Invoices with Treatments"/>
-                </MenuItem>
+                <MenuItem Header="Invoices" Command="{Binding InvoiceReportCMD}"/>
                 <MenuItem Header="Others">
                     <MenuItem Header="Services" Command="{Binding ServiceReportCMD}"/>
                     <MenuItem Header="Dentists" Command="{Binding DentistReportCMD}"/>

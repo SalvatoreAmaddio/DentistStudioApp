@@ -43,6 +43,7 @@ namespace DentistStudioApp
             //Reporting
             DatabaseManager.Add(new SQLiteDatabase<PatientReport>());
             DatabaseManager.Add(new SQLiteDatabase<PatientWithTreatment>());
+            DatabaseManager.Add(new SQLiteDatabase<InvoiceReport>());
 
             this.DisposeOnExit();
         }

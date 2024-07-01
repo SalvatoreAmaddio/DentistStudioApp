@@ -33,6 +33,7 @@ namespace DentistStudioApp.Controller
         public ICommand ServiceReportCMD { get; }
         public ICommand DentistReportCMD { get; }
         public ICommand ClinicReportCMD { get; }
+        public ICommand InvoiceReportCMD { get; }
         #endregion
 
         public MainWindowController(MainWindow mainWin)
@@ -51,6 +52,7 @@ namespace DentistStudioApp.Controller
             DentistReportCMD = new CMDAsync(DentistReport);
             PatientWithTreatmentReportCMD = new CMDAsync(PatientWithTreatmentReport);
             ClinicReportCMD = new CMDAsync(ClinicReport);
+            InvoiceReportCMD = new CMDAsync(InvoiceReport);
         }
      
         private void OpenSurveyQuestionCategory()
@@ -69,6 +71,13 @@ namespace DentistStudioApp.Controller
         {
             IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
             return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+        }
+
+        private async Task InvoiceReport()
+        {
+            MainTab.CurrentTabController()?.SetLoading(true);
+            string sql = new InvoiceReport().SelectQry;
+            await RunTasks<InvoiceReport>(sql, nameof(Invoice));
         }
 
         private async Task PatientReport()
@@ -171,6 +180,9 @@ namespace DentistStudioApp.Controller
                     break;
                 case nameof(Clinic):
                     headers = ["Clinic ID", "Clinic Name"];
+                    break;
+                case nameof(Invoice):
+                    headers = ["Invoice ID", "Patient", "Date", "Amount", "Discount", "Deposit", "Total Due", "Payment Type", "Paid"];
                     break;
             }
 

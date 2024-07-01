@@ -85,4 +85,53 @@ namespace DentistStudioApp.Model
         public override string ToString() => $"{InvoiceID} - Date: {DOI} - Amount: {Amount} - Deposit {Deposit} - Paid: {Paid} - PaymentType: {PaymentType}";
 
     }
+
+    [Table(nameof(Invoice))]
+    public class InvoiceReport : AbstractModel<InvoiceReport>
+    {
+        [PK]
+        public long InvoiceID { get; }
+
+        [FK]
+        public Patient? Patient { get; }
+
+        [Field]
+        public DateTime? DOI { get; }
+
+        [Field]
+        public double Amount { get; }
+
+        [Field]
+        public double Discount { get; }
+
+        [Field]
+        public double Deposit { get; }
+
+        [Field]
+        public double TotalDue { get; }
+
+        [FK]
+        public PaymentType? PaymentType { get; }
+
+        [Field]
+        public string Paid { get; } = string.Empty;
+
+        public InvoiceReport() 
+        {
+            SelectQry = "SELECT Invoice.*, (Invoice.Amount - Invoice.Deposit) As TotalDue, Treatment.PatientID FROM Invoice INNER JOIN InvoicedTreatment on Invoice.InvoiceID = InvoicedTreatment.InvoiceID INNER JOIN Treatment ON InvoicedTreatment.TreatmentID = Treatment.TreatmentID;";
+        }
+
+        public InvoiceReport(DbDataReader reader) : this()
+        {
+            InvoiceID = reader.GetInt64(0);
+            DOI = reader.TryFetchDate(1);
+            Discount = reader.GetDouble(2);
+            PaymentType = new(reader.GetInt64(3));
+            Paid = (reader.GetBoolean(4)) ? "YES" : "NO";
+            Amount = reader.TryFetchDouble(5);
+            TotalDue = reader.GetDouble(6);
+            Deposit = reader.TryFetchDouble(7);
+            Patient = new(reader.GetInt64(8));
+        }
+    }
 }
