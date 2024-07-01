@@ -83,4 +83,47 @@ namespace DentistStudioApp.Model
         public override string ToString() => $"Date: {DOA} - Time: {TOA} - Service: {Service} - Dentist: {Dentist} - Room Number: {RoomNumber} Attended: {Attended}";
     }
 
+
+    [Table(nameof(Appointment))]
+    public class AppointmentServices : AbstractModel<AppointmentServices>
+    {
+        [PK]
+        public long AppointmentID { get; }
+        [Field]
+        public DateTime? DOA { get; }
+
+        [FK]
+        public Service? Service { get; }
+
+        public AppointmentServices() 
+        { 
+            
+        }
+
+        public AppointmentServices(DbDataReader reader) : this()
+        {
+           AppointmentID = reader.GetInt64(0);
+           DOA = reader.TryFetchDate(1);
+           Service = new(reader.GetInt64(2))
+           {
+            ServiceName = reader.GetString(3),
+            Cost = reader.GetDouble(4)
+           };
+        }
+
+        public static async Task<IEnumerable<AppointmentServices>> GetInvoicedServices(long invoiceid)
+        {
+            string? sql = new Appointment()
+                            .Select(nameof(AppointmentID), nameof(DOA), "Service.ServiceID", "Service.ServiceName", "Service.Cost")
+                            .From()
+                            .InnerJoin(nameof(Treatment), "TreatmentID")
+                            .InnerJoin(nameof(InvoicedTreatment), "TreatmentID")
+                            .InnerJoin(nameof(Service), "ServiceID")
+                            .Where().EqualsTo("InvoicedTreatment.InvoiceID", "@invoiceID").Statement();
+
+            List<QueryParameter> para = [];
+            para.Add(new("invoiceID", invoiceid));
+            return await RecordSource<AppointmentServices>.CreateFromAsyncList(new SQLiteDatabase<AppointmentServices>().RetrieveAsync(sql, para).Cast<AppointmentServices>());
+        }
+    }
 }

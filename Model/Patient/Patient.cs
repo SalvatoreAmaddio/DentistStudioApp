@@ -57,6 +57,17 @@ namespace DentistStudioApp.Model
 
         [Field] //This attribute tells this property represents a Field of the Employee Table.
         public string PicturePath { get => _picturePath; set => UpdateProperty(ref value, ref _picturePath); }
+        
+        public string Title 
+        { 
+            get 
+            {
+                if (Gender == null) return string.Empty;
+                if (Gender.GenderID == 1) return "Mr.";
+                if (Gender.GenderID == 2) return "Ms.";
+                return string.Empty;
+            }
+        }
         #endregion
 
         #region Constructor

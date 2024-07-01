@@ -27,9 +27,9 @@
                     <Image Source="{StaticResource appLogo}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200"/>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <Label Content="Business Name" FontWeight="Bold" FontSize="17"/>
-                        <Label Content="Street Address, City, Country"/>
-                        <Label Content="Postcode"/>
+                        <Label Content="The Dentist Studio" FontWeight="Bold" FontSize="17"/>
+                        <Label Content="79 North Grove, London, UK"/>
+                        <Label Content="N15 5QS"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" VerticalAlignment="Center">
@@ -51,6 +51,7 @@
                     <Label x:Name="PatientPhone" Content="Phone Number"/>
                 </StackPanel>
             <Separator Height="20"/>
+            
             <Grid x:Name="Items">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -60,9 +61,9 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <Label Content="TREATMENT" FontWeight="Bold" VerticalAlignment="Center"/>
-                <Label Content="DATE" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Label Content="AMOUNT" Grid.Column="2" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <Label Content="TREATMENT" FontWeight="Bold" VerticalAlignment="Center" Background="{StaticResource DefaultGrey}"/>
+                <Label Content="DATE" Grid.Column="1" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center" Background="{StaticResource DefaultGrey}"/>
+                <Label Content="AMOUNT" Grid.Column="2" FontWeight="Bold" HorizontalContentAlignment="Right" VerticalAlignment="Center" Background="{StaticResource DefaultGrey}"/>
             </Grid>
 
             <Separator Height="20"/>
@@ -77,19 +78,24 @@
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25" x:Name="DiscountRow"/>
                         <RowDefinition Height="25"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="27"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Total" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+                
+                    <Label Content="Total" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="Total" Content="1000" HorizontalAlignment="Right"/>
+
                     <Label Grid.Row="1" Content="Total Paid" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="Deposit" Grid.Row="1" Content="1000" HorizontalAlignment="Right"/>
-                    <Label Grid.Row="2" Content="Discount" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+
+                    <Label Grid.Row="2" Content="Discount" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="Discount" Grid.Row="2" Content="1000" HorizontalAlignment="Right"/>
-                    <Label Grid.Row="3" Content="Total Due" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+
+                    <Label Grid.Row="3" Content="Total Due" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="TotalDue" Grid.Row="3" Content="1000" HorizontalAlignment="Right"/>
+                
                     <Label x:Name="ToBePaid" Grid.Row="5" Content="To be paid by" BorderThickness="0,0,0,1" BorderBrush="Black"/>
-                <Label x:Name="PaymentMethod" Grid.Row="5" Content="Cash" HorizontalAlignment="Right"/>
+                    <Label x:Name="PaymentMethod" Grid.Row="5" Content="Cash" HorizontalAlignment="Right"/>
             </Grid>
         </StackPanel>
     </r:ReportPage.Body>

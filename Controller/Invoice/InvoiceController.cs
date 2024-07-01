@@ -38,6 +38,7 @@ namespace DentistStudioApp.Controller
         public TreatmentInvoicedListController TreatmentsInvoiced { get; } = new();
         public RecordSource<PaymentType> PaymentTypes { get; private set; } = new(DatabaseManager.Find<PaymentType>()!);
         public ICommand OpenPaymentWindowCMD { get; }
+        public ICommand OpenInvoiceCMD { get; }
         #endregion
 
         #region Constructor
@@ -49,6 +50,7 @@ namespace DentistStudioApp.Controller
             TreatmentsToInvoice.NotifyParentController += OnNotifyParentEvent;
             TreatmentsInvoiced.NotifyParentController += OnNotifyParentEvent;
             OpenPaymentWindowCMD = new CMD(OpenPaymentWindow);
+            OpenInvoiceCMD = new CMD<Invoice>(InvoiceListController.OpenInvoice);
             WindowClosing += OnWindowClosing;
             BeforeRecordNavigation += OnBeforeRecordNavigation;
         }

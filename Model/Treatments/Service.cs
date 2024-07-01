@@ -1,6 +1,8 @@
-﻿using Backend.ExtensionMethods;
+﻿using Backend.Database;
+using Backend.ExtensionMethods;
 using Backend.Model;
 using FrontEnd.Model;
+using FrontEnd.Source;
 using System.Data.Common;
 
 namespace DentistStudioApp.Model
@@ -33,6 +35,7 @@ namespace DentistStudioApp.Model
             _cost = reader.GetDouble(2);
         }
         #endregion
+
         private void OnAfterUpdate(object? sender, FrontEnd.Events.AfterUpdateArgs e)
         {
             if (e.Is(nameof(ServiceName)))

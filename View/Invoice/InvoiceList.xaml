@@ -45,17 +45,15 @@
                             <fr:Text Grid.Column="0" IsReadOnly="True" Text="{Binding ., Mode=OneWay, Converter={StaticResource GetPatientFromInvoicedTreatment}}"/>
                             <fr:Text Grid.Column="1" IsReadOnly="True" Text="{Binding InvoiceID}"/>
                             <fr:TextBoxDate Grid.Column="2" Date="{Binding DOI}"/>
-                            <fr:Text Grid.Column="3" IsReadOnly="True" Text="{Binding Amount, StringFormat={}{0:C2}}"/>
-                            <fr:Text Grid.Column="4" Text="{Binding Deposit, StringFormat={}{0:C2}}"/>
-                            <fr:Text Grid.Column="5" IsReadOnly="True" Text="{Binding TotalDue, Mode=OneWay, StringFormat={}{0:C2}}"/>
+                            <fr:Text Grid.Column="3" IsReadOnly="True" Text="{Binding Amount, StringFormat={}{0:C2}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Column="4" Text="{Binding Deposit, StringFormat={}{0:C2}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Column="5" IsReadOnly="True" Text="{Binding TotalDue, Mode=OneWay, StringFormat={}{0:C2}, ConverterCulture='en-GB'}"/>
                             <fr:Combo Grid.Column="6" ControllerRecordSource="PaymentTypes" SelectedItem="{Binding PaymentType}"/>
                             <CheckBox Grid.Column="7" IsChecked="{Binding Paid}" HorizontalAlignment="Center"/>
                             <fr:SaveButton Grid.Column="8" IsWithinList="True"/>
                             <fr:DeleteButton Grid.Column="9" IsWithinList="True"/>
                             <fr:OpenButton Grid.Column="10" IsWithinList="True"/>
-                            <Button Grid.Column="11" fr:Extension.IsWithinList="True">
-                                <Image Source="{StaticResource report}"/>
-                            </Button>
+                            <fr:ReportButton Grid.Column="11" IsWithinList="True" Command="{Binding OpenInvoiceCMD}"/>
                         </Grid>
                     </fr:FormRow>
                 </DataTemplate>

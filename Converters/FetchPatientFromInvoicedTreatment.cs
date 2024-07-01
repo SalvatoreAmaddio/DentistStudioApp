@@ -43,7 +43,7 @@ namespace DentistStudioApp.Converters
 
     public class FetchPatientFromTreatment : AbstractFetchModel<Treatment, Patient>
     {
-        protected override string Sql => 
+        protected override string Sql =>
             new Treatment()
             .Select("Patient.*")
             .From()
@@ -60,4 +60,15 @@ namespace DentistStudioApp.Converters
         }
     }
 
+    public class FetchPaymentMethod : AbstractFetchModel<Invoice, PaymentType>
+    {
+        protected override string Sql => new PaymentType().Select().From().Where().This("id").Statement();
+
+        public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Record = (Invoice)value;
+            para.Add(new("id", Record?.PaymentType?.PaymentTypeID));
+            return (PaymentType?)Db?.Retrieve(Sql, para).FirstOrDefault();
+        }
+    }
 }

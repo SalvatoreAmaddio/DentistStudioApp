@@ -49,10 +49,10 @@
                             <Label Grid.Row="0" Grid.Column="1" Content="{Binding Patient}"/>
                             <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
                             <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOI}"/>
-                            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}}"/>
-                            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}}"/>
-                            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}}"/>
-                            <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}}"/>
+                            <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
 
                             <fr:Combo Grid.Row="7" Grid.Column="1" ItemsSource="{Binding PaymentTypes}" SelectedItem="{Binding CurrentRecord.PaymentType}"/>
                             <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding CurrentRecord.Paid}"/>
@@ -75,7 +75,7 @@
                                 <Setter Property="Height" Value="30"/>
                             </Style>
                         </StackPanel.Resources>
-                        <fr:ReportButton/>
+                        <fr:ReportButton Command="{Binding OpenInvoiceCMD}"/>
                         <fr:SaveButton/>
                         <fr:DeleteButton/>
                     </StackPanel>

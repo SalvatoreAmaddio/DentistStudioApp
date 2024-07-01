@@ -32,7 +32,7 @@
                     <fr:FormRow>
                         <Grid  fr:Definition.RowDefinitions="30" fr:Definition.ColumnDefinitions="100,70,50,50">
                             <fr:Text Text="{Binding ServiceName}"/>
-                            <fr:Text Grid.Column="1" Text="{Binding Cost, StringFormat={}{0:C}}"/>
+                            <fr:Text Grid.Column="1" Text="{Binding Cost, StringFormat={}{0:C}, ConverterCulture='en-GB'}"/>
                             <fr:SaveButton Grid.Column="2" IsWithinList="True"/>
                             <fr:DeleteButton Grid.Column="3" IsWithinList="True"/>
                         </Grid>
