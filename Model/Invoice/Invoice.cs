@@ -134,15 +134,15 @@ namespace DentistStudioApp.Model
             InvoiceID = reader.GetInt64(0);
             DateTime? date = reader.TryFetchDate(1);
 
-            if (date != null)
+            if (date.HasValue)
                 DOI = date.Value.ToString("dd/MM/yyyy");
 
             PaymentType = new(reader.GetInt64(3));
             Paid = (reader.GetBoolean(4)) ? "YES" : "NO";
             Amount = reader.TryFetchDouble(5);
             Discount = reader.GetDouble(2) * Amount;
-            Deposit = reader.TryFetchDouble(7);
-            TotalDue = reader.GetDouble(6) - Discount;
+            Deposit = reader.TryFetchDouble(6);
+            TotalDue = reader.GetDouble(7) - Discount;
             Patient = new(reader.GetInt64(8));
         }
     }

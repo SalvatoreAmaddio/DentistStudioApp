@@ -118,28 +118,28 @@ namespace DentistStudioApp.Model
     public class PatientReport : AbstractModel<PatientReport>
     {
         [PK]
-        public long PatientID { get; set; }
+        public long PatientID { get; }
 
         [Field]
-        public string FirstName { get; set; } = string.Empty;
+        public string FirstName { get; } = string.Empty;
 
         [Field]
-        public string LastName { get; set; } = string.Empty;
+        public string LastName { get; } = string.Empty;
 
         [Field]
-        public DateTime? DOB { get; set; }
+        public string DOB { get; } = string.Empty;
 
         [FK]
-        public Gender? Gender { get; set; }
+        public Gender? Gender { get; }
 
         [FK]
-        public JobTitle? JobTitle { get; set; }
+        public JobTitle? JobTitle { get; }
 
         [Field]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string PhoneNumber { get; } = string.Empty;
 
         [Field]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; } = string.Empty;
 
         public PatientReport() { }
 
@@ -148,7 +148,11 @@ namespace DentistStudioApp.Model
             PatientID = reader.GetInt64(0);
             FirstName = reader.GetString(1);
             LastName = reader.GetString(2);
-            DOB = reader.TryFetchDate(3);
+            DateTime? date = reader.TryFetchDate(3);
+            
+            if (date.HasValue)
+                DOB = date.Value.ToString("dd/MM/yyyy");
+
             Gender = new(reader.GetInt64(4));
             JobTitle = new(reader.GetInt64(5));
             PhoneNumber = reader.GetString(6);
@@ -165,13 +169,13 @@ namespace DentistStudioApp.Model
         [Field]
         public string LastName { get; } = string.Empty;
         [Field]
-        public DateTime? StartDate { get; }
+        public string StartDate { get; } = string.Empty;
         [Field]
-        public DateTime? EndDate { get; }
+        public string EndDate { get; } = string.Empty;
         [Field]
-        public DateTime? DOA { get; }
+        public string DOA { get; } = string.Empty;
         [Field]
-        public TimeSpan? TOA { get; }
+        public string TOA { get; } = string.Empty;
         [FK]
         public Service? Service { get; }
         [FK]
@@ -195,10 +199,23 @@ namespace DentistStudioApp.Model
             PatientID = reader.GetInt64(0);
             FirstName = reader.GetString(1);
             LastName = reader.GetString(2);
-            StartDate = reader.TryFetchDate(3);
-            EndDate = reader.TryFetchDate(4);
-            DOA = reader.TryFetchDate(5);
-            TOA = reader.TryFetchTime(6);
+
+            DateTime? startDate = reader.TryFetchDate(3);
+            if (startDate.HasValue)
+                StartDate = startDate.Value.ToString("dd/MM/yyyy");
+
+            DateTime? endDate = reader.TryFetchDate(4);
+            if (endDate.HasValue)
+                EndDate = endDate.Value.ToString("dd/MM/yyyy");
+
+            DateTime? doa = reader.TryFetchDate(5);
+            if (doa.HasValue)
+                DOA = doa.Value.ToString("dd/MM/yyyy");
+            
+            TimeSpan? toa = reader.TryFetchTime(6);
+            if (toa.HasValue)
+                TOA = new DateTime(toa.Value.Ticks).ToString("h:mm tt");
+
             Service = new(reader.GetInt64(7));
             Dentist = new(reader.GetInt64(8));
             ClinicName = reader.GetString(9);

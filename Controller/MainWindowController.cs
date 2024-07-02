@@ -69,8 +69,18 @@ namespace DentistStudioApp.Controller
 
         private static async Task<RecordSource<M>> FetchData<M>(string sql) where M : IAbstractModel, new()
         {
-            IAbstractDatabase? db = DatabaseManager.Find<M>() ?? throw new NullReferenceException();
-            return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+            return await Task.Run(async() => 
+            {
+                IAbstractDatabase? db = DatabaseManager.Find<M>();
+                if (db == null)
+                {
+                    db = new SQLiteDatabase<M>();
+                    RecordSource<M> result = await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+                    db.Dispose();
+                    return result;
+                }
+                else return await RecordSource<M>.CreateFromAsyncList(db.RetrieveAsync(sql).Cast<M>());
+            });
         }
 
         private async Task InvoiceReport()
@@ -154,11 +164,14 @@ namespace DentistStudioApp.Controller
 
         private Task<Excel> InstantiateExcel(string sheetName)
         {
-            Excel _excel = new();
-            _excel.Create();
-            _excel.Worksheet?.SetName(sheetName);
-            SetHeaders(sheetName, ref _excel);
-            return Task.FromResult(_excel);
+            return Task.Run(() => 
+            {
+                Excel _excel = new();
+                _excel.Create();
+                _excel.Worksheet?.SetName(sheetName);
+                SetHeaders(sheetName, ref _excel);
+                return _excel;
+            });
         }
 
         private void SetHeaders(string sheetName, ref Excel excel)
