@@ -104,7 +104,7 @@ namespace DentistStudioApp.Model
         public Patient? Patient { get; }
 
         [Field]
-        public DateTime? DOI { get; }
+        public string DOI { get; } = string.Empty;
 
         [Field]
         public double Amount { get; }
@@ -132,13 +132,17 @@ namespace DentistStudioApp.Model
         public InvoiceReport(DbDataReader reader) : this()
         {
             InvoiceID = reader.GetInt64(0);
-            DOI = reader.TryFetchDate(1);
-            Discount = reader.GetDouble(2);
+            DateTime? date = reader.TryFetchDate(1);
+
+            if (date != null)
+                DOI = date.Value.ToString("dd/MM/yyyy");
+
             PaymentType = new(reader.GetInt64(3));
             Paid = (reader.GetBoolean(4)) ? "YES" : "NO";
             Amount = reader.TryFetchDouble(5);
-            TotalDue = reader.GetDouble(6);
+            Discount = reader.GetDouble(2) * Amount;
             Deposit = reader.TryFetchDouble(7);
+            TotalDue = reader.GetDouble(6) - Discount;
             Patient = new(reader.GetInt64(8));
         }
     }
