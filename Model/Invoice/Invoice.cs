@@ -4,6 +4,7 @@ using Backend.Model;
 using FrontEnd.Model;
 using System.Data.Common;
 using FrontEnd.Events;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DentistStudioApp.Model
 {
@@ -24,19 +25,26 @@ namespace DentistStudioApp.Model
         #region Properties
         [PK]
         public long InvoiceID { get => _invoiceid; set => UpdateProperty(ref value, ref _invoiceid); }
+        
         [Field]
         public DateTime? DOI { get => _doi; set => UpdateProperty(ref value, ref _doi); }
+        
         [Field]
         public double Discount { get => _discount; set => UpdateProperty(ref value, ref _discount); }
+        
         [Field]
         public bool Paid { get => _paid; set => UpdateProperty(ref value, ref _paid); }
+        
         [FK]
         public PaymentType? PaymentType { get => _paymentType; set => UpdateProperty(ref value, ref _paymentType); }
+        
         [Field]
         public double Amount { get => _amount; set => UpdateProperty(ref value, ref _amount); }
+        
         [Field]
         public double Deposit { get => _deposit; set => UpdateProperty(ref value, ref _deposit); }
-        public double TotalDue => Amount - Deposit;
+        public double DiscountAmount => Discount * Amount;
+        public double TotalDue => Amount - DiscountAmount - Deposit;
         #endregion
 
         #region Constructors

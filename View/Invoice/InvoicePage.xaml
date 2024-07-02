@@ -91,8 +91,8 @@
                     <Label Grid.Row="2" Content="Discount" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="Discount" Grid.Row="2" Content="1000" HorizontalAlignment="Right"/>
 
-                    <Label Grid.Row="3" Content="Total Due" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black"/>
-                    <Label x:Name="TotalDue" Grid.Row="3" Content="1000" HorizontalAlignment="Right"/>
+                    <Label Grid.Row="3" Content="Total Due" Background="{StaticResource DefaultGrey}" BorderThickness="0,0,0,1" BorderBrush="Black" FontWeight="Bold"/>
+                    <Label x:Name="TotalDue" Grid.Row="3" Content="1000" HorizontalAlignment="Right" FontWeight="Bold"/>
                 
                     <Label x:Name="ToBePaid" Grid.Row="5" Content="To be paid by" BorderThickness="0,0,0,1" BorderBrush="Black"/>
                     <Label x:Name="PaymentMethod" Grid.Row="5" Content="Cash" HorizontalAlignment="Right"/>

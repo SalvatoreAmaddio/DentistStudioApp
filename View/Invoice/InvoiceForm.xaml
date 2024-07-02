@@ -6,12 +6,16 @@
         xmlns:local="clr-namespace:DentistStudioApp.View"
         xmlns:fr="clr-namespace:FrontEnd.Forms;assembly=FrontEnd"
         xmlns:controller="clr-namespace:DentistStudioApp.Controller"
+        xmlns:converters="clr-namespace:DentistStudioApp.Converters"
         d:DataContext="{d:DesignInstance Type=controller:InvoiceController, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         WindowState="Maximized"
         MinWidth="1100"
         Title="Invoice Form">
-
+    
+    <Window.Resources>
+        <converters:PercentageConverter x:Key="percentageConverter"/>
+    </Window.Resources>
 
         <fr:Form>
             <fr:Form.Menu>
@@ -50,7 +54,7 @@
                             <Label Grid.Row="1" Grid.Column="1" Content="{Binding CurrentRecord.InvoiceID}"/>
                             <fr:TextBoxDate Grid.Row="2" Grid.Column="1" Date="{Binding CurrentRecord.DOI}"/>
                             <fr:Text Grid.Row="3" Grid.Column="1" Text="{Binding CurrentRecord.Amount,StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
-                            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount,StringFormat={}{0:P1}, ConverterCulture='en-GB'}"/>
+                            <fr:Text Grid.Row="4" Grid.Column="1" Text="{Binding CurrentRecord.Discount, Converter={StaticResource percentageConverter}}"/>
                             <fr:Text Grid.Row="5" Grid.Column="1" Text="{Binding CurrentRecord.Deposit,StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
                             <fr:Text Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding CurrentRecord.TotalDue, Mode=OneWay, StringFormat={}{0:C1}, ConverterCulture='en-GB'}"/>
 

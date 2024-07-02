@@ -24,7 +24,9 @@ namespace DentistStudioApp.View
             _patient = patient;
 
             InvoiceID.Content = $"Invoice# {_invoice.InvoiceID}";
-            DOI.Content = $"{_invoice.DOI.Value.ToString("dd/MM/yyyy")}";
+    
+            if (_invoice.DOI != null)
+                DOI.Content = $"{_invoice.DOI.Value.ToString("dd/MM/yyyy")}";
 
             PatientName.Content = $"{_patient.Title} {_patient.FirstName} {_patient.LastName}".Trim();
             PatientEmail.Content = $"Email: {_patient.Email}";
@@ -35,11 +37,10 @@ namespace DentistStudioApp.View
             Total.Content = _invoice.Amount.ToString("c2");
             Deposit.Content = _invoice.Deposit.ToString("c2");
             TotalDue.Content = _invoice.TotalDue.ToString("c2");
+
             if (_invoice.Discount == 0)
-            {
                 DiscountRow.Height = new(0);
-            }
-            else Discount.Content = _invoice.Discount.ToString("c2");
+            else Discount.Content = _invoice.DiscountAmount.ToString("c2");
 
             ToBePaid.Content = (_invoice.Paid) ? "Paid by" : "To be paid by";
             PaymentMethod.Content = _invoice.PaymentType?.PaymentBy;
